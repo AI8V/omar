@@ -1,0 +1,11 @@
+# =============================================================
+# Ai8V | Mind & Machine - Robots Exclusion Protocol File
+# =============================================================
+
+# Allow all reputable crawlers (Google, Bing, etc.)
+User-agent: *
+Allow: /
+
+# Specify the location of the sitemap to help crawlers
+# discover all important pages efficiently.
+Sitemap: https://ai8v.com/sitemap.xml

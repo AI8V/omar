@@ -1,0 +1,361 @@
+:root {
+  --gradient-sitemap: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-robots: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  --gradient-manifest: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  --gradient-github: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
+  --gradient-seo-crawler: linear-gradient(135deg, #5ee7df 0%, #b490ca 100%);
+  --gradient-feature: linear-gradient(45deg, #28a745, #20c997);
+  --gradient-pro: linear-gradient(45deg, #6f42c1, #e83e8c);
+  --gradient-ultimate: linear-gradient(45deg, #fd7e14, #dc3545);
+  --gradient-dark-toggle: linear-gradient(45deg, #667eea, #764ba2);
+  --gradient-live-counter: linear-gradient(45deg, #28a745, #20c997);
+}
+
+/* --- General & Reusable Components --- */
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.file-drop-zone.dragover {
+  border-color: var(--bs-primary) !important;
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
+}
+
+.url-textarea-drop.dragover {
+  border-color: var(--bs-success) !important;
+  background-color: rgba(var(--bs-success-rgb), 0.1);
+}
+
+.dark-mode-toggle {
+  background: var(--gradient-dark-toggle);
+  transition: all 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.live-counter {
+  background: var(--gradient-live-counter);
+  transition: all 0.3s ease;
+}
+
+/* --- Custom Badges --- */
+
+.badge.feature-badge {
+  background: var(--gradient-feature);
+}
+
+.badge.pro-badge {
+  background: var(--gradient-pro);
+}
+
+.badge.ultimate-badge {
+  background: var(--gradient-ultimate);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(var(--bs-warning-rgb), 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px 5px rgba(var(--bs-warning-rgb), 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(var(--bs-warning-rgb), 0);
+  }
+}
+
+/* --- Gradient Sections & Drop Zones --- */
+
+.sitemap-section, .robots-section, .manifest-section, .github-section, .seo-crawler-section {
+  color: var(--bs-dark-text-emphasis);
+}
+
+.sitemap-section {
+  background: var(--gradient-sitemap);
+  color: white;
+}
+
+.robots-section {
+  background: var(--gradient-robots);
+}
+
+.manifest-section {
+  background: var(--gradient-manifest);
+}
+
+.github-section {
+  background: var(--gradient-github);
+}
+
+.seo-crawler-section {
+  background: var(--gradient-seo-crawler);
+}
+
+.sitemap-section .drop-zone {
+  border: 2px dashed rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+}
+
+.sitemap-section .drop-zone:hover {
+  border-color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.robots-section .drop-zone, .manifest-section .drop-zone, .github-section .drop-zone {
+  border: 2px dashed rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.robots-section .drop-zone:hover, .manifest-section .drop-zone:hover, .github-section .drop-zone:hover {
+  border-color: #333;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* --- Results & Accordion Styling --- */
+
+.accordion-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.accordion-collapse {
+  max-height: 45vh;
+  overflow-y: auto;
+}
+
+[dir="rtl"] .accordion-button::after {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.result-item.is-editing .editable-content {
+  display: none;
+}
+
+.result-item .edit-input {
+  margin-block: 0.2rem;
+}
+
+.result-item.selected {
+  background-color: rgba(var(--bs-primary-rgb), 0.08) !important;
+  border-color: rgba(var(--bs-primary-rgb), 0.4) !important;
+}
+
+.result-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.result-item-url-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.seo-score-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  vertical-align: middle;
+  border: 1px solid rgba(0,0,0,0.2);
+}
+
+.seo-summary-item {
+  display: inline-block;
+  margin-inline-end: 0.75rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.seo-summary-item .badge {
+  font-size: 0.75rem;
+  margin-inline-start: 0.25rem;
+}
+
+#showAnalyticsBtn {
+  margin-inline-start: 1rem;
+}
+
+#crawlerCurrentUrl {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  max-width: 100%;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+
+/* --- SERP Preview Modal --- */
+
+.serp-preview {
+  font-family: Arial, sans-serif;
+  padding: 1rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.5rem;
+}
+
+.serp-url {
+  color: var(--bs-body-color);
+  font-size: 14px;
+  direction: ltr;
+  text-align: left;
+}
+
+.serp-title {
+  color: #1a0dab;
+  font-size: 20px;
+  font-weight: normal;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+[data-bs-theme="dark"] .serp-title {
+  color: #8ab4f8;
+}
+
+.serp-description {
+  font-size: 14px;
+  line-height: 1.57;
+  word-wrap: break-word;
+}
+
+/* --- Feature-Specific Components --- */
+
+#site-graph-container {
+  position: relative;
+  background-color: var(--bs-tertiary-bg);
+}
+
+#visualizer-sidebar .list-group-item {
+  padding: 0.5rem 0.25rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  border-color: var(--bs-border-color-translucent);
+  background-color: transparent;
+  transition: background-color 0.2s ease-in-out;
+}
+
+#visualizer-sidebar .list-group-item:hover {
+  background-color: var(--bs-secondary-bg-subtle);
+}
+
+#visualizer-sidebar .list-group-item.active {
+  background-color: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary-text-emphasis);
+  border-right: 3px solid var(--bs-primary);
+}
+
+.comparison-card {
+  border-color: var(--bs-border-color-translucent);
+}
+
+.comparison-card .list-group-item {
+  background-color: transparent;
+}
+
+.comparison-card .badge {
+  font-size: 0.9em;
+  padding: 0.4em 0.6em;
+}
+
+/* ================================================================
+--- FINAL OVERRIDES FOR ACCESSIBILITY, PRINTING, & BOOTSTRAP ---
+================================================================ */
+
+/* 1. Accessibility: Contrast Fixes */
+
+/* A. Muted Text: A darker gray for light theme, a lighter gray for dark theme. */
+
+.text-muted, .result-item-url-bar {
+  color: #5f6c7a !important;
+}
+
+[data-bs-theme="dark"] .text-muted, [data-bs-theme="dark"] .result-item-url-bar {
+  color: #a0a9b3 !important;
+}
+
+/* B. Outline Buttons: Use stronger, more vibrant colors for text and borders. */
+
+.btn-outline-info {
+  --bs-btn-color: #087990;
+  --bs-btn-border-color: #087990;
+  --bs-btn-hover-bg: #0dcaf0;
+  --bs-btn-hover-border-color: #0dcaf0;
+  --bs-btn-hover-color: #000;
+}
+
+[data-bs-theme="dark"] .btn-outline-info {
+  --bs-btn-color: #6edff6;
+  --bs-btn-border-color: #6edff6;
+  --bs-btn-hover-bg: #6edff6;
+  --bs-btn-hover-border-color: #6edff6;
+  --bs-btn-hover-color: #000;
+}
+
+.btn-outline-secondary {
+  --bs-btn-color: #495057;
+  --bs-btn-border-color: #495057;
+  --bs-btn-hover-bg: #6c757d;
+  --bs-btn-hover-border-color: #6c757d;
+  --bs-btn-hover-color: #fff;
+}
+
+[data-bs-theme="dark"] .btn-outline-secondary {
+  --bs-btn-color: #adb5bd;
+  --bs-btn-border-color: #adb5bd;
+  --bs-btn-hover-bg: #adb5bd;
+  --bs-btn-hover-border-color: #adb5bd;
+  --bs-btn-hover-color: #000;
+}
+
+/* C. Opened Accordion Header */
+
+.accordion-button:not(.collapsed) {
+  color: #052c65;
+  background-color: #cfe2ff;
+}
+
+[data-bs-theme="dark"] .accordion-button:not(.collapsed) {
+  color: #cde2fe;
+  background-color: #03285b;
+}
+
+/* 2. Toast Notification Color */
+
+.toast.bg-info {
+  --bs-bg-opacity: 1;
+  background-color: #0d6efd !important;
+}
+
+.badge.bg-warning {
+  color: #000 !important;
+}
+
+.badge.bg-info {
+  color: #000 !important;
+}
+
+[data-bs-theme="dark"] .text-primary {
+  color: var(--bs-primary-text-emphasis) !important;
+}
+
+[data-bs-theme="dark"] .text-success {
+  color: var(--bs-success-text-emphasis) !important;
+}
+
