@@ -145,7 +145,18 @@
 
 <body>
     <nav class="navbar navbar-expand-lg sticky-top bg-body shadow-sm">
-        <div class="container"><a class="navbar-brand" href="#"><i class="bi bi-server ms-2" aria-hidden="true"></i>Log File Analyzer</a><span class="fw-bold mx-auto navbar-text"><i class="bi bi-gem ms-2" aria-hidden="true"></i>Ai8V | Mind &amp; Machine</span><a class="btn btn-outline-primary btn-sm" role="button" href="../index.html"><i class="bi bi-tools ms-2" aria-hidden="true"></i>الأداة الكاملة </a></div>
+        <div class="container"><a class="navbar-brand" href="#"><i class="bi bi-server ms-2" aria-hidden="true"></i>Log File Analyzer</a><span class="fw-bold mx-auto navbar-text"><i class="bi bi-gem ms-2" aria-hidden="true"></i>Ai8V | Mind &amp; Machine</span><div class="dropdown"><button id="toolsMenu" class="btn btn-outline-primary btn-sm dropdown-toggle mt-2" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="تصفح جميع أدوات Ai8V"><i class="bi bi-tools ms-2" aria-hidden="true"></i> جميع الأدوات </button>
+                <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="toolsMenu">
+                    <li><a class="d-flex align-items-center dropdown-item" href="/"><i class="bi bi-house-door-fill opacity-75 ms-2" aria-hidden="true"></i>الأداة الكاملة (الرئيسية)</a></li>
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <li><a class="d-flex align-items-center dropdown-item" href="/SiteVisualizerLab/"><i class="bi bi-diagram-3-fill opacity-75 ms-2" aria-hidden="true"></i>المحلل البصري</a></li>
+                    <li><a class="d-flex align-items-center dropdown-item" href="/LogFileAnalyzer/"><i class="bi bi-server opacity-75 ms-2" aria-hidden="true"></i>محلل السجلات</a></li>
+                    <li><a class="d-flex align-items-center dropdown-item" href="/SchemaArchitect/"><i class="bi bi-bounding-box-circles opacity-75 ms-2" aria-hidden="true"></i>مهندس السكيما</a></li>
+                </ul>
+            </div>
+        </div>
     </nav>
     <div class="theme-switcher dropdown position-fixed top-0 start-0 m-3 mt-5 ps-0 pt-2 pb-0 mb-0" style="z-index:1031;"><button class="btn btn-link dropdown-toggle ps-0 pe-0 pb-0 pt-0" aria-expanded="false" data-bs-toggle="dropdown" aria-label="التبديل بين الوضع الفاتح والغامق" style="color:var(--bs-body-color);" title="التبديل بين الوضع الفاتح و الغامق" type="button"><i aria-hidden="true" class="bi bi-sun-fill mb-1"></i></button>
         <div class="dropdown-menu"><button aria-pressed="false" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" type="button"><i aria-hidden="true" class="bi bi-sun-fill opacity-50 ms-2"></i>Light</button><button class="active dropdown-item d-flex align-items-center" aria-pressed="true" data-bs-theme-value="dark" type="button"><i aria-hidden="true" class="bi bi-moon-stars-fill opacity-50 ms-2"></i>Dark</button><button aria-pressed="false" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" type="button"><i aria-hidden="true" class="bi bi-circle-half opacity-50 ms-2"></i>Auto</button></div>
