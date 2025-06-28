@@ -359,3 +359,8 @@
   color: var(--bs-success-text-emphasis) !important;
 }
 
+.comparison-card .list-group-item span[dir="ltr"], .comparison-card .list-group-item .d-block.text-muted {
+            direction: ltr;
+            text-align: left;
+            margin-right: auto;
+        }
