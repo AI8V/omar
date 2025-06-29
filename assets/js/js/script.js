@@ -727,6 +727,14 @@ const ProjectManager = (function (State, UI, Utils) {
             const origin = new URL(baseUrl).origin;
             Utils.showNotification(`<i class="bi bi-rocket-takeoff-fill ms-2"></i> بدء زحف SEO لـ ${origin}...`, 'info');
             DOM.dom.crawlerStatus.classList.remove('d-none');
+
+            // === بداية الإصلاح ===
+            let proxyTemplate = DOM.dom.proxySelector.value;
+            if (proxyTemplate === 'custom') {
+                proxyTemplate = DOM.dom.customProxyUrl.value.trim() || '{url}';
+            }
+            const getFinalUrl = (target) => proxyTemplate.replace('{url}', encodeURIComponent(target));
+            // === نهاية الإصلاح ===
         
             const queue = [{ url: baseUrl, depth: 0 }];
             const visited = new Set([baseUrl]);
@@ -749,7 +757,8 @@ const ProjectManager = (function (State, UI, Utils) {
                         try {
                             DOM.dom.crawlerCurrentUrl.textContent = `فحص: ${new URL(task.url).pathname}...`;
                             const startTime = performance.now();
-                            const response = await fetch(Utils.getProxyUrl(task.url));
+                            
+                            const response = await fetch(getFinalUrl(task.url)); 
                             if (!response.ok) throw new Error(`Status ${response.status}`);
                             const html = await response.text();
                             const analysis = Analyzer.analyzeHtmlContent(html, task.url, { loadTime: Math.round(performance.now() - startTime), saveHtmlContent });
