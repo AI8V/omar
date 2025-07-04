@@ -1,11 +1,8 @@
-// --- START OF FILE ghost-crawler.js ---
-
-// assets/js/ghost-crawler.js - Operation: Ghost Evolved - The Mapmaker (Genome Project v1.1 - URL Normalization Fix)
+// assets/js/ghost-crawler.js 
 
 (function() {
     'use strict';
 
-    // --- DOM Elements ---
     const startUrlInput = document.getElementById('startUrl');
     const startCrawlBtn = document.getElementById('startCrawlBtn');
     const progressSection = document.getElementById('progress-section');
@@ -23,7 +20,6 @@
     const errorToast = bootstrap.Toast.getOrCreateInstance(errorToastEl);
     const toastBodyMessage = document.getElementById('toast-body-message');
 
-    // --- State variables ---
     let crawledUrls;
     let queue;
     let issues;
@@ -32,20 +28,17 @@
     let pageData;
     let crawlMap;
 
-    // --- Helper Functions ---
 
-    // NEW: URL Normalization function to prevent duplicate crawls
     function normalizeUrl(urlStr) {
         try {
             const urlObj = new URL(urlStr);
-            urlObj.hash = ''; // Always remove fragment identifier
-            // Remove trailing slash if the path is not just '/'
+            urlObj.hash = '';
             if (urlObj.pathname.length > 1 && urlObj.pathname.endsWith('/')) {
                 urlObj.pathname = urlObj.pathname.slice(0, -1);
             }
             return urlObj.href;
         } catch (e) {
-            return urlStr; // Return as-is if invalid
+            return urlStr;
         }
     }
 
@@ -58,7 +51,6 @@
         }
     }
 
-    // --- Event Listeners ---
     startCrawlBtn.addEventListener('click', startCrawl);
     if(exportVisualizerBtn) exportVisualizerBtn.addEventListener('click', exportForVisualizer);
     
@@ -69,11 +61,9 @@
             return;
         }
         
-        // Normalize the start URL from the beginning
         const startUrl = normalizeUrl(rawStartUrl);
         origin = new URL(startUrl).origin;
 
-        // --- Reset state for new crawl ---
         crawledUrls = new Set();
         queue = [{ url: startUrl, depth: 0 }];
         issues = [];
@@ -118,7 +108,6 @@
             if (newLinks) {
                 newLinks.forEach(link => {
                     try {
-                        // Normalize every new link found
                         const absoluteUrl = normalizeUrl(new URL(link, origin).href);
                         
                         if (absoluteUrl.startsWith(origin) && !crawledUrls.has(absoluteUrl) && !queue.some(q => q.url === absoluteUrl)) {
@@ -139,34 +128,13 @@
     }
     
     async function analyzeResponse(url, response, depth, loadTime) {
-        // Expanded pageObject structure
         const pageObject = {
             url: url,
             title: '',
             description: '',
             category: 'زاحف SEO',
             tags: [],
-            seo: {
-                h1: '',
-                lang: '',
-                canonical: '',
-                imageAltInfo: { total: 0, missing: 0 },
-                loadTime: loadTime,
-                isNoIndex: false,
-                isOrphan: false,
-                isDefaultDescription: false,
-                internalLinkEquity: 0,
-                ogTitle: '',
-                ogImage: '',
-                hasStructuredData: false,
-                wordCount: 0,
-                crawlDepth: depth,
-                contentAnalysis: {
-                    internalLinks: 0,
-                    externalLinks: 0,
-                    outgoingInternalLinks: []
-                }
-            },
+            seo: { loadTime: loadTime, crawlDepth: depth, issues: [] },
             issues: []
         };
         pageData.set(url, pageObject);
@@ -175,7 +143,15 @@
             const errorType = response.status >= 500 ? 'Server Error (5xx)' : 'Broken Link (4xx)';
             addIssue(errorType, `كود الحالة: ${response.status}`, url);
             healthScore -= (response.status >= 500 ? 10 : 5);
-            return [];
+            return []; 
+        }
+        
+        const contentType = response.headers.get('Content-Type') || '';
+        if (!contentType.includes('text/html')) {
+            console.log(`Skipping HTML analysis for non-HTML content: ${url} (${contentType})`);
+            pageObject.title = `ملف (${contentType})`;
+            pageObject.description = `تم تخطي التحليل لملف غير نصي.`;
+            return []; 
         }
 
         const html = await response.text();
@@ -191,13 +167,13 @@
         pageObject.seo.ogImage = doc.querySelector('meta[property="og:image"]')?.content.trim() || '';
         pageObject.seo.isNoIndex = doc.querySelector('meta[name="robots"][content*="noindex"]') !== null;
         pageObject.seo.hasStructuredData = doc.querySelector('script[type="application/ld+json"]') !== null;
-
-        const bodyText = doc.body.textContent || "";
-        pageObject.seo.wordCount = bodyText.trim().split(/\s+/).filter(Boolean).length;
-
+        pageObject.seo.wordCount = (doc.body.textContent || "").trim().split(/\s+/).filter(Boolean).length;
+        
         const images = doc.querySelectorAll('img');
-        pageObject.seo.imageAltInfo.total = images.length;
-        pageObject.seo.imageAltInfo.missing = Array.from(images).filter(img => !img.alt || !img.alt.trim()).length;
+        pageObject.seo.imageAltInfo = {
+            total: images.length,
+            missing: Array.from(images).filter(img => !img.alt || !img.alt.trim()).length
+        };
 
         if (!pageObject.title || pageObject.title.length < 10 || pageObject.title.length > 60) {
             addIssue('SEO', `العنوان غير مثالي (الطول: ${pageObject.title.length}).`, url);
@@ -220,20 +196,20 @@
             const href = a.getAttribute('href');
             if (!href || href.startsWith('mailto:') || href.startsWith('tel:')) return;
             try {
-                // Here we use the un-normalized URL to build the absolute path
                 const absoluteUrl = new URL(href, origin).href;
                 if (absoluteUrl.startsWith(origin)) {
-                    // But we store the normalized version
                     outgoingInternalLinksAbs.push(normalizeUrl(absoluteUrl));
                 } else {
                     externalLinksCount++;
                 }
             } catch (e) { /* Invalid href, ignore */ }
         });
-
-        pageObject.seo.contentAnalysis.outgoingInternalLinks = outgoingInternalLinksAbs;
-        pageObject.seo.contentAnalysis.internalLinks = outgoingInternalLinksAbs.length;
-        pageObject.seo.contentAnalysis.externalLinks = externalLinksCount;
+        
+        pageObject.seo.contentAnalysis = {
+            internalLinks: outgoingInternalLinksAbs.length,
+            externalLinks: externalLinksCount,
+            outgoingInternalLinks: outgoingInternalLinksAbs
+        };
 
         return allLinks.map(a => a.getAttribute('href')).filter(Boolean);
     }
@@ -251,15 +227,21 @@
         const allPages = Array.from(pageData.values());
 
         allPages.forEach(page => {
-            page.seo.contentAnalysis.outgoingInternalLinks.forEach(targetUrl => {
-                if (pageData.has(targetUrl)) {
-                    pageData.get(targetUrl).seo.internalLinkEquity++;
-                }
-            });
+            if (page.seo && page.seo.contentAnalysis) {
+                page.seo.contentAnalysis.outgoingInternalLinks.forEach(targetUrl => {
+                    if (pageData.has(targetUrl)) {
+                        const targetPage = pageData.get(targetUrl);
+                        if (!targetPage.seo.internalLinkEquity) {
+                            targetPage.seo.internalLinkEquity = 0;
+                        }
+                        targetPage.seo.internalLinkEquity++;
+                    }
+                });
+            }
         });
 
         allPages.forEach(page => {
-            if (page.seo.internalLinkEquity === 0 && page.seo.crawlDepth > 0) {
+            if (page.seo && page.seo.internalLinkEquity === 0 && page.seo.crawlDepth > 0) {
                 page.seo.isOrphan = true;
                 addIssue('Structure', 'صفحة يتيمة (لا توجد روابط داخلية إليها)', page.url);
             }
@@ -322,7 +304,10 @@
         
         const finalExportData = crawlMap.map((page, index) => {
             const relativeUrl = page.url.replace(origin, '') || '/';
-            const relativeOutgoingLinks = page.seo.contentAnalysis.outgoingInternalLinks
+            
+            const outgoingLinks = page.seo?.contentAnalysis?.outgoingInternalLinks || [];
+
+            const relativeOutgoingLinks = outgoingLinks
                 .map(link => link.replace(origin, '') || '/')
                 .filter(link => link !== relativeUrl);
 
@@ -336,7 +321,7 @@
                 seo: {
                     ...page.seo,
                     contentAnalysis: {
-                        ...page.seo.contentAnalysis,
+                        ...(page.seo?.contentAnalysis || {}),
                         outgoingInternalLinks: relativeOutgoingLinks
                     }
                 }
@@ -356,5 +341,3 @@
     }
 
 })();
-
-// --- END OF FILE ghost-crawler.js ---
