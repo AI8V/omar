@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html data-bs-theme="auto" lang="ar" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>The Ultimate Technical SEO Blog: Structured Guides, Data-Driven Strategies &amp; AI-Powered Insights</title>
+    <link rel="canonical" href="https://ai8v.com/blog/">
+    <meta property="og:url" content="https://ai8v.com/blog/">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://throbbing-dew-da3c.amr-omar304.workers.dev https://api.allorigins.win; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com; img-src 'self' data: https://images.example.com; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; object-src 'none';">
+    <meta name="description" content="أهلاً بيك في مرجع السيو التقني الأقوى باللغة العربية.
+هنا تلاقي محتوى منظّم في 6 أعمدة رئيسية تغطي كل جوانب تحسين المواقع لمحركات البحث،
+من الزحف، والهندسة، والبيانات المنظمة، لحد سرعة الصفحة، المحتوى، وأحدث التحديثات من Google.
+
+مدونة Ai8V بتجمع بين الخبرة العملية، والتحليل المبني على البيانات، والتفكير بنفس منطق Google نفسه.
+
+كل دليل، كل عنقود، وكل مقال هنا مكتوب بهدف:
+إنك تتخطى المنافسة، مش تواكبها فقط.">
+    <script>
+        (function() {
+
+            // JavaScript snippet handling Dark/Light mode switching
+
+            const getStoredTheme = () => localStorage.getItem('theme');
+            const setStoredTheme = theme => localStorage.setItem('theme', theme);
+            const forcedTheme = document.documentElement.getAttribute('data-bss-forced-theme');
+
+            const getPreferredTheme = () => {
+
+                if (forcedTheme) return forcedTheme;
+
+                const storedTheme = getStoredTheme();
+                if (storedTheme) {
+                    return storedTheme;
+                }
+
+                const pageTheme = document.documentElement.getAttribute('data-bs-theme');
+
+                if (pageTheme) {
+                    return pageTheme;
+                }
+
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+
+            const setTheme = theme => {
+                if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.setAttribute('data-bs-theme', 'dark');
+                } else {
+                    document.documentElement.setAttribute('data-bs-theme', theme);
+                }
+            }
+
+            setTheme(getPreferredTheme());
+
+            const showActiveTheme = (theme, focus = false) => {
+                const themeSwitchers = [].slice.call(document.querySelectorAll('.theme-switcher'));
+
+                if (!themeSwitchers.length) return;
+
+                document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+                    element.classList.remove('active');
+                    element.setAttribute('aria-pressed', 'false');
+                });
+
+                for (const themeSwitcher of themeSwitchers) {
+
+                    const btnToActivate = themeSwitcher.querySelector('[data-bs-theme-value="' + theme + '"]');
+
+                    if (btnToActivate) {
+                        btnToActivate.classList.add('active');
+                        btnToActivate.setAttribute('aria-pressed', 'true');
+                    }
+                }
+            }
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                const storedTheme = getStoredTheme();
+                if (storedTheme !== 'light' && storedTheme !== 'dark') {
+                    setTheme(getPreferredTheme());
+                }
+            });
+
+            window.addEventListener('DOMContentLoaded', () => {
+                showActiveTheme(getPreferredTheme());
+
+                document.querySelectorAll('[data-bs-theme-value]')
+                    .forEach(toggle => {
+                        toggle.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const theme = toggle.getAttribute('data-bs-theme-value');
+                            setStoredTheme(theme);
+                            setTheme(theme);
+                            showActiveTheme(theme);
+                        })
+                    })
+            });
+        })();
+    </script>
+    <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../assets/img/favicon/fav180.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon/fav16.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon/fav16D.png" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon/fav32.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon/fav32D.png" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/png" sizes="180x180" href="../assets/img/favicon/fav180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/img/favicon/fav192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="../assets/img/favicon/fav512.png">
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="manifest" href="../manifest.json" crossorigin="use-credentials">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+    <div class="container my-5">
+        <h2>دليل السيو التقني الشامل</h2>
+        <p>ابدأ بأساسيات التحكم في الموقع</p>
+        <div data-bss-type="blog-loop" data-bss-perpage="1" class="mt-5">
+            <div class="row gy-4" data-bss-type="blog-loop-base">
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="technical-seo-complete-guide/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="technical-seo-complete-guide/index.html">
+                                <h4 class="text-body" dir="ltr">Technical SEO Complete Guide: Master Crawling, Indexing, Site Performance and More</h4>
+                            </a>
+                            <p class="lead card-text">السيو التقني مش مجرد إعدادات أو إصلاحات خلف الكواليس…
+                                هو الأساس اللي بيتبني عليه كل شغل SEO ناجح.
+
+                                في هذا الدليل الكامل، هنتعلم خطوة بخطوة:
+
+                                إزاي Google بيكتشف موقعك ويزحف لصفحاتك
+
+                                إزاي تفهم الفهرسة، وتتحكم فيها
+
+                                إزاي تحسّن أداء الموقع وسرعته
+
+                                وإزاي تمنع الأخطاء اللي بتضيّع ترتيبك قبل ما تظهر!
+
+                                ده مش مجرد مقال…
+                                دي خريطة طريق فنية شاملة بتربط بين كل الأعمدة الستة لموقع Ai8V،
+                                وهتخليك تبص لموقعك بعين Google نفسها.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container my-5">
+        <h2>تحليل السجلات وميزانية الزحف</h2>
+        <p>احترف مراقبة البوتات وتحسين الزحف</p>
+        <div data-bss-type="blog-loop" data-bss-perpage="6" class="mt-5">
+            <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-lg-3" data-bss-type="blog-loop-base">
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="crawl-budget/googlebot-analysis/different-user-agents.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="crawl-budget/googlebot-analysis/different-user-agents.html">
+                                <h4 class="text-body" dir="ltr">Googlebot User-Agents Explained: Desktop, Mobile, Image, and More</h4>
+                            </a>
+                            <p class="lead card-text">جوجل بيستخدم أكثر من زاحف، وكل واحد ليه دور معين:
+                                Googlebot-Mobile، Googlebot-Image، AdsBot، وغيرهم.
+                                في هذه الصفحة، هتفه…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="crawl-budget/googlebot-analysis/identify-fake-googlebot.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="crawl-budget/googlebot-analysis/identify-fake-googlebot.html">
+                                <h4 class="text-body" dir="ltr">How to Identify Fake Googlebots and Protect Your Crawl Budget</h4>
+                            </a>
+                            <p class="lead card-text">مش كل من كتب "Googlebot" هو جوجل فعلاً.
+                                في هذه المقالة نكشف لك كيفية التحقق من صحة الزاحف باستخدام IP verification،
+                                ونعر…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="crawl-budget/googlebot-analysis/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="crawl-budget/googlebot-analysis/index.html">
+                                <h4 class="text-body" dir="ltr">Googlebot Analysis: Understand How Google Crawls Your Website</h4>
+                            </a>
+                            <p class="lead card-text">جوجل ما بيزورش موقعك صدفة… بل من خلال روبوت ذكي اسمه Googlebot.
+                                في هذا القسم، نحلل سلوك الزاحف خطوة بخطوة: أنواعه، توقيت…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="crawl-budget/rendering/dynamic-rendering-for-seo.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="crawl-budget/rendering/dynamic-rendering-for-seo.html">
+                                <h4 class="text-body" dir="ltr">Dynamic Rendering for SEO: Should You Use It in 2025?</h4>
+                            </a>
+                            <p class="lead card-text">الديناميك ريندرينج كان حل مؤقت لمشكلة فهرسة المحتوى المبني بجافاسكريبت.
+                                لكنه اتلغبط مع الزمن، وبقى محل جدال.
+                                في المقال د…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="crawl-budget/rendering/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="crawl-budget/rendering/index.html">
+                                <h4 class="text-body" dir="ltr">Rendering for SEO: How Server-Side and Client-Side Rendering Affect Googlebot</h4>
+                            </a>
+                            <p class="lead card-text">مش كل صفحة انت بتشوفها، بيشوفها Googlebot بنفس الشكل.
+                                الفرق بين SSR (العرض من السيرفر) وCSR (العرض من المتصفح)
+                                ممكن يكون…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="crawl-budget/robots-txt/crawl-delay-directive.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="crawl-budget/robots-txt/crawl-delay-directive.html">
+                                <h4 class="text-body" dir="ltr">The Crawl-Delay Directive: Should You Slow Down Search Bots?</h4>
+                            </a>
+                            <p class="lead card-text">الأمر Crawl-delay مش معتمد من Google، لكن بينفع مع محركات تانية.
+                                هل لازم تستخدمه؟ إمتى يكون مفيد؟ وإزاي ممكن يضر موقعك؟
+                                …</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="crawl-budget/robots-txt/disallow-vs-noindex.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="crawl-budget/robots-txt/disallow-vs-noindex.html">
+                                <h4 class="text-body" dir="ltr">Disallow vs Noindex: What's the Difference and When to Use Each?</h4>
+                            </a>
+                            <p class="lead card-text">كتير من الناس بيخلطوا بين "Disallow" في robots.txt و"noindex" في meta tags.
+                                بس الحقيقة إنهم مختلفين تمامًا!
+                                في هذا المقا…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="crawl-budget/robots-txt/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="crawl-budget/robots-txt/index.html">
+                                <h4 class="text-body" dir="ltr">Mastering Robots.txt: The Definitive Guide to Controlling Search Crawlers</h4>
+                            </a>
+                            <p class="lead card-text">ملف robots.txt هو الحارس اللي واقف على باب موقعك.
+                                تقدر من خلاله تقول لجوجل "ادخل هنا" أو "امشي بعيد".
+                                في هذا الكلستر، هت…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="crawl-budget/robots-txt/using-wildcards.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="crawl-budget/robots-txt/using-wildcards.html">
+                                <h4 class="text-body" dir="ltr">Using Wildcards in Robots.txt: Targeting URLs with Precision</h4>
+                            </a>
+                            <p class="lead card-text">عندك آلاف الصفحات بنفس الشكل؟ أو روابط دايناميكية كتير؟
+                                باستخدام الـ Wildcards زي * و $، تقدر تكتب قواعد عامة تتحكم في ا…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="crawl-budget/status-codes/301-vs-302-redirects.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="crawl-budget/status-codes/301-vs-302-redirects.html">
+                                <h4 class="text-body" dir="ltr">301 vs 302 Redirects: Which One Should You Use for SEO?</h4>
+                            </a>
+                            <p class="lead card-text">التحويلات الدائمة (301) والمؤقتة (302) بيأدوا نفس الوظيفة في نظر المستخدم…
+                                لكن في نظر Google، الفرق بينهم كبير.
+                                في هذا ا…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="crawl-budget/status-codes/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="crawl-budget/status-codes/index.html">
+                                <h4 class="text-body" dir="ltr">HTTP Status Codes for SEO: Understand How Crawlers See Your Site</h4>
+                            </a>
+                            <p class="lead card-text">أكواد الاستجابة مش بس للعرض أو الدعم الفني…
+                                في عالم SEO، هي إشارات بتفهم Google إزاي يتعامل مع صفحاتك.
+                                في هذا الكلستر، ه…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="crawl-budget/status-codes/redirect-chains-and-loops.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="crawl-budget/status-codes/redirect-chains-and-loops.html">
+                                <h4 class="text-body" dir="ltr">Redirect Chains and Loops: Advanced SEO Issues That Drain Crawl Budget</h4>
+                            </a>
+                            <p class="lead card-text">لو صفحة بتحوّل لصفحة، واللي بعدها كمان بتحوّل… ده اسمه redirect chain.
+                                ولو دخلنا في دايرة مغلقة؟ بنسميه redirect loop.
+                                ا…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="crawl-budget/status-codes/soft-404-errors.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="crawl-budget/status-codes/soft-404-errors.html">
+                                <h4 class="text-body" dir="ltr">Soft 404 Errors: Hidden SEO Killers You Must Detect and Fix</h4>
+                            </a>
+                            <p class="lead card-text">الصفحة شكلها بتشتغل… بس جوجل شايفها "404 ناعم".
+                                الـ Soft 404 بيضيع الزحف والسمعة مع بعض.
+                                في هذا الدليل، هتفهم إيه اللي ب…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="crawl-budget/status-codes/understanding-304-not-modified.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="crawl-budget/status-codes/understanding-304-not-modified.html">
+                                <h4 class="text-body" dir="ltr">What Does 304 Not Modified Mean for SEO and Crawl Efficiency?</h4>
+                            </a>
+                            <p class="lead card-text">الكود 304 مش خطأ… لكنه من أكتر الأكواد اللي ممكن تحسن كفاءة الزحف.
+                                في هذه المقالة هتعرف ليه جوجل بيستخدم 304،
+                                وإزاي ده ب…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="crawl-budget/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="crawl-budget/index.html">
+                                <h4 class="text-body" dir="ltr">Crawl Budget Optimization: The Ultimate Guide to Log File Analysis for SEO</h4>
+                            </a>
+                            <p class="lead card-text">هل تعلم أن Google لا تزحف إلى كل صفحات موقعك؟
+                                اكتشف في هذا الدليل الشامل كيف تعمل ميزانية الزحف،
+                                وكيف يمكنك قراءتها وفهم…</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav class="d-flex justify-content-center mt-3" data-bss-type="blog-loop-pagination">
+                <ul class="pagination">
+                    <li class="page-item disabled" data-type="prev" data-page="1"><a class="page-link" aria-label="Previous" href="#"><span aria-hidden="true">«</span></a></li>
+                    <li class="page-item active" data-type="regular" data-page="1"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item" data-type="regular" data-page="2"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item" data-type="regular" data-page="3"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item" data-type="next" data-page="2"><a class="page-link" aria-label="Next" href="#"><span aria-hidden="true">»</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="container my-5">
+        <h2>السيو داخل الصفحة</h2>
+        <p>حسّن كل عنصر في صفحتك… حرفيًا</p>
+        <div data-bss-type="blog-loop" data-bss-perpage="6" class="mt-5">
+            <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-lg-3" data-bss-type="blog-loop-base">
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="on-page-seo/canonicals/canonicals-and-hreflang.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/canonicals/canonicals-and-hreflang.html">
+                                <h4 class="text-body" dir="ltr">Canonical Tags and Hreflang: How to Avoid Conflicts in Multilingual SEO</h4>
+                            </a>
+                            <p class="lead card-text">لو بتستهدف لغات متعددة، لازم توازن بين canonical و hreflang.
+                                المقال ده بيشرح السيناريوهات الصعبة، والأخطاء الشائعة، والح…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="on-page-seo/canonicals/cross-domain.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/canonicals/cross-domain.html">
+                                <h4 class="text-body" dir="ltr">Cross-Domain Canonicals: Sharing Authority Across Multiple Sites</h4>
+                            </a>
+                            <p class="lead card-text">عندك نفس المحتوى على أكتر من موقع؟
+                                هنا هتعرف إزاي تستخدم canonical عبر نطاقات مختلفة لتحافظ على الـ SEO وما تقعش في فخ ا…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="on-page-seo/canonicals/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/canonicals/index.html">
+                                <h4 class="text-body" dir="ltr">Mastering Canonical Tags: Solve Duplicate Content the Right Way</h4>
+                            </a>
+                            <p class="lead card-text">المحتوى المكرر بيشتت Google، ويضيع ترتيبك.
+                                Canonical Tags بتقول لجوجل: "النسخة الأصلية هي دي".
+                                في هذا الكلستر، هتفهم إمت…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="on-page-seo/canonicals/self-referencing.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/canonicals/self-referencing.html">
+                                <h4 class="text-body" dir="ltr">Self-Referencing Canonicals: Why Every Page Needs One</h4>
+                            </a>
+                            <p class="lead card-text">حتى الصفحة الأصلية لازم تقول إنها الأصل!
+                                في المقال ده هنتعلم ليه self-canonical مهمة حتى لو الصفحة مش مكررة.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="on-page-seo/content-structure/how-to-use-header-tags.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/content-structure/how-to-use-header-tags.html">
+                                <h4 class="text-body" dir="ltr">Header Tags SEO: How to Use H1–H6 for Better Structure and Rankings</h4>
+                            </a>
+                            <p class="lead card-text">ترتيب العناوين داخل الصفحة (H1–H6) مش ديكور… ده بيساعد جوجل يفهم الموضوع بالكامل.
+                                في المقال ده، هنتعلم قواعد استخدام الع…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="on-page-seo/content-structure/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/content-structure/index.html">
+                                <h4 class="text-body" dir="ltr">Structuring Content for SEO: How to Make Your Pages Clear and Searchable</h4>
+                            </a>
+                            <p class="lead card-text">محركات البحث بتحب الصفحات المنظمة… والمستخدمين كمان.
+                                هنا هتتعلم إزاي ترتب المحتوى بعناوين فرعية، فقرات منطقية، وتسلسل يس…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="on-page-seo/content-structure/what-is-structured-content.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/content-structure/what-is-structured-content.html">
+                                <h4 class="text-body" dir="ltr">What Is Structured Content? Organize Your Pages for Maximum Clarity</h4>
+                            </a>
+                            <p class="lead card-text">المحتوى المنظم بيساعد المستخدم على الفهم السريع، وGoogle على الزحف الأذكى.
+                                هنا هنتكلم عن استراتيجيات تقسيم المحتوى، وإنش…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="on-page-seo/media-optimization/image-alt-text.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/media-optimization/image-alt-text.html">
+                                <h4 class="text-body" dir="ltr">Image Alt Text for SEO: Write Descriptions Google Can Understand</h4>
+                            </a>
+                            <p class="lead card-text">النص البديل هو عين جوجل على الصور.
+                                في المقال ده هتعرف إزاي تكتب alt text فعال يشرح الصورة ويساعد على ترتيبها في البحث.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="on-page-seo/media-optimization/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/media-optimization/index.html">
+                                <h4 class="text-body" dir="ltr">Image &amp; Video SEO: How to Optimize Visual Content for Search</h4>
+                            </a>
+                            <p class="lead card-text">الصور والفيديوهات مش للزينة بس.
+                                تحسين الوسائط بيأثر على سرعة الموقع، تجربة المستخدم، وكمان فرص الظهور في البحث المرئي.
+                                ف…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="on-page-seo/media-optimization/lazy-loading-seo.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/media-optimization/lazy-loading-seo.html">
+                                <h4 class="text-body" dir="ltr">Lazy Loading and SEO: Boost Speed Without Hurting Crawling</h4>
+                            </a>
+                            <p class="lead card-text">Lazy loading بيخلي الصفحة تفتح أسرع…
+                                لكن لو اتنفذ غلط، ممكن يمنع الزحف للصور.
+                                في المقال ده بنوضح الطريقة الصحيحة للتوازن…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="on-page-seo/media-optimization/next-gen-image-formats.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/media-optimization/next-gen-image-formats.html">
+                                <h4 class="text-body" dir="ltr">Next-Gen Image Formats: WebP and AVIF for SEO and Speed</h4>
+                            </a>
+                            <p class="lead card-text">WebP وAVIF هي المستقبل.
+                                المقال ده بيشرح ليه صيغ الصور الجديدة أفضل، وإزاي تستخدمها بدون التأثير على تجربة المستخدم أو ال…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="on-page-seo/metadata/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/metadata/index.html">
+                                <h4 class="text-body" dir="ltr">SEO Metadata Optimization: How to Write Titles and Descriptions That Rank</h4>
+                            </a>
+                            <p class="lead card-text">جوجل بيشوف أول سطرين من صفحتك في العنوان والوصف.
+                                لو مكتوبين صح، هتدخل المنافسة. لو لأ، هتضيع فرصتك من قبل ما تبدأ.
+                                في هذ…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="on-page-seo/metadata/writing-meta-descriptions.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/metadata/writing-meta-descriptions.html">
+                                <h4 class="text-body" dir="ltr">Crafting Meta Descriptions That Boost Click-Through Rates</h4>
+                            </a>
+                            <p class="lead card-text">الـ Meta Description مش بتأثر مباشرة في الترتيب،
+                                لكنها بتفرق جدًا في جذب الزائر.
+                                هنتعلم قواعد كتابة وصف مختصر يوصل المعن…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="on-page-seo/metadata/writing-title-tags.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/metadata/writing-title-tags.html">
+                                <h4 class="text-body" dir="ltr">How to Write Title Tags That Drive Clicks and Rankings</h4>
+                            </a>
+                            <p class="lead card-text">عنوان الصفحة هو أول وأهم عامل On-Page SEO.
+                                في هذا الدليل، هتعرف إزاي تكتب عناوين قصيرة، مركزة، غنية بالكلمات المفتاحية، …</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="on-page-seo/mobile-and-js-seo/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/mobile-and-js-seo/index.html">
+                                <h4 class="text-body" dir="ltr">Mobile &amp; JavaScript SEO: Make Your Site Visible and Crawlable on Any Device</h4>
+                            </a>
+                            <p class="lead card-text">Google أصبح mobile-first… ومواقع كتير مبنية على JavaScript.
+                                الكلستر ده بيركز على إزاي تتأكد إن صفحاتك بتُعرض وتُفهرس بشك…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="on-page-seo/mobile-and-js-seo/mobile-first-indexing.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/mobile-and-js-seo/mobile-first-indexing.html">
+                                <h4 class="text-body" dir="ltr">Mobile-First Indexing: How to Adapt Your Site for Google's Primary Crawler</h4>
+                            </a>
+                            <p class="lead card-text">جوجل بيزحف دلوقتي بإصدار الموبايل أولًا.
+                                لو عندك فرق بين نسخة الجوال والديسكتوب… ممكن تخسر ترتيبك.
+                                في المقال ده هنشرح إز…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="on-page-seo/mobile-and-js-seo/troubleshooting-js-rendering.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/mobile-and-js-seo/troubleshooting-js-rendering.html">
+                                <h4 class="text-body" dir="ltr">JavaScript SEO Troubleshooting: Fix Rendering Issues That Block Indexing</h4>
+                            </a>
+                            <p class="lead card-text">لو صفحاتك بتعتمد على JavaScript heavily، ممكن جوجل ميشوفهاش زي ما تتوقع.
+                                في هذا المقال المتقدم، بنغوص في مشاكل الزحف وال…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="on-page-seo/page-experience/cls-optimization.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/page-experience/cls-optimization.html">
+                                <h4 class="text-body" dir="ltr">CLS Optimization: Fix Layout Shifts That Annoy Users and Hurt Rankings</h4>
+                            </a>
+                            <p class="lead card-text">الصفحة بتتحرك بعد التحميل؟ الصور بتغيّر مكانها؟
+                                ده بيزود CLS ويأثر على ترتيبك.
+                                في المقال ده بنشرح إزاي تمنع الحركة المفا…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="on-page-seo/page-experience/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/page-experience/index.html">
+                                <h4 class="text-body" dir="ltr">Core Web Vitals &amp; Page Experience: How Speed and Stability Impact SEO</h4>
+                            </a>
+                            <p class="lead card-text">جوجل بيهتم مش بس بالمحتوى… لكن بتجربة الزائر على الصفحة.
+                                في هذا الكلستر هنتعلم إزاي نقيس السرعة، التفاعل، والثبات البصري…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="on-page-seo/page-experience/inp-optimization.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/page-experience/inp-optimization.html">
+                                <h4 class="text-body" dir="ltr">INP Optimization: Improve Your Page’s Responsiveness and Interactivity</h4>
+                            </a>
+                            <p class="lead card-text">INP بيقيس استجابة الصفحة لتفاعل الزائر.
+                                لو فيه lag أو تأخير، التجربة بتسوء وجوجل بيلاحظ.
+                                هنقدم حلول تقنية لتحسينه في الم…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="on-page-seo/page-experience/lcp-optimization.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/page-experience/lcp-optimization.html">
+                                <h4 class="text-body" dir="ltr">LCP Optimization: How to Improve Largest Contentful Paint</h4>
+                            </a>
+                            <p class="lead card-text">LCP هو مقياس الوقت اللي بيظهر فيه العنصر الأكبر في الصفحة.
+                                لو اتأخر، جوجل بيقلل من ترتيبك.
+                                المقال ده فيه نصايح عملية لتح…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="on-page-seo/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="on-page-seo/index.html">
+                                <h4 class="text-body" dir="ltr">On-Page SEO: The Complete Guide to Perfectly Optimized Webpages</h4>
+                            </a>
+                            <p class="lead card-text">تحسين الصفحة مش مجرد عنوان وكلمات مفتاحية…
+                                هو علم وفن في آنٍ واحد.
+                                في هذا الدليل الكامل، هنتعلّم إزاي نهيئ كل عنصر في ال…</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav class="d-flex justify-content-center mt-3" data-bss-type="blog-loop-pagination">
+                <ul class="pagination">
+                    <li class="page-item disabled" data-type="prev" data-page="1"><a class="page-link" aria-label="Previous" href="#"><span aria-hidden="true">«</span></a></li>
+                    <li class="page-item active" data-type="regular" data-page="1"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item" data-type="regular" data-page="2"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item" data-type="regular" data-page="3"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item" data-type="regular" data-page="4"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item" data-type="next" data-page="2"><a class="page-link" aria-label="Next" href="#"><span aria-hidden="true">»</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="container my-5">
+        <h2>هندسة الموقع والزحف</h2>
+        <p>تعلم كيف تفكر Google في بنية موقعك</p>
+        <div data-bss-type="blog-loop" data-bss-perpage="6" class="mt-5">
+            <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-lg-3" data-bss-type="blog-loop-base">
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="site-architecture/advanced-architecture/ajax-seo-best-practices.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/advanced-architecture/ajax-seo-best-practices.html">
+                                <h4 class="text-body" dir="ltr">AJAX SEO: Make JavaScript-Rendered Content Crawlable and Indexable</h4>
+                            </a>
+                            <p class="lead card-text">لو موقعك بيعتمد على AJAX لعرض المحتوى، ممكن جوجل ميشوفش المحتوى خالص.
+                                في المقال ده، بنشرح إزاي تهيئ صفحات AJAX للزحف وال…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="site-architecture/advanced-architecture/faceted-navigation-solutions.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/advanced-architecture/faceted-navigation-solutions.html">
+                                <h4 class="text-body" dir="ltr">Faceted Navigation for SEO: Avoid Duplicate Content and Crawl Waste</h4>
+                            </a>
+                            <p class="lead card-text">فلاتر البحث (Facet filters) بتحسّن تجربة المستخدم… لكنها خطر على SEO لو اتنفذت غلط.
+                                هنا هنعرض حلول ذكية للحد من المحتوى …</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="site-architecture/advanced-architecture/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/advanced-architecture/index.html">
+                                <h4 class="text-body" dir="ltr">Advanced Site Architecture for SEO: Solve Complex Structure Challenges</h4>
+                            </a>
+                            <p class="lead card-text">بعض المواقع بيكون فيها تحديات تقنية بسبب الحجم، الفلاتر، أو المحتوى الديناميكي.
+                                الكلستر ده بيغطي أفضل الممارسات في التعا…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="site-architecture/advanced-architecture/pagination-best-practices.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/advanced-architecture/pagination-best-practices.html">
+                                <h4 class="text-body" dir="ltr">SEO Pagination Best Practices: Keep Crawlers and Users Aligned</h4>
+                            </a>
+                            <p class="lead card-text">الصفحات المرقمة ممكن تسبب تكرار، أو تضيّع صفحات مهمة لو اتنفذت غلط.
+                                هنا بنشرح أفضل الطرق للتعامل مع pagination بشكل يرضي…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="site-architecture/crawling-and-indexing/crawl-depth.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/crawling-and-indexing/crawl-depth.html">
+                                <h4 class="text-body" dir="ltr">Crawl Depth: Why Deep Pages Get Ignored by Google</h4>
+                            </a>
+                            <p class="lead card-text">لو الصفحة مدفونة على عمق 5 أو 6 نقرات… جوجل غالبًا مش هيزورها.
+                                في المقال ده، هنفهم مفهوم عمق الزحف،
+                                وإزاي تقرّب صفحاتك ا…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="site-architecture/crawling-and-indexing/fix-orphan-pages.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/crawling-and-indexing/fix-orphan-pages.html">
+                                <h4 class="text-body" dir="ltr">Fix Orphan Pages: Make Hidden Content Discoverable to Search Engines</h4>
+                            </a>
+                            <p class="lead card-text">صفحات يتيمة = صفحات موجودة بس مفيش أي رابط داخلي يوصل ليها.
+                                دي بتضيع مجهودك، لأن جوجل مش بيكتشفها بسهولة.
+                                في هذا المقال …</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="site-architecture/crawling-and-indexing/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/crawling-and-indexing/index.html">
+                                <h4 class="text-body" dir="ltr">Crawling and Indexing: How Google Discovers and Stores Your Content</h4>
+                            </a>
+                            <p class="lead card-text">الزحف هو الخطوة الأولى، لكن الفهرسة هي بوابة الظهور في نتائج البحث.
+                                في هذا الكلستر هنتعرف على الفارق بين الاتنين،
+                                وإزاي …</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="site-architecture/crawling-and-indexing/website-flattening.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/crawling-and-indexing/website-flattening.html">
+                                <h4 class="text-body" dir="ltr">Website Flattening: Boost Crawl Efficiency by Reducing Click Depth</h4>
+                            </a>
+                            <p class="lead card-text">بدل ما تبني موقعك كأنه هرم… Flattening بيخليه مسطّح وأسهل للزحف.
+                                في المقال ده، هنشرح الاستراتيجية دي، وفايدتها في تسريع …</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="site-architecture/internal-linking/anchor-text-optimization.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/internal-linking/anchor-text-optimization.html">
+                                <h4 class="text-body" dir="ltr">Anchor Text Optimization: How to Guide Users and Crawlers with Smart Links</h4>
+                            </a>
+                            <p class="lead card-text">النص اللي بتربط بيه مهم أكتر مما تتخيل…
+                                في المقال ده، هنتكلم عن اختيار أنسب كلمات للرابط،
+                                وإزاي ده بيساعد في تحسين الفهم…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="site-architecture/internal-linking/common-mistakes.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/internal-linking/common-mistakes.html">
+                                <h4 class="text-body" dir="ltr">Internal Linking Mistakes That Harm Your SEO: What to Avoid</h4>
+                            </a>
+                            <p class="lead card-text">الربط الداخلي لو اتنفذ غلط ممكن يضرك أكتر ما يفيدك.
+                                في المقال ده، بنراجع الأخطاء الشائعة:
+                                الروابط الزايدة، التكرار، الرب…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="site-architecture/internal-linking/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/internal-linking/index.html">
+                                <h4 class="text-body" dir="ltr">Internal Linking for SEO: Build Authority and Improve Crawl Flow</h4>
+                            </a>
+                            <p class="lead card-text">الروابط الداخلية مش بس وسيلة تنقل…
+                                دي خريطة طريق لجوجل عشان يعرف إيه المهم في موقعك.
+                                في هذا الكلستر هنتعلّم قواعد الربط …</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="site-architecture/internal-linking/pagerank-sculpting.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/internal-linking/pagerank-sculpting.html">
+                                <h4 class="text-body" dir="ltr">PageRank Sculpting: Advanced Techniques to Direct Link Equity</h4>
+                            </a>
+                            <p class="lead card-text">مش كل رابط داخلي بيساوي غيره.
+                                في المقال المتقدم ده، هنتكلم عن "نحت" PageRank داخل الموقع،
+                                وإزاي تتحكم في تدفق القوة بين …</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="site-architecture/internal-linking/topical-authority.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/internal-linking/topical-authority.html">
+                                <h4 class="text-body" dir="ltr">Topical Authority Through Internal Links: Strengthen Your SEO Structure</h4>
+                            </a>
+                            <p class="lead card-text">لو محتواك مترابط حوالين موضوع واحد، Google بيشوفك كـ “مرجع”.
+                                في المقال ده، هنتعلم إزاي نستخدم الروابط الداخلية لتعزيز "ا…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="site-architecture/internationalization/hreflang-implementation-mistakes.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/internationalization/hreflang-implementation-mistakes.html">
+                                <h4 class="text-body" dir="ltr">Common Hreflang Mistakes: How to Avoid SEO Loss in Multilingual Sites</h4>
+                            </a>
+                            <p class="lead card-text">غلطة بسيطة في hreflang ممكن تسبب تكرار، أو تجاهل كامل للصفحات الدولية.
+                                في هذا المقال، بنستعرض أشهر الأخطاء (الروابط المت…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="site-architecture/internationalization/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/internationalization/index.html">
+                                <h4 class="text-body" dir="ltr">International SEO with Hreflang: Serve the Right Language to the Right Audience</h4>
+                            </a>
+                            <p class="lead card-text">لو موقعك بيستهدف لغات أو دول متعددة، hreflang هو المفتاح.
+                                هنا هتعرف إزاي تستخدم الوسوم دي لتوجيه الزوار للنسخة المناسبة،…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="site-architecture/sitemaps/html-vs-xml.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/sitemaps/html-vs-xml.html">
+                                <h4 class="text-body" dir="ltr">HTML vs XML Sitemaps: Which One Should You Use for SEO?</h4>
+                            </a>
+                            <p class="lead card-text">كل نوع من السايت مابس ليه وظيفة محددة.
+                                هنا هنقارن بين HTML Sitemap الموجه للمستخدم، وXML Sitemap الموجه لجوجل،
+                                ونوضح متى…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="site-architecture/sitemaps/image-guide.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/sitemaps/image-guide.html">
+                                <h4 class="text-body" dir="ltr">Image Sitemaps: Make Your Visual Content Discoverable in Google Images</h4>
+                            </a>
+                            <p class="lead card-text">عندك صور مهمة في موقعك؟ لازم تساعد جوجل يكتشفها.
+                                في المقال ده، هنتعلم إزاي نستخدم image sitemap لتقوية فرص ظهور صورك في …</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="site-architecture/sitemaps/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/sitemaps/index.html">
+                                <h4 class="text-body" dir="ltr">Sitemaps for SEO: Create and Optimize XML, HTML, Image &amp; Video Maps</h4>
+                            </a>
+                            <p class="lead card-text">ملف الـ Sitemap هو خريطة الموقع اللي Google بيمشي عليها.
+                                في هذا الكلستر، هنتعلم الفرق بين أنواع الـ Sitemaps المختلفة،
+                                و…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="site-architecture/sitemaps/news-requirements.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/sitemaps/news-requirements.html">
+                                <h4 class="text-body" dir="ltr">Google News Sitemaps: Advanced Guidelines for Publishers</h4>
+                            </a>
+                            <p class="lead card-text">لو بتشتغل في محتوى إخباري، جوجل ليه قواعد خاصة.
+                                المقال ده بيشرح إزاي تبني Google News Sitemap حسب الشروط الرسمية،
+                                وإزاي …</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="site-architecture/sitemaps/video-guide.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/sitemaps/video-guide.html">
+                                <h4 class="text-body" dir="ltr">Video Sitemaps: Help Google Understand and Index Your Video Content</h4>
+                            </a>
+                            <p class="lead card-text">الفيديوهات محتوى قوي… لكن صعب على Google يفهمه من غير إرشاد.
+                                Video Sitemaps بتشرح لجوجل تفاصيل كل فيديو في موقعك.
+                                هنا هت…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="site-architecture/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="site-architecture/index.html">
+                                <h4 class="text-body" dir="ltr">Site Architecture for SEO: How to Structure Your Website for Better Crawling and Rankings</h4>
+                            </a>
+                            <p class="lead card-text">هيكل موقعك هو اللي بيحدد Google هيمشي فين الأول، وهيكتشف إيه ومتى.
+                                في هذا الدليل الشامل، هتتعلم إزاي تصمّم هيكل واضح وسه…</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav class="d-flex justify-content-center mt-3" data-bss-type="blog-loop-pagination">
+                <ul class="pagination">
+                    <li class="page-item disabled" data-type="prev" data-page="1"><a class="page-link" aria-label="Previous" href="#"><span aria-hidden="true">«</span></a></li>
+                    <li class="page-item active" data-type="regular" data-page="1"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item" data-type="regular" data-page="2"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item" data-type="regular" data-page="3"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item" data-type="regular" data-page="4"><a class="page-link" href="#">4</a></li>
+                    <li class="page-item" data-type="next" data-page="2"><a class="page-link" aria-label="Next" href="#"><span aria-hidden="true">»</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="container my-5">
+        <h2>البيانات المنظمة والـ Rich Snippets</h2>
+        <p>اجعل محتواك أكثر فهماً وظهورًا</p>
+        <div data-bss-type="blog-loop" data-bss-perpage="6" class="mt-5">
+            <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-lg-3" data-bss-type="blog-loop-base">
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="structured-data/entities-and-knowledge-graph/building-your-knowledge-graph.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="structured-data/entities-and-knowledge-graph/building-your-knowledge-graph.html">
+                                <h4 class="text-body" dir="ltr">How to Build Your Own Knowledge Graph Using Structured Data</h4>
+                            </a>
+                            <p class="lead card-text">تقدر تبني شبكة من الكيانات حوالين موقعك، تربطهم ببعض، وتظهر كمرجع في مجالك.
+                                المقال ده فيه خطوات عملية لهيكلة موقعك وبناء…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="structured-data/entities-and-knowledge-graph/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="structured-data/entities-and-knowledge-graph/index.html">
+                                <h4 class="text-body" dir="ltr">Entities in SEO: Build a Strong Identity in Google’s Knowledge Graph</h4>
+                            </a>
+                            <p class="lead card-text">كل كيان (شخص، مكان، شيء) ليه صفحة في دماغ جوجل.
+                                في هذا الكلستر، هنتعلم يعني إيه “كيان”،
+                                وإزاي تربط موقعك بكيانات معروفة …</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="structured-data/entities-and-knowledge-graph/schema-and-eeat.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="structured-data/entities-and-knowledge-graph/schema-and-eeat.html">
+                                <h4 class="text-body" dir="ltr">Schema and E-E-A-T: Show Google You’re Trustworthy and Authoritative</h4>
+                            </a>
+                            <p class="lead card-text">Google بيدور على الخبرة والمصداقية (E-E-A-T).
+                                استخدام Schema بشكل صحيح بيقوّي انطباع جوجل عنك كخبير موثوق.
+                                هنعرف إزاي نر…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="structured-data/entities-and-knowledge-graph/using-sameas-property.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="structured-data/entities-and-knowledge-graph/using-sameas-property.html">
+                                <h4 class="text-body" dir="ltr">Using sameAs Property: Link Your Entity to Trusted Sources</h4>
+                            </a>
+                            <p class="lead card-text">لو عندك صفحة شخص أو شركة، لازم تربطها بمصادر معروفة.
+                                باستخدام sameAs، تقدر تقول لجوجل “أنا نفس الشخص اللي موجود هنا”.
+                                هن…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="structured-data/implementation-and-validation/debugging-structured-data.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="structured-data/implementation-and-validation/debugging-structured-data.html">
+                                <h4 class="text-body" dir="ltr">Debugging Structured Data: Fix Errors That Block Rich Results</h4>
+                            </a>
+                            <p class="lead card-text">أضفت Schema ومفيش حاجة ظهرت في البحث؟
+                                غالبًا فيه خطأ بسيط في البيانات.
+                                في المقال ده، هنشرح أدوات الفحص، أشهر الأخطاء، وإ…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="structured-data/implementation-and-validation/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="structured-data/implementation-and-validation/index.html">
+                                <h4 class="text-body" dir="ltr">How to Implement and Validate Structured Data the Right Way</h4>
+                            </a>
+                            <p class="lead card-text">كتابة البيانات المنظمة شيء… وتنفيذها الصحيح شيء تاني.
+                                في هذا الكلستر، هنتعلّم إزاي نضيف Schema باستخدام JSON-LD،
+                                ونستخدم…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="structured-data/implementation-and-validation/json-ld-vs-microdata-rdfa.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="structured-data/implementation-and-validation/json-ld-vs-microdata-rdfa.html">
+                                <h4 class="text-body" dir="ltr">JSON-LD vs Microdata vs RDFa: Which Format is Best for SEO?</h4>
+                            </a>
+                            <p class="lead card-text">فيه كذا طريقة تكتب بيها Schema، بس مش كلهم مفضلين.
+                                هنا بنقارن بين الطرق الثلاثة، وإيه اللي جوجل بيفضله، وليه بنوصي بـ JS…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="structured-data/schema-types/advanced-nesting.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="structured-data/schema-types/advanced-nesting.html">
+                                <h4 class="text-body" dir="ltr">Advanced Schema Nesting: Combine Multiple Types Without Conflicts</h4>
+                            </a>
+                            <p class="lead card-text">أحيانًا تحتاج تدمج أكثر من نوع Schema في نفس الصفحة.
+                                هنا هنتعلم إزاي تربط الأنواع المختلفة داخل كائن واحد، وتتفادى الأخط…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="structured-data/schema-types/article-and-news.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="structured-data/schema-types/article-and-news.html">
+                                <h4 class="text-body" dir="ltr">Article &amp; News Schema: How to Stand Out in Google News and Top Stories</h4>
+                            </a>
+                            <p class="lead card-text">لو بتكتب مقالات أو محتوى إخباري، النوع ده من Schema ضروري.
+                                بيزود فرص ظهور مقالاتك في قسم “Top Stories” وGoogle News.
+                                هنا…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="structured-data/schema-types/breadcrumbs.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="structured-data/schema-types/breadcrumbs.html">
+                                <h4 class="text-body" dir="ltr">Breadcrumbs Schema: Help Google Understand Your Site’s Structure</h4>
+                            </a>
+                            <p class="lead card-text">الـ Breadcrumb مش بس للمستخدم، لكن كمان مهم لجوجل عشان يعرف مكان الصفحة في الموقع.
+                                هنعرف إزاي تنفذه باستخدام Schema لعرض…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="structured-data/schema-types/faq-and-qa.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="structured-data/schema-types/faq-and-qa.html">
+                                <h4 class="text-body" dir="ltr">FAQ &amp; QA Schema: Appear in People Also Ask and Rich Answers</h4>
+                            </a>
+                            <p class="lead card-text">عندك صفحة فيها أسئلة وأجوبة؟
+                                النوع ده من Schema ممكن يظهر المحتوى بتاعك مباشرة في Snippets أو People Also Ask.
+                                في المقال…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="structured-data/schema-types/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="structured-data/schema-types/index.html">
+                                <h4 class="text-body" dir="ltr">Schema Types for SEO: Which Ones to Use and Why They Matter</h4>
+                            </a>
+                            <p class="lead card-text">مش كل Schema زي التاني… وبعضهم ليه تأثير مباشر على شكل ظهورك في النتائج.
+                                هنا بنراجع أشهر أنواع البيانات المنظمة، وفايدته…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="structured-data/schema-types/local-business.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="structured-data/schema-types/local-business.html">
+                                <h4 class="text-body" dir="ltr">Local Business Schema: Help Customers Discover and Trust Your Brand</h4>
+                            </a>
+                            <p class="lead card-text">لو عندك نشاط محلي، سواء عيادة أو مطعم أو متجر…
+                                LocalBusiness Schema بتقول لجوجل إنت فين، وساعات عملك، وتفاصيل تواصلك.
+                                هن…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="structured-data/schema-types/product-and-offers.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="structured-data/schema-types/product-and-offers.html">
+                                <h4 class="text-body" dir="ltr">Product and Offer Schema: Show Prices, Availability, and Ratings in Search</h4>
+                            </a>
+                            <p class="lead card-text">لو بتبيع أي منتج، النوع ده من Schema بيخلي منتجك يظهر بسعره وتقييمه في البحث.
+                                تعلم إزاي تضيف بيانات منظمة للمنتجات، وتحص…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="structured-data/how-to-get-rich-results.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="structured-data/how-to-get-rich-results.html">
+                                <h4 class="text-body" dir="ltr">How to Get Rich Results in Google Search Using Schema Markup</h4>
+                            </a>
+                            <p class="lead card-text">هدفنا من كل البيانات المنظمة؟
+                                نظهر بشكل أفضل في نتائج البحث.
+                                في هذا الدليل، هنتكلم عن أنواع النتائج المنسقة، شروط ظهورها…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="structured-data/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="structured-data/index.html">
+                                <h4 class="text-body" dir="ltr">Structured Data for SEO: The Ultimate Guide to Rich Snippets and Search Visibility</h4>
+                            </a>
+                            <p class="lead card-text">البيانات المنظمة (Structured Data) هي لغة التخاطب بين موقعك ومحرك البحث.
+                                في هذا الدليل الشامل، هتتعلم إزاي تستخدم Schema…</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav class="d-flex justify-content-center mt-3" data-bss-type="blog-loop-pagination">
+                <ul class="pagination">
+                    <li class="page-item disabled" data-type="prev" data-page="1"><a class="page-link" aria-label="Previous" href="#"><span aria-hidden="true">«</span></a></li>
+                    <li class="page-item active" data-type="regular" data-page="1"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item" data-type="regular" data-page="2"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item" data-type="regular" data-page="3"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item" data-type="next" data-page="2"><a class="page-link" aria-label="Next" href="#"><span aria-hidden="true">»</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="container my-5">
+        <h2>التحديثات والاتجاهات الحديثة</h2>
+        <p>خليك دايمًا سابق جوجل بخطوة</p>
+        <div data-bss-type="blog-loop" data-bss-perpage="3" class="mt-5">
+            <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-lg-3" data-bss-type="blog-loop-base">
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="trends-and-updates/ai-in-seo/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="trends-and-updates/ai-in-seo/index.html">
+                                <h4 class="text-body" dir="ltr">AI in SEO: How Generative Search and Machine Learning Are Changing Everything</h4>
+                            </a>
+                            <p class="lead card-text">الذكاء الاصطناعي دخل قلب SEO… من فهم النية، لتوليد الإجابات، وحتى ترتيب النتائج.
+                                في هذا الكلستر، بنغطي أدوات الذكاء الاص…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="trends-and-updates/case-studies/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="trends-and-updates/case-studies/index.html">
+                                <h4 class="text-body" dir="ltr">SEO Case Studies: Learn from Real Websites, Real Results</h4>
+                            </a>
+                            <p class="lead card-text">التجارب الواقعية هي أقوى مصدر تعليم.
+                                في هذا الكلستر، بنعرض حالات حقيقية لمواقع عربية وأجنبية،
+                                شوفنا فيها كيف تغيّر ترتيب…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item">
+                    <div class="card"><a href="trends-and-updates/google-updates/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="trends-and-updates/google-updates/index.html">
+                                <h4 class="text-body" dir="ltr">Google Algorithm Updates: Understand Core Changes and Stay Compliant</h4>
+                            </a>
+                            <p class="lead card-text">كل تحديث أساسي في خوارزميات Google ممكن يغيّر قواعد اللعبة.
+                                في هذا الكلستر، بنشرح التحديثات الأخيرة، تأثيرها على الترتيب…</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" data-bss-type="blog-loop-item" style="display: none !important;">
+                    <div class="card"><a href="trends-and-updates/index.html"><img class="card-img-top" src=""></a>
+                        <div class="card-body"><a href="trends-and-updates/index.html">
+                                <h4 class="text-body" dir="ltr">SEO Trends &amp; Google Updates: Stay Ahead with the Latest Changes</h4>
+                            </a>
+                            <p class="lead card-text">عالم SEO بيتغير باستمرار، وجوجل بتحدّث خوارزمياتها أكتر من 500 مرة سنويًا.
+                                في هذا القسم، بنرصد أهم الاتجاهات، التحديثات …</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav class="d-flex justify-content-center mt-3" data-bss-type="blog-loop-pagination">
+                <ul class="pagination">
+                    <li class="page-item disabled" data-type="prev" data-page="1"><a class="page-link" aria-label="Previous" href="#"><span aria-hidden="true">«</span></a></li>
+                    <li class="page-item active" data-type="regular" data-page="1"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item" data-type="regular" data-page="2"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item" data-type="next" data-page="2"><a class="page-link" aria-label="Next" href="#"><span aria-hidden="true">»</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../assets/js/bs-init.js"></script>
+</body>
+
+</html>
