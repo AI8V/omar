@@ -13,11 +13,19 @@
 
 .schema-suggestion {
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, box-shadow 0.2s;
 }
 
 .schema-suggestion:hover {
   background-color: var(--bs-tertiary-bg);
+}
+
+/* Accessibility Improvement: Visible focus state for custom button-like elements */
+
+.schema-suggestion:focus-visible {
+  outline: 2px solid var(--bs-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 .25rem rgba(var(--bs-primary-rgb), .25);
 }
 
 .schema-explanation {
@@ -32,3 +40,18 @@
   color: var(--bs-emphasis-color);
 }
 
+[dir="rtl"] .accordion-button::after {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+/* CHANGE: Added for better color contrast on prices/important text */
+
+.text-high-contrast-success {
+  color: var(--bs-success-text-emphasis);
+  font-weight: bold;
+}
+
+[data-bs-theme="dark"] .text-high-contrast-success {
+  color: #75b798;
+}
