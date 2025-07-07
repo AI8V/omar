@@ -1,0 +1,3747 @@
+[
+  {
+    "url": "/home",
+    "title": "The Tech Megasite - Homepage",
+    "seo": {
+      "internalLinkEquity": 1000,
+      "crawlDepth": 0,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/google",
+          "/ai",
+          "/gaming"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple",
+    "title": "Pillar: APPLE",
+    "seo": {
+      "internalLinkEquity": 800,
+      "crawlDepth": 1,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple/article-0",
+          "/apple/article-1",
+          "/apple/article-2",
+          "/apple/article-3",
+          "/apple/article-4",
+          "/apple/article-5",
+          "/apple/article-6",
+          "/apple/article-7",
+          "/apple/article-8",
+          "/apple/article-9",
+          "/apple/article-10",
+          "/apple/article-11",
+          "/apple/article-12",
+          "/apple/article-13",
+          "/apple/article-14",
+          "/apple/article-15",
+          "/apple/article-16",
+          "/apple/article-17",
+          "/apple/article-18",
+          "/apple/article-19",
+          "/apple/article-20",
+          "/apple/article-21",
+          "/apple/article-22",
+          "/apple/article-23",
+          "/apple/article-24",
+          "/apple/article-25",
+          "/apple/article-26",
+          "/apple/article-27",
+          "/apple/article-28",
+          "/apple/article-29",
+          "/apple/article-30",
+          "/apple/article-31",
+          "/apple/article-32",
+          "/apple/article-33",
+          "/apple/article-34",
+          "/apple/article-35",
+          "/apple/article-36",
+          "/apple/article-37",
+          "/apple/article-38",
+          "/apple/article-39",
+          "/apple/article-40",
+          "/apple/article-41",
+          "/apple/article-42",
+          "/apple/article-43",
+          "/apple/article-44",
+          "/apple/article-45",
+          "/apple/article-46",
+          "/apple/article-47",
+          "/apple/article-48",
+          "/apple/article-49",
+          "/google/article-2",
+          "/google/article-25",
+          "/ai/article-11",
+          "/gaming/article-4"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google",
+    "title": "Pillar: GOOGLE",
+    "seo": {
+      "internalLinkEquity": 800,
+      "crawlDepth": 1,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google/article-0",
+          "/google/article-1",
+          "/google/article-2",
+          "/google/article-3",
+          "/google/article-4",
+          "/google/article-5",
+          "/google/article-6",
+          "/google/article-7",
+          "/google/article-8",
+          "/google/article-9",
+          "/google/article-10",
+          "/google/article-11",
+          "/google/article-12",
+          "/google/article-13",
+          "/google/article-14",
+          "/google/article-15",
+          "/google/article-16",
+          "/google/article-17",
+          "/google/article-18",
+          "/google/article-19",
+          "/google/article-20",
+          "/google/article-21",
+          "/google/article-22",
+          "/google/article-23",
+          "/google/article-24",
+          "/google/article-25",
+          "/google/article-26",
+          "/google/article-27",
+          "/google/article-28",
+          "/google/article-29",
+          "/google/article-30",
+          "/google/article-31",
+          "/google/article-32",
+          "/google/article-33",
+          "/google/article-34",
+          "/google/article-35",
+          "/google/article-36",
+          "/google/article-37",
+          "/google/article-38",
+          "/google/article-39",
+          "/google/article-40",
+          "/google/article-41",
+          "/google/article-42",
+          "/google/article-43",
+          "/google/article-44",
+          "/google/article-45",
+          "/google/article-46",
+          "/google/article-47",
+          "/google/article-48",
+          "/google/article-49",
+          "/apple/article-33",
+          "/ai/article-17",
+          "/gaming/article-15"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai",
+    "title": "Pillar: AI",
+    "seo": {
+      "internalLinkEquity": 800,
+      "crawlDepth": 1,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai/article-0",
+          "/ai/article-1",
+          "/ai/article-2",
+          "/ai/article-3",
+          "/ai/article-4",
+          "/ai/article-5",
+          "/ai/article-6",
+          "/ai/article-7",
+          "/ai/article-8",
+          "/ai/article-9",
+          "/ai/article-10",
+          "/ai/article-11",
+          "/ai/article-12",
+          "/ai/article-13",
+          "/ai/article-14",
+          "/ai/article-15",
+          "/ai/article-16",
+          "/ai/article-17",
+          "/ai/article-18",
+          "/ai/article-19",
+          "/ai/article-20",
+          "/ai/article-21",
+          "/ai/article-22",
+          "/ai/article-23",
+          "/ai/article-24",
+          "/ai/article-25",
+          "/ai/article-26",
+          "/ai/article-27",
+          "/ai/article-28",
+          "/ai/article-29",
+          "/ai/article-30",
+          "/ai/article-31",
+          "/ai/article-32",
+          "/ai/article-33",
+          "/ai/article-34",
+          "/ai/article-35",
+          "/ai/article-36",
+          "/ai/article-37",
+          "/ai/article-38",
+          "/ai/article-39",
+          "/ai/article-40",
+          "/ai/article-41",
+          "/ai/article-42",
+          "/ai/article-43",
+          "/ai/article-44",
+          "/ai/article-45",
+          "/ai/article-46",
+          "/ai/article-47",
+          "/ai/article-48",
+          "/ai/article-49",
+          "/apple/article-40",
+          "/google/article-10",
+          "/gaming/article-22"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming",
+    "title": "Pillar: GAMING",
+    "seo": {
+      "internalLinkEquity": 800,
+      "crawlDepth": 1,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming/article-0",
+          "/gaming/article-1",
+          "/gaming/article-2",
+          "/gaming/article-3",
+          "/gaming/article-4",
+          "/gaming/article-5",
+          "/gaming/article-6",
+          "/gaming/article-7",
+          "/gaming/article-8",
+          "/gaming/article-9",
+          "/gaming/article-10",
+          "/gaming/article-11",
+          "/gaming/article-12",
+          "/gaming/article-13",
+          "/gaming/article-14",
+          "/gaming/article-15",
+          "/gaming/article-16",
+          "/gaming/article-17",
+          "/gaming/article-18",
+          "/gaming/article-19",
+          "/gaming/article-20",
+          "/gaming/article-21",
+          "/gaming/article-22",
+          "/gaming/article-23",
+          "/gaming/article-24",
+          "/gaming/article-25",
+          "/gaming/article-26",
+          "/gaming/article-27",
+          "/gaming/article-28",
+          "/gaming/article-29",
+          "/gaming/article-30",
+          "/gaming/article-31",
+          "/gaming/article-32",
+          "/gaming/article-33",
+          "/gaming/article-34",
+          "/gaming/article-35",
+          "/gaming/article-36",
+          "/gaming/article-37",
+          "/gaming/article-38",
+          "/gaming/article-39",
+          "/gaming/article-40",
+          "/gaming/article-41",
+          "/gaming/article-42",
+          "/gaming/article-43",
+          "/gaming/article-44",
+          "/gaming/article-45",
+          "/gaming/article-46",
+          "/gaming/article-47",
+          "/gaming/article-48",
+          "/gaming/article-49"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-0",
+    "title": "Article 0 about apple",
+    "seo": {
+      "internalLinkEquity": 105,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-17"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-1",
+    "title": "Article 1 about apple",
+    "seo": {
+      "internalLinkEquity": 37,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-1",
+          "/apple/article-41",
+          "/apple/article-16"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-2",
+    "title": "Article 2 about apple",
+    "seo": {
+      "internalLinkEquity": 71,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-35"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-3",
+    "title": "Article 3 about apple",
+    "seo": {
+      "internalLinkEquity": 107,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-10",
+          "/apple/article-22",
+          "/apple/article-40"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-4",
+    "title": "Article 4 about apple",
+    "seo": {
+      "internalLinkEquity": 27,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-25",
+          "/apple/article-37"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-5",
+    "title": "Article 5 about apple",
+    "seo": {
+      "internalLinkEquity": 22,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-31",
+          "/apple/article-10",
+          "/apple/article-12"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-6",
+    "title": "Article 6 about apple",
+    "seo": {
+      "internalLinkEquity": 70,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-32",
+          "/apple/article-48",
+          "/apple/article-44"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-7",
+    "title": "Article 7 about apple",
+    "seo": {
+      "internalLinkEquity": 77,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-7"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-8",
+    "title": "Article 8 about apple",
+    "seo": {
+      "internalLinkEquity": 53,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-9",
+    "title": "Article 9 about apple",
+    "seo": {
+      "internalLinkEquity": 99,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-27"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-10",
+    "title": "Article 10 about apple",
+    "seo": {
+      "internalLinkEquity": 39,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-36",
+          "/apple/article-16",
+          "/apple/article-39"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-11",
+    "title": "Article 11 about apple",
+    "seo": {
+      "internalLinkEquity": 76,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-26",
+          "/apple/article-28"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-12",
+    "title": "Article 12 about apple",
+    "seo": {
+      "internalLinkEquity": 71,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-41",
+          "/apple/article-29",
+          "/apple/article-16",
+          "/gaming/article-41"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-13",
+    "title": "Article 13 about apple",
+    "seo": {
+      "internalLinkEquity": 10,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-41"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-14",
+    "title": "Article 14 about apple",
+    "seo": {
+      "internalLinkEquity": 103,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-31"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-15",
+    "title": "Article 15 about apple",
+    "seo": {
+      "internalLinkEquity": 102,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-39",
+          "/apple/article-1"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-16",
+    "title": "Article 16 about apple",
+    "seo": {
+      "internalLinkEquity": 43,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-23",
+          "/apple/article-19"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-17",
+    "title": "Article 17 about apple",
+    "seo": {
+      "internalLinkEquity": 44,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-46",
+          "/apple/article-14"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-18",
+    "title": "Article 18 about apple",
+    "seo": {
+      "internalLinkEquity": 70,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-10"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-19",
+    "title": "Article 19 about apple",
+    "seo": {
+      "internalLinkEquity": 25,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-32",
+          "/apple/article-40",
+          "/google/article-42"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-20",
+    "title": "Article 20 about apple",
+    "seo": {
+      "internalLinkEquity": 56,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-44",
+          "/apple/article-41"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-21",
+    "title": "Article 21 about apple",
+    "seo": {
+      "internalLinkEquity": 42,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-28",
+          "/apple/article-45",
+          "/apple/article-32"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-22",
+    "title": "Article 22 about apple",
+    "seo": {
+      "internalLinkEquity": 43,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-31",
+          "/apple/article-27"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-23",
+    "title": "Article 23 about apple",
+    "seo": {
+      "internalLinkEquity": 68,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-24",
+    "title": "Article 24 about apple",
+    "seo": {
+      "internalLinkEquity": 70,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-1",
+          "/apple/article-34"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-25",
+    "title": "Article 25 about apple",
+    "seo": {
+      "internalLinkEquity": 41,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-34"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-26",
+    "title": "Article 26 about apple",
+    "seo": {
+      "internalLinkEquity": 88,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-27",
+    "title": "Article 27 about apple",
+    "seo": {
+      "internalLinkEquity": 55,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-14",
+          "/apple/article-7",
+          "/apple/article-34",
+          "/gaming/article-31"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-28",
+    "title": "Article 28 about apple",
+    "seo": {
+      "internalLinkEquity": 75,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-48"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-29",
+    "title": "Article 29 about apple",
+    "seo": {
+      "internalLinkEquity": 79,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-3",
+          "/apple/article-33"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-30",
+    "title": "Article 30 about apple",
+    "seo": {
+      "internalLinkEquity": 63,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-15",
+          "/apple/article-22",
+          "/apple/article-48"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-31",
+    "title": "Article 31 about apple",
+    "seo": {
+      "internalLinkEquity": 74,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-37",
+          "/apple/article-26",
+          "/apple/article-25",
+          "/apple/article-45"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-32",
+    "title": "Article 32 about apple",
+    "seo": {
+      "internalLinkEquity": 17,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-14",
+          "/apple/article-38"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-33",
+    "title": "Article 33 about apple",
+    "seo": {
+      "internalLinkEquity": 88,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-43",
+          "/apple/article-16",
+          "/apple/article-19",
+          "/google/article-36"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-34",
+    "title": "Article 34 about apple",
+    "seo": {
+      "internalLinkEquity": 60,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-3",
+          "/apple/article-18",
+          "/apple/article-31"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-35",
+    "title": "Article 35 about apple",
+    "seo": {
+      "internalLinkEquity": 85,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-44",
+          "/apple/article-20",
+          "/apple/article-32",
+          "/apple/article-34"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-36",
+    "title": "Article 36 about apple",
+    "seo": {
+      "internalLinkEquity": 43,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-24",
+          "/apple/article-33"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-37",
+    "title": "Article 37 about apple",
+    "seo": {
+      "internalLinkEquity": 80,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-19"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-38",
+    "title": "Article 38 about apple",
+    "seo": {
+      "internalLinkEquity": 105,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-30"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-39",
+    "title": "Article 39 about apple",
+    "seo": {
+      "internalLinkEquity": 93,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-48"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-40",
+    "title": "Article 40 about apple",
+    "seo": {
+      "internalLinkEquity": 43,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-34",
+          "/apple/article-43",
+          "/apple/article-47",
+          "/gaming/article-12"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-41",
+    "title": "Article 41 about apple",
+    "seo": {
+      "internalLinkEquity": 78,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-20"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-42",
+    "title": "Article 42 about apple",
+    "seo": {
+      "internalLinkEquity": 74,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-8"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-43",
+    "title": "Article 43 about apple",
+    "seo": {
+      "internalLinkEquity": 104,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-44",
+    "title": "Article 44 about apple",
+    "seo": {
+      "internalLinkEquity": 40,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-23"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-45",
+    "title": "Article 45 about apple",
+    "seo": {
+      "internalLinkEquity": 88,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-43",
+          "/apple/article-26"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-46",
+    "title": "Article 46 about apple",
+    "seo": {
+      "internalLinkEquity": 44,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-47",
+          "/apple/article-26",
+          "/apple/article-4"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-47",
+    "title": "Article 47 about apple",
+    "seo": {
+      "internalLinkEquity": 93,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-45",
+          "/apple/article-42"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-48",
+    "title": "Article 48 about apple",
+    "seo": {
+      "internalLinkEquity": 104,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-11"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/apple/article-49",
+    "title": "Article 49 about apple",
+    "seo": {
+      "internalLinkEquity": 14,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/apple",
+          "/apple/article-36",
+          "/apple/article-28",
+          "/apple/article-4"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-0",
+    "title": "Article 0 about google",
+    "seo": {
+      "internalLinkEquity": 52,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-32",
+          "/google/article-37"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-1",
+    "title": "Article 1 about google",
+    "seo": {
+      "internalLinkEquity": 27,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-22",
+          "/google/article-33"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-2",
+    "title": "Article 2 about google",
+    "seo": {
+      "internalLinkEquity": 103,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-3",
+    "title": "Article 3 about google",
+    "seo": {
+      "internalLinkEquity": 88,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-16",
+          "/google/article-18",
+          "/google/article-43",
+          "/ai/article-45"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-4",
+    "title": "Article 4 about google",
+    "seo": {
+      "internalLinkEquity": 99,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-17",
+          "/google/article-49",
+          "/google/article-19",
+          "/google/article-22"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-5",
+    "title": "Article 5 about google",
+    "seo": {
+      "internalLinkEquity": 72,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-45",
+          "/google/article-31"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-6",
+    "title": "Article 6 about google",
+    "seo": {
+      "internalLinkEquity": 63,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-10",
+          "/google/article-48"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-7",
+    "title": "Article 7 about google",
+    "seo": {
+      "internalLinkEquity": 43,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-30"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-8",
+    "title": "Article 8 about google",
+    "seo": {
+      "internalLinkEquity": 106,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-49",
+          "/google/article-39"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-9",
+    "title": "Article 9 about google",
+    "seo": {
+      "internalLinkEquity": 33,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-22",
+          "/google/article-32",
+          "/google/article-45",
+          "/google/article-30"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-10",
+    "title": "Article 10 about google",
+    "seo": {
+      "internalLinkEquity": 36,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-25",
+          "/google/article-48"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-11",
+    "title": "Article 11 about google",
+    "seo": {
+      "internalLinkEquity": 108,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-26",
+          "/google/article-24",
+          "/google/article-35"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-12",
+    "title": "Article 12 about google",
+    "seo": {
+      "internalLinkEquity": 43,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-15"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-13",
+    "title": "Article 13 about google",
+    "seo": {
+      "internalLinkEquity": 27,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-14",
+    "title": "Article 14 about google",
+    "seo": {
+      "internalLinkEquity": 96,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-37",
+          "/google/article-48",
+          "/google/article-47"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-15",
+    "title": "Article 15 about google",
+    "seo": {
+      "internalLinkEquity": 94,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-47"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-16",
+    "title": "Article 16 about google",
+    "seo": {
+      "internalLinkEquity": 99,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-35",
+          "/google/article-21"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-17",
+    "title": "Article 17 about google",
+    "seo": {
+      "internalLinkEquity": 55,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-18",
+    "title": "Article 18 about google",
+    "seo": {
+      "internalLinkEquity": 84,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-42",
+          "/google/article-48",
+          "/google/article-47"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-19",
+    "title": "Article 19 about google",
+    "seo": {
+      "internalLinkEquity": 79,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-49",
+          "/google/article-1"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-20",
+    "title": "Article 20 about google",
+    "seo": {
+      "internalLinkEquity": 27,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-40",
+          "/google/article-49"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-21",
+    "title": "Article 21 about google",
+    "seo": {
+      "internalLinkEquity": 21,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-12",
+          "/google/article-36",
+          "/google/article-22",
+          "/google/article-10"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-22",
+    "title": "Article 22 about google",
+    "seo": {
+      "internalLinkEquity": 105,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-4",
+          "/google/article-44",
+          "/google/article-40",
+          "/apple/article-1"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-23",
+    "title": "Article 23 about google",
+    "seo": {
+      "internalLinkEquity": 61,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-1",
+          "/google/article-40",
+          "/google/article-11",
+          "/apple/article-10"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-24",
+    "title": "Article 24 about google",
+    "seo": {
+      "internalLinkEquity": 29,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-13",
+          "/google/article-14",
+          "/gaming/article-24"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-25",
+    "title": "Article 25 about google",
+    "seo": {
+      "internalLinkEquity": 36,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-46"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-26",
+    "title": "Article 26 about google",
+    "seo": {
+      "internalLinkEquity": 31,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-20",
+          "/google/article-18"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-27",
+    "title": "Article 27 about google",
+    "seo": {
+      "internalLinkEquity": 72,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-15",
+          "/google/article-40",
+          "/google/article-36"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-28",
+    "title": "Article 28 about google",
+    "seo": {
+      "internalLinkEquity": 88,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-49",
+          "/google/article-2",
+          "/google/article-41",
+          "/gaming/article-10"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-29",
+    "title": "Article 29 about google",
+    "seo": {
+      "internalLinkEquity": 71,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-30",
+    "title": "Article 30 about google",
+    "seo": {
+      "internalLinkEquity": 31,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-15",
+          "/google/article-48"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-31",
+    "title": "Article 31 about google",
+    "seo": {
+      "internalLinkEquity": 32,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-48"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-32",
+    "title": "Article 32 about google",
+    "seo": {
+      "internalLinkEquity": 17,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-20",
+          "/google/article-39"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-33",
+    "title": "Article 33 about google",
+    "seo": {
+      "internalLinkEquity": 76,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-34",
+    "title": "Article 34 about google",
+    "seo": {
+      "internalLinkEquity": 55,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-49",
+          "/google/article-18"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-35",
+    "title": "Article 35 about google",
+    "seo": {
+      "internalLinkEquity": 60,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-2",
+          "/google/article-41"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-36",
+    "title": "Article 36 about google",
+    "seo": {
+      "internalLinkEquity": 88,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-38"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-37",
+    "title": "Article 37 about google",
+    "seo": {
+      "internalLinkEquity": 105,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-38"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-38",
+    "title": "Article 38 about google",
+    "seo": {
+      "internalLinkEquity": 60,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-40",
+          "/google/article-24"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-39",
+    "title": "Article 39 about google",
+    "seo": {
+      "internalLinkEquity": 62,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-17",
+          "/google/article-32"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-40",
+    "title": "Article 40 about google",
+    "seo": {
+      "internalLinkEquity": 109,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-28",
+          "/google/article-21"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-41",
+    "title": "Article 41 about google",
+    "seo": {
+      "internalLinkEquity": 38,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-15",
+          "/google/article-35"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-42",
+    "title": "Article 42 about google",
+    "seo": {
+      "internalLinkEquity": 37,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-43",
+          "/google/article-16",
+          "/google/article-41"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-43",
+    "title": "Article 43 about google",
+    "seo": {
+      "internalLinkEquity": 89,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-42",
+          "/google/article-11"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-44",
+    "title": "Article 44 about google",
+    "seo": {
+      "internalLinkEquity": 55,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-27"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-45",
+    "title": "Article 45 about google",
+    "seo": {
+      "internalLinkEquity": 93,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-49"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-46",
+    "title": "Article 46 about google",
+    "seo": {
+      "internalLinkEquity": 43,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-37",
+          "/google/article-13",
+          "/google/article-32"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-47",
+    "title": "Article 47 about google",
+    "seo": {
+      "internalLinkEquity": 62,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-40",
+          "/google/article-48"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-48",
+    "title": "Article 48 about google",
+    "seo": {
+      "internalLinkEquity": 64,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-27",
+          "/google/article-20",
+          "/google/article-23"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/google/article-49",
+    "title": "Article 49 about google",
+    "seo": {
+      "internalLinkEquity": 88,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/google",
+          "/google/article-47"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-0",
+    "title": "Article 0 about ai",
+    "seo": {
+      "internalLinkEquity": 99,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-13"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-1",
+    "title": "Article 1 about ai",
+    "seo": {
+      "internalLinkEquity": 55,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-16",
+          "/ai/article-23",
+          "/ai/article-21",
+          "/ai/article-4"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-2",
+    "title": "Article 2 about ai",
+    "seo": {
+      "internalLinkEquity": 51,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-35",
+          "/ai/article-46"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-3",
+    "title": "Article 3 about ai",
+    "seo": {
+      "internalLinkEquity": 71,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-14",
+          "/ai/article-7",
+          "/ai/article-47",
+          "/google/article-29"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-4",
+    "title": "Article 4 about ai",
+    "seo": {
+      "internalLinkEquity": 105,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-27"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-5",
+    "title": "Article 5 about ai",
+    "seo": {
+      "internalLinkEquity": 59,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-45",
+          "/ai/article-12",
+          "/ai/article-32"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-6",
+    "title": "Article 6 about ai",
+    "seo": {
+      "internalLinkEquity": 27,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-31",
+          "/ai/article-42",
+          "/ai/article-1"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-7",
+    "title": "Article 7 about ai",
+    "seo": {
+      "internalLinkEquity": 33,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-18",
+          "/ai/article-14",
+          "/ai/article-35"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-8",
+    "title": "Article 8 about ai",
+    "seo": {
+      "internalLinkEquity": 61,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-23",
+          "/ai/article-1"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-9",
+    "title": "Article 9 about ai",
+    "seo": {
+      "internalLinkEquity": 28,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-47"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-10",
+    "title": "Article 10 about ai",
+    "seo": {
+      "internalLinkEquity": 33,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-13",
+          "/ai/article-46",
+          "/apple/article-19"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-11",
+    "title": "Article 11 about ai",
+    "seo": {
+      "internalLinkEquity": 103,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-48"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-12",
+    "title": "Article 12 about ai",
+    "seo": {
+      "internalLinkEquity": 55,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-31"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-13",
+    "title": "Article 13 about ai",
+    "seo": {
+      "internalLinkEquity": 74,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-14",
+    "title": "Article 14 about ai",
+    "seo": {
+      "internalLinkEquity": 99,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-40",
+          "/ai/article-2"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-15",
+    "title": "Article 15 about ai",
+    "seo": {
+      "internalLinkEquity": 99,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-18",
+          "/ai/article-11"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-16",
+    "title": "Article 16 about ai",
+    "seo": {
+      "internalLinkEquity": 63,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-49",
+          "/ai/article-8"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-17",
+    "title": "Article 17 about ai",
+    "seo": {
+      "internalLinkEquity": 89,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-2",
+          "/ai/article-40"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-18",
+    "title": "Article 18 about ai",
+    "seo": {
+      "internalLinkEquity": 94,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-23"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-19",
+    "title": "Article 19 about ai",
+    "seo": {
+      "internalLinkEquity": 99,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-24",
+          "/ai/article-36"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-20",
+    "title": "Article 20 about ai",
+    "seo": {
+      "internalLinkEquity": 82,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-21",
+    "title": "Article 21 about ai",
+    "seo": {
+      "internalLinkEquity": 109,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-23",
+          "/ai/article-42",
+          "/ai/article-39"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-22",
+    "title": "Article 22 about ai",
+    "seo": {
+      "internalLinkEquity": 55,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-24",
+          "/ai/article-7",
+          "/ai/article-40"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-23",
+    "title": "Article 23 about ai",
+    "seo": {
+      "internalLinkEquity": 25,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-20",
+          "/ai/article-42"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-24",
+    "title": "Article 24 about ai",
+    "seo": {
+      "internalLinkEquity": 109,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-13",
+          "/ai/article-34",
+          "/apple/article-22"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-25",
+    "title": "Article 25 about ai",
+    "seo": {
+      "internalLinkEquity": 37,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-26",
+          "/ai/article-20"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-26",
+    "title": "Article 26 about ai",
+    "seo": {
+      "internalLinkEquity": 104,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-27",
+    "title": "Article 27 about ai",
+    "seo": {
+      "internalLinkEquity": 27,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-43",
+          "/ai/article-49"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-28",
+    "title": "Article 28 about ai",
+    "seo": {
+      "internalLinkEquity": 69,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-1",
+          "/ai/article-14",
+          "/google/article-40"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-29",
+    "title": "Article 29 about ai",
+    "seo": {
+      "internalLinkEquity": 37,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-12",
+          "/ai/article-34"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-30",
+    "title": "Article 30 about ai",
+    "seo": {
+      "internalLinkEquity": 27,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-44",
+          "/ai/article-17"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-31",
+    "title": "Article 31 about ai",
+    "seo": {
+      "internalLinkEquity": 43,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-32",
+    "title": "Article 32 about ai",
+    "seo": {
+      "internalLinkEquity": 25,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-4",
+          "/ai/article-27"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-33",
+    "title": "Article 33 about ai",
+    "seo": {
+      "internalLinkEquity": 29,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-29",
+          "/ai/article-22",
+          "/ai/article-16"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-34",
+    "title": "Article 34 about ai",
+    "seo": {
+      "internalLinkEquity": 105,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-31",
+          "/ai/article-38"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-35",
+    "title": "Article 35 about ai",
+    "seo": {
+      "internalLinkEquity": 71,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-46",
+          "/ai/article-28"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-36",
+    "title": "Article 36 about ai",
+    "seo": {
+      "internalLinkEquity": 22,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-37",
+    "title": "Article 37 about ai",
+    "seo": {
+      "internalLinkEquity": 61,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-12",
+          "/ai/article-25",
+          "/ai/article-35"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-38",
+    "title": "Article 38 about ai",
+    "seo": {
+      "internalLinkEquity": 43,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-31"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-39",
+    "title": "Article 39 about ai",
+    "seo": {
+      "internalLinkEquity": 99,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-25",
+          "/ai/article-27"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-40",
+    "title": "Article 40 about ai",
+    "seo": {
+      "internalLinkEquity": 93,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-3",
+          "/ai/article-4"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-41",
+    "title": "Article 41 about ai",
+    "seo": {
+      "internalLinkEquity": 79,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-17",
+          "/ai/article-19",
+          "/ai/article-42"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-42",
+    "title": "Article 42 about ai",
+    "seo": {
+      "internalLinkEquity": 99,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-1",
+          "/ai/article-43",
+          "/google/article-38"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-43",
+    "title": "Article 43 about ai",
+    "seo": {
+      "internalLinkEquity": 13,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-15",
+          "/ai/article-4"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-44",
+    "title": "Article 44 about ai",
+    "seo": {
+      "internalLinkEquity": 97,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-24",
+          "/ai/article-21"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-45",
+    "title": "Article 45 about ai",
+    "seo": {
+      "internalLinkEquity": 27,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-15"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-46",
+    "title": "Article 46 about ai",
+    "seo": {
+      "internalLinkEquity": 74,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-47",
+          "/ai/article-21"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-47",
+    "title": "Article 47 about ai",
+    "seo": {
+      "internalLinkEquity": 105,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-45",
+          "/ai/article-44",
+          "/apple/article-18"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-48",
+    "title": "Article 48 about ai",
+    "seo": {
+      "internalLinkEquity": 107,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-37",
+          "/ai/article-27",
+          "/ai/article-44"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/ai/article-49",
+    "title": "Article 49 about ai",
+    "seo": {
+      "internalLinkEquity": 61,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/ai",
+          "/ai/article-19",
+          "/ai/article-10"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-0",
+    "title": "Article 0 about gaming",
+    "seo": {
+      "internalLinkEquity": 90,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-4",
+          "/gaming/article-42",
+          "/gaming/article-13"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-1",
+    "title": "Article 1 about gaming",
+    "seo": {
+      "internalLinkEquity": 75,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-4",
+          "/gaming/article-28"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-2",
+    "title": "Article 2 about gaming",
+    "seo": {
+      "internalLinkEquity": 12,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-23"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-3",
+    "title": "Article 3 about gaming",
+    "seo": {
+      "internalLinkEquity": 17,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-4",
+    "title": "Article 4 about gaming",
+    "seo": {
+      "internalLinkEquity": 108,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-39",
+          "/gaming/article-21"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-5",
+    "title": "Article 5 about gaming",
+    "seo": {
+      "internalLinkEquity": 88,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-32",
+          "/gaming/article-35"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-6",
+    "title": "Article 6 about gaming",
+    "seo": {
+      "internalLinkEquity": 19,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-32",
+          "/gaming/article-23"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-7",
+    "title": "Article 7 about gaming",
+    "seo": {
+      "internalLinkEquity": 105,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-42",
+          "/gaming/article-47",
+          "/google/article-32"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-8",
+    "title": "Article 8 about gaming",
+    "seo": {
+      "internalLinkEquity": 27,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-20",
+          "/gaming/article-44",
+          "/gaming/article-12",
+          "/gaming/article-46"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-9",
+    "title": "Article 9 about gaming",
+    "seo": {
+      "internalLinkEquity": 61,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-41",
+          "/gaming/article-39",
+          "/gaming/article-15"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-10",
+    "title": "Article 10 about gaming",
+    "seo": {
+      "internalLinkEquity": 102,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-1",
+          "/gaming/article-19",
+          "/gaming/article-20"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-11",
+    "title": "Article 11 about gaming",
+    "seo": {
+      "internalLinkEquity": 93,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-20"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-12",
+    "title": "Article 12 about gaming",
+    "seo": {
+      "internalLinkEquity": 74,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-13",
+    "title": "Article 13 about gaming",
+    "seo": {
+      "internalLinkEquity": 88,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-25",
+          "/gaming/article-24"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-14",
+    "title": "Article 14 about gaming",
+    "seo": {
+      "internalLinkEquity": 82,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-44"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-15",
+    "title": "Article 15 about gaming",
+    "seo": {
+      "internalLinkEquity": 74,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-37",
+          "/gaming/article-43",
+          "/gaming/article-36"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-16",
+    "title": "Article 16 about gaming",
+    "seo": {
+      "internalLinkEquity": 75,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-36",
+          "/gaming/article-48"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-17",
+    "title": "Article 17 about gaming",
+    "seo": {
+      "internalLinkEquity": 27,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-42",
+          "/gaming/article-25"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-18",
+    "title": "Article 18 about gaming",
+    "seo": {
+      "internalLinkEquity": 52,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-40",
+          "/gaming/article-25"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-19",
+    "title": "Article 19 about gaming",
+    "seo": {
+      "internalLinkEquity": 61,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-20",
+          "/gaming/article-40",
+          "/gaming/article-27"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-20",
+    "title": "Article 20 about gaming",
+    "seo": {
+      "internalLinkEquity": 39,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-20"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-21",
+    "title": "Article 21 about gaming",
+    "seo": {
+      "internalLinkEquity": 105,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-43",
+          "/gaming/article-38",
+          "/google/article-13"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-22",
+    "title": "Article 22 about gaming",
+    "seo": {
+      "internalLinkEquity": 109,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-41",
+          "/gaming/article-27",
+          "/gaming/article-29",
+          "/gaming/article-26"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-23",
+    "title": "Article 23 about gaming",
+    "seo": {
+      "internalLinkEquity": 74,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-35"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-24",
+    "title": "Article 24 about gaming",
+    "seo": {
+      "internalLinkEquity": 63,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-37",
+          "/gaming/article-17"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-25",
+    "title": "Article 25 about gaming",
+    "seo": {
+      "internalLinkEquity": 104,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-32",
+          "/gaming/article-35",
+          "/gaming/article-30"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-26",
+    "title": "Article 26 about gaming",
+    "seo": {
+      "internalLinkEquity": 63,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-3",
+          "/gaming/article-22",
+          "/gaming/article-34"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-27",
+    "title": "Article 27 about gaming",
+    "seo": {
+      "internalLinkEquity": 18,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-18",
+          "/gaming/article-21",
+          "/gaming/article-40"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-28",
+    "title": "Article 28 about gaming",
+    "seo": {
+      "internalLinkEquity": 84,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-28",
+          "/gaming/article-1"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-29",
+    "title": "Article 29 about gaming",
+    "seo": {
+      "internalLinkEquity": 77,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-21"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-30",
+    "title": "Article 30 about gaming",
+    "seo": {
+      "internalLinkEquity": 102,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-31",
+    "title": "Article 31 about gaming",
+    "seo": {
+      "internalLinkEquity": 27,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-40",
+          "/gaming/article-21"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-32",
+    "title": "Article 32 about gaming",
+    "seo": {
+      "internalLinkEquity": 94,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-3",
+          "/gaming/article-31"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-33",
+    "title": "Article 33 about gaming",
+    "seo": {
+      "internalLinkEquity": 105,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-46"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-34",
+    "title": "Article 34 about gaming",
+    "seo": {
+      "internalLinkEquity": 72,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-12",
+          "/gaming/article-40"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-35",
+    "title": "Article 35 about gaming",
+    "seo": {
+      "internalLinkEquity": 99,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-4",
+          "/gaming/article-40",
+          "/google/article-44"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-36",
+    "title": "Article 36 about gaming",
+    "seo": {
+      "internalLinkEquity": 55,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-11"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-37",
+    "title": "Article 37 about gaming",
+    "seo": {
+      "internalLinkEquity": 37,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-38",
+    "title": "Article 38 about gaming",
+    "seo": {
+      "internalLinkEquity": 70,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-39",
+    "title": "Article 39 about gaming",
+    "seo": {
+      "internalLinkEquity": 61,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-40",
+    "title": "Article 40 about gaming",
+    "seo": {
+      "internalLinkEquity": 96,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-24",
+          "/gaming/article-16",
+          "/apple/article-17"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-41",
+    "title": "Article 41 about gaming",
+    "seo": {
+      "internalLinkEquity": 103,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-28",
+          "/gaming/article-49"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-42",
+    "title": "Article 42 about gaming",
+    "seo": {
+      "internalLinkEquity": 104,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-23",
+          "/gaming/article-2"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-43",
+    "title": "Article 43 about gaming",
+    "seo": {
+      "internalLinkEquity": 80,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-33",
+          "/gaming/article-25",
+          "/gaming/article-44",
+          "/google/article-27"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-44",
+    "title": "Article 44 about gaming",
+    "seo": {
+      "internalLinkEquity": 74,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-42"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-45",
+    "title": "Article 45 about gaming",
+    "seo": {
+      "internalLinkEquity": 104,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-46",
+    "title": "Article 46 about gaming",
+    "seo": {
+      "internalLinkEquity": 43,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-47",
+    "title": "Article 47 about gaming",
+    "seo": {
+      "internalLinkEquity": 86,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-46",
+          "/gaming/article-49"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-48",
+    "title": "Article 48 about gaming",
+    "seo": {
+      "internalLinkEquity": 108,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming",
+          "/gaming/article-15"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/gaming/article-49",
+    "title": "Article 49 about gaming",
+    "seo": {
+      "internalLinkEquity": 12,
+      "crawlDepth": 2,
+      "contentAnalysis": {
+        "outgoingInternalLinks": [
+          "/gaming"
+        ]
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-0",
+    "title": "Legacy Article 0 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-1",
+    "title": "Legacy Article 1 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-2",
+    "title": "Legacy Article 2 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-3",
+    "title": "Legacy Article 3 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-4",
+    "title": "Legacy Article 4 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-5",
+    "title": "Legacy Article 5 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-6",
+    "title": "Legacy Article 6 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-7",
+    "title": "Legacy Article 7 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-8",
+    "title": "Legacy Article 8 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-9",
+    "title": "Legacy Article 9 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-10",
+    "title": "Legacy Article 10 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-11",
+    "title": "Legacy Article 11 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-12",
+    "title": "Legacy Article 12 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-13",
+    "title": "Legacy Article 13 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-14",
+    "title": "Legacy Article 14 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-15",
+    "title": "Legacy Article 15 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-16",
+    "title": "Legacy Article 16 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-17",
+    "title": "Legacy Article 17 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-18",
+    "title": "Legacy Article 18 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/blackberry/old-article-19",
+    "title": "Legacy Article 19 on blackberry",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-0",
+    "title": "Legacy Article 0 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-1",
+    "title": "Legacy Article 1 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-2",
+    "title": "Legacy Article 2 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-3",
+    "title": "Legacy Article 3 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-4",
+    "title": "Legacy Article 4 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-5",
+    "title": "Legacy Article 5 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-6",
+    "title": "Legacy Article 6 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-7",
+    "title": "Legacy Article 7 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-8",
+    "title": "Legacy Article 8 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-9",
+    "title": "Legacy Article 9 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-10",
+    "title": "Legacy Article 10 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-11",
+    "title": "Legacy Article 11 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-12",
+    "title": "Legacy Article 12 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-13",
+    "title": "Legacy Article 13 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-14",
+    "title": "Legacy Article 14 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-15",
+    "title": "Legacy Article 15 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-16",
+    "title": "Legacy Article 16 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-17",
+    "title": "Legacy Article 17 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-18",
+    "title": "Legacy Article 18 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  },
+  {
+    "url": "/windows-phone/old-article-19",
+    "title": "Legacy Article 19 on windows-phone",
+    "seo": {
+      "isOrphan": true,
+      "internalLinkEquity": 5,
+      "crawlDepth": 99,
+      "contentAnalysis": {
+        "outgoingInternalLinks": []
+      }
+    }
+  }
+]
