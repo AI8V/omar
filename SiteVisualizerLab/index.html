@@ -244,6 +244,22 @@
             <button class="btn btn-outline-danger remove-cluster-rule-btn" type="button" title="إزالة القاعدة"><i class="bi bi-trash"></i></button>
         </div>
     </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:1100;">
+        <div class="toast jello animated hide" role="alert" data-bs-animation="false" id="appToast" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header"><i id="toast-icon" class="bi rounded ms-2"></i><strong class="mx-auto" id="toast-title"></strong><button class="btn-close ms-0" type="button" data-bs-dismiss="toast" aria-label="Close"></button></div>
+            <div class="toast-body" role="alert" id="toast-body"></div>
+        </div>
+    </div>
+    
+    <!-- Template for cluster rules -->
+    <div id="cluster-rule-template" class="d-none">
+        <div class="input-group input-group-sm mb-2 cluster-rule-item">
+            <input type="color" class="form-control-color cluster-color-input" value="#ff0000" title="اختر لون المجموعة">
+            <input type="text" class="form-control cluster-regex-input" placeholder="تعبير نمطي (Regex)..." dir="ltr">
+            <button class="btn btn-outline-danger remove-cluster-rule-btn" type="button" title="إزالة القاعدة"><i class="bi bi-trash"></i></button>
+        </div>
+    </div>
     <script src="../assets/bootstrap/js/bootstrap.min.js" defer></script>
     <script src="../assets/js/bs-init.js" defer></script>
     <script src="../assets/js/SiteVisualizerLab/enhancements.js" defer></script>
