@@ -200,8 +200,44 @@
         const sortedPages = Object.entries(filteredData.pageCounts).sort(([, a], [, b]) => b.count - a.count).slice(0, 25);
         topPagesBody.innerHTML = sortedPages.length > 0
             ? sortedPages.map(([page, pageData], index) => {
-                const topIps = Object.entries(pageData.ips).sort(([, a], [, b]) => b - a).slice(0, 3).map(([ip, count]) => `${ip} <span class="badge bg-secondary-subtle text-secondary-emphasis rounded-pill">${count}</span>`).join('<br>');
-                return `<tr><td>${index + 1}</td><td class="text-start" dir="ltr">${page}</td><td class="text-center">${pageData.count.toLocaleString()}</td><td class="text-center" dir="ltr">${topIps || ''}</td></tr>`;
+                // الكود الجديد - انسخ هذا والصقه مكان الكود القديم
+                const topIpsHtml = Object.entries(pageData.ips)
+                    .sort(([, a], [, b]) => b - a)
+                    .slice(0, 3)
+                    .map(([ip, count]) => {
+                        // بناء الرابط الآمن للتحقق من IP
+                        const verificationUrl = `https://mxtoolbox.com/SuperTool.aspx?action=ptr:${encodeURIComponent(ip)}&run=toolpage`;
+                        
+                        // بناء HTML لكل IP مع زر التحقق
+                        // نستخدم `gap-2` لإضافة مسافة بسيطة بين عدد الزيارات والزر
+                        return `
+                            <div class="d-flex justify-content-between align-items-center py-1">
+                                <code dir="ltr">${ip}</code>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-light text-dark border border-secondary-subtle rounded-pill">${count.toLocaleString()}</span>
+                                    <a href="${verificationUrl}" 
+                                       target="_blank" 
+                                       rel="noopener noreferrer" 
+                                       class="btn btn-outline-secondary btn-sm p-0 px-1" 
+                                       style="line-height: 1;"
+                                       title="التحقق من هذا الـ IP باستخدام MXToolbox (يفتح في نافذة جديدة)"
+                                       aria-label="التحقق من IP ${ip}">
+                                        <i class="bi bi-shield-check" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    })
+                    .join('<hr class="my-1">'); // استخدام فاصل <hr> أنيق بين كل IP
+                
+                return `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td class="text-start" dir="ltr" style="max-width: 300px; word-wrap: break-word;">${page}</td>
+                        <td class="text-center">${pageData.count.toLocaleString()}</td>
+                        <td class="text-center" style="min-width: 220px;">${topIpsHtml || ''}</td>
+                    </tr>
+                `;
             }).join('')
             : `<tr><td colspan="4" class="text-center text-muted">لم يتم العثور على زيارات مطابقة لهذا الفلتر.</td></tr>`;
 
