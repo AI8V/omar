@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // Init Web Worker
             try {
-                visualizerWorker = new Worker('assets/js/visualizer-worker.js');
+                visualizerWorker = new Worker('../assets/js/SiteVisualizerLab/visualizer-worker.js');
                 visualizerWorker.onmessage = (e) => {
                     this.setLoadingState(false);
                     const { status, data, message } = e.data;
