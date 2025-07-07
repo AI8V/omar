@@ -274,7 +274,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
             
             dom.loadSampleDataBtn.addEventListener('click', () => {
-                fetch('assets/js/SiteVisualizerLab/sample-data.json')
+                fetch('../assets/js/SiteVisualizerLab/sample-data.json')
                     .then(res => res.ok ? res.text() : Promise.reject('فشل تحميل الملف التجريبي.'))
                     .then(data => {
                         dom.jsonInput.value = data;
