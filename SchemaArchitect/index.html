@@ -160,39 +160,104 @@
         <div class="dropdown-menu"><button aria-pressed="false" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" type="button"><i aria-hidden="true" class="bi bi-sun-fill opacity-50 ms-2"></i>Light</button><button class="active dropdown-item d-flex align-items-center" aria-pressed="true" data-bs-theme-value="dark" type="button"><i aria-hidden="true" class="bi bi-moon-stars-fill opacity-50 ms-2"></i>Dark</button><button aria-pressed="false" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" type="button"><i aria-hidden="true" class="bi bi-circle-half opacity-50 ms-2"></i>Auto</button></div>
     </div>
     <main class="container-fluid g-0">
-        <h1 class="visually-hidden">أداة مُصمم السكيما (Schema Architect Tool)</h1>
-        <div class="row g-0" style="min-height:calc(100vh - 56px);">
-            <div class="col-lg-3 p-4 bg-body-tertiary border-end">
-                <h2 class="h4 mb-4"><i class="bi bi-sliders ms-2" aria-hidden="true"></i> لوحة التحكم</h2>
-                <div class="mb-3"><label class="form-label fw-bold" for="urlInput">رابط الصفحة</label><input type="url" class="form-control" dir="ltr" id="urlInput" placeholder="https://example.com/..."></div>
-                <div class="text-center text-muted my-2 small"><span>أو</span></div>
-                <div class="mb-3"><label class="form-label fw-bold" for="htmlContentInput">الصق كود HTML</label><textarea class="form-control" dir="ltr" id="htmlContentInput" placeholder="<html>...</html>" rows="8"></textarea></div>
-                <div class="d-grid mt-4"><button class="btn btn-primary btn-lg" id="analyzeBtn"><i class="bi bi-cpu-fill ms-2" aria-hidden="true"></i> فك شفرة المحتوى </button></div>
-                <hr class="my-4">
-                <h3 class="h5">خيارات متقدمة</h3>
-                <div class="form-check form-switch"><input type="checkbox" checked="" class="form-check-input" id="autoDetectSwitch" role="switch"><label class="form-check-label" for="autoDetectSwitch">اكتشاف تلقائي للسكيما</label></div>
-            </div>
-            <div class="col-lg-5 p-4 analysis-column">
-                <h2 class="h4 mb-4"><i class="bi bi-diagram-3-fill ms-2" aria-hidden="true"></i> تشريح المحتوى والكيانات</h2>
-                <div id="analysisResults" style="max-height:80vh;overflow-y:auto;">
-                    <div class="text-center text-muted d-flex flex-column justify-content-center align-items-center p-5 h-100"><i class="bi bi-binoculars-fill" style="font-size:4rem;" aria-hidden="true"></i>
-                        <p class="fs-5 mt-3">في انتظار المحتوى لعرض الكيانات المقترحة وبنية السكيما...</p>
+    <h1 class="visually-hidden">أداة مُصمم السكيما (Schema Architect Tool)</h1>
+    <div class="row g-0" style="min-height: calc(100vh - 56px);">
+        <div class="col-lg-3 p-4 bg-body-tertiary border-end">
+            <h2 class="h4 mb-4"><i class="bi bi-sliders ms-2" aria-hidden="true"></i> لوحة التحكم</h2>
+            <div class="mb-3"><label class="form-label fw-bold" for="urlInput">رابط الصفحة</label><input id="urlInput" class="form-control" type="url" dir="ltr" placeholder="https://example.com/..." /></div>
+            <div class="text-center text-muted my-2 small"><span>أو</span></div>
+            <div class="mb-3"><label class="form-label fw-bold" for="htmlContentInput">الصق كود HTML</label><textarea id="htmlContentInput" class="form-control" dir="ltr" placeholder="&lt;html&gt;...&lt;/html&gt;" rows="4"></textarea></div>
+            <div class="d-grid mt-4"><button id="analyzeBtn" class="btn btn-primary btn-lg"><i class="bi bi-cpu-fill ms-2" aria-hidden="true"></i> فك شفرة المحتوى </button></div>
+            <hr class="my-4" />
+            <h3 class="h5">خيارات متقدمة</h3>
+            <div class="form-check form-switch mb-3"><input id="autoDetectSwitch" class="form-check-input" type="checkbox" checked role="switch" /><label class="form-check-label" for="autoDetectSwitch">اكتشاف تلقائي للسكيما</label></div>
+            <div id="customIdentifiersAccordion" class="accordion" role="tablist">
+                <div class="accordion-item">
+                    <h2 id="headingFaq" class="accordion-header" role="tab"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaq" aria-expanded="true" aria-controls="collapseFaq"><i class="bi bi-patch-question-fill ms-2"></i>مُعرّفات الأسئلة (FAQ) </button></h2>
+                    <div id="collapseFaq" class="accordion-collapse collapse show item-1 show" role="tabpanel" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingFaq">
+                        <div class="accordion-body">
+                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customFaqItem" style="width: 110px;">حاوي الـ FAQ</label><input id="customFaqItem" class="form-control form-control" type="text" dir="ltr" placeholder=".accordion-item" /></div>
+                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customFaqQuestion" style="width: 110px;">محدد السؤال</label><input id="customFaqQuestion" class="form-control form-control" type="text" dir="ltr" placeholder=".accordion-button" /></div>
+                            <div class="input-group input-group-sm"><label class="input-group-text input-group-text" for="customFaqAnswer" style="width: 110px;">محدد الجواب</label><input id="customFaqAnswer" class="form-control form-control" type="text" dir="ltr" placeholder=".accordion-body" /></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 id="headingProduct" class="accordion-header" role="tab"><button class="accordion-button collapsed collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProduct" aria-expanded="false" aria-controls="collapseProduct"><i class="bi bi-box-seam-fill ms-2"></i>مُعرّفات المنتج </button></h2>
+                    <div id="collapseProduct" class="accordion-collapse collapse item-2" role="tabpanel" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingProduct">
+                        <div class="accordion-body">
+                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customProductPrice" style="width: 110px;">السعر</label><input id="customProductPrice" class="form-control form-control" type="text" dir="ltr" placeholder=".price" /></div>
+                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customProductCurrency" style="width: 110px;">العملة</label><input id="customProductCurrency" class="form-control form-control" type="text" dir="ltr" placeholder="USD, SAR, EGP" /></div>
+                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customProductSku" style="width: 110px;">SKU</label><input id="customProductSku" class="form-control form-control" type="text" dir="ltr" placeholder=".sku" /></div>
+                            <div class="input-group input-group-sm"><label class="input-group-text input-group-text" for="customProductBrand" style="width: 110px;">العلامة التجارية</label><input id="customProductBrand" class="form-control form-control" type="text" dir="ltr" placeholder=".brand" /></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 id="headingRecipe" class="accordion-header" role="tab"><button class="accordion-button collapsed collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRecipe" aria-expanded="false" aria-controls="collapseRecipe"><i class="bi bi-egg-fried ms-2"></i>مُعرّفات الوصفة </button></h2>
+                    <div id="collapseRecipe" class="accordion-collapse collapse item-3" role="tabpanel" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingRecipe">
+                        <div class="accordion-body">
+                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customRecipePrepTime" style="width: 110px;">وقت التحضير</label><input id="customRecipePrepTime" class="form-control form-control" type="text" dir="ltr" placeholder=".prep-time" /></div>
+                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customRecipeCookTime" style="width: 110px;">وقت الطهي</label><input id="customRecipeCookTime" class="form-control form-control" type="text" dir="ltr" placeholder=".cook-time" /></div>
+                            <div class="input-group input-group-sm"><label class="input-group-text input-group-text" for="customRecipeIngredients" style="width: 110px;">المكونات (LI)</label><input id="customRecipeIngredients" class="form-control form-control" type="text" dir="ltr" placeholder=".ingredients li" /></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 id="headingHowTo" class="accordion-header" role="tab"><button class="accordion-button collapsed collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHowTo" aria-expanded="false" aria-controls="collapseHowTo"><i class="bi bi-list-ol ms-2"></i>مُعرّفات الإرشادات </button></h2>
+                    <div id="collapseHowTo" class="accordion-collapse collapse item-4" role="tabpanel" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingHowTo">
+                        <div class="accordion-body">
+                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customHowToStep" style="width: 110px;">حاوي الخطوة</label><input id="customHowToStep" class="form-control form-control" type="text" dir="ltr" placeholder=".step-item" /></div>
+                            <div class="input-group input-group-sm"><label class="input-group-text input-group-text" for="customHowToText" style="width: 110px;">نص الخطوة</label><input id="customHowToText" class="form-control form-control" type="text" dir="ltr" placeholder=".step-text" /></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 id="headingEvent" class="accordion-header" role="tab"><button class="accordion-button collapsed collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEvent" aria-expanded="false" aria-controls="collapseEvent"><i class="bi bi-calendar-event-fill ms-2"></i>مُعرّفات الحدث (Event) </button></h2>
+                    <div id="collapseEvent" class="accordion-collapse collapse item-5" role="tabpanel" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingEvent">
+                        <div class="accordion-body">
+                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customEventStartDate" style="width: 110px;">تاريخ البدء</label><input id="customEventStartDate" class="form-control form-control" type="text" dir="ltr" placeholder=".event-start-date" /></div>
+                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customEventLocation" style="width: 110px;">المكان</label><input id="customEventLocation" class="form-control form-control" type="text" dir="ltr" placeholder=".location, .venue" /></div>
+                            <div class="input-group input-group-sm"><label class="input-group-text input-group-text" for="customEventOrganizer" style="width: 110px;">المنظم</label><input id="customEventOrganizer" class="form-control form-control" type="text" dir="ltr" placeholder=".organizer" /></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 id="headingOrg" class="accordion-header" role="tab"><button class="accordion-button collapsed collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOrg" aria-expanded="false" aria-controls="collapseOrg"><i class="bi bi-building-fill ms-2"></i>مُعرّفات المنظمة </button></h2>
+                    <div id="collapseOrg" class="accordion-collapse collapse item-6" role="tabpanel" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingOrg">
+                        <div class="accordion-body">
+                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customOrgLogo" style="width: 110px;">شعار (URL)</label><input id="customOrgLogo" class="form-control form-control" type="text" dir="ltr" placeholder="img.logo[src]" /></div>
+                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customOrgAddress" style="width: 110px;">العنوان</label><input id="customOrgAddress" class="form-control form-control" type="text" dir="ltr" placeholder=".address" /></div>
+                            <div class="input-group input-group-sm"><label class="input-group-text input-group-text" for="customOrgTelephone" style="width: 110px;">هاتف</label><input id="customOrgTelephone" class="form-control form-control" type="text" dir="ltr" placeholder="a[href^=&#39;tel:&#39;]" /></div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 p-4 bg-body-tertiary border-start">
-                <h2 class="h4 mb-4"><i class="bi bi-file-earmark-code-fill ms-2" aria-hidden="true"></i> المُخرج النهائي (JSON-LD)</h2>
-                <div class="card shadow-sm">
-                    <div class="card-header d-flex justify-content-between align-items-center code-header"><span class="fw-bold">schema.jsonld</span><button class="btn btn-success btn-sm disabled disabled" id="copyBtn" disabled=""><i class="bi bi-clipboard-check ms-1" aria-hidden="true"></i> نسخ </button></div>
-                    <div class="card-body p-0"><textarea class="border-0 form-control" dir="ltr" id="generatedCode" placeholder="سيظهر الكود هنا..." readonly="" rows="20"></textarea></div>
-                </div>
-                <div id="sge-preview" class="mt-4">
-                    <h3 class="h6">معاينة محتملة في Google SGE</h3>
-                    <div class="alert alert-info small" role="alert"><i class="bi bi-robot ms-2" aria-hidden="true"></i><span>هذه معاينة تخيلية لكيفية استخدام جوجل لهذه البيانات المنظمة لتوليد إجابات مباشرة.</span></div>
+        </div>
+        <div class="col-lg-5 p-4 analysis-column">
+            <h2 class="h4 mb-4"><i class="bi bi-diagram-3-fill ms-2" aria-hidden="true"></i> تشريح المحتوى والكيانات</h2>
+            <div id="analysisResults" style="max-height: 80vh;overflow-y: auto;">
+                <div class="text-center text-muted d-flex flex-column justify-content-center align-items-center p-5 h-100"><i class="bi bi-binoculars-fill" style="font-size: 4rem;" aria-hidden="true"></i>
+                    <p class="fs-5 mt-3">في انتظار المحتوى لعرض الكيانات المقترحة وبنية السكيما...</p>
                 </div>
             </div>
         </div>
-    </main>
+        <div class="col-lg-4 p-4 bg-body-tertiary border-start">
+            <h2 class="h4 mb-4"><i class="bi bi-file-earmark-code-fill ms-2" aria-hidden="true"></i> المُخرج النهائي (JSON-LD)</h2>
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center code-header"><span class="fw-bold">schema.jsonld</span>
+                    <div class="btn-group" role="group"><button id="copyBtn" class="btn btn-success btn-sm disabled disabled disabled" disabled><i class="bi bi-clipboard-check ms-1" aria-hidden="true"></i> نسخ </button><button id="downloadBtn" class="btn btn-secondary btn-sm disabled disabled disabled" disabled><i class="bi bi-download ms-1" aria-hidden="true"></i> تحميل </button><button id="validateBtn" class="btn btn-info btn-sm disabled disabled disabled" disabled><i class="bi bi-google ms-1" aria-hidden="true"></i> تحقق </button></div>
+                </div>
+                <div class="card-body p-0"><textarea id="generatedCode" class="border-0 form-control" dir="ltr" placeholder="سيظهر الكود هنا..." readonly rows="15"></textarea></div>
+            </div>
+            <div id="sge-preview" class="mt-4" style="display: none;">
+                <h3 class="h6"><i class="text-warning bi bi-stars ms-2"></i>معاينة محتملة في Google SGE</h3>
+                <div class="alert alert-info small" role="alert"><i class="bi bi-robot ms-2" aria-hidden="true"></i><span>هذه معاينة تخيلية لكيفية استخدام جوجل لهذه البيانات المنظمة لتوليد إجابات مباشرة.</span></div>
+                <div id="sge-preview-content"></div>
+            </div>
+        </div>
+    </div>
+</main>
     <footer class="text-center text-lg-start bg-body-tertiary mt-auto border-top mt-5 pt-5">
         <h2 class="visually-hidden">تذييل الموقع ومعلومات إضافية</h2>
         <div class="container p-4">
