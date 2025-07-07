@@ -166,15 +166,30 @@
         <div class="row g-0 full-height-row">
             <div class="col-12 col-lg-3 p-4 control-column bg-body-tertiary">
                 <h2 class="h4 mb-4"><i class="bi bi-upload ms-2" aria-hidden="true"></i> تحميل بيانات الزحف</h2>
-                <p class="text-muted small"> قم بتصدير نتائج الزحف كملف `JSON` من الأداة الكاملة، ثم قم بلصق المحتوى هنا أو ارفع الملف مباشرة. </p>
-                <div class="mb-3"><label class="form-label fw-bold" for="jsonInput">1. الصق محتوى JSON</label><textarea class="form-control" dir="ltr" id="jsonInput" placeholder="[ ... ]" rows="10"></textarea></div>
+                <p class="text-muted small">ابدأ الآن: الصق بيانات JSON، أو ارفع ملف الزحف مباشرة. ندعم search-index.json من أداتنا، بالإضافة إلى تصديرات Screaming Frog (internal_all.csv) وغيرها.</p>
+                <div class="mb-3"><label class="form-label fw-bold" for="jsonInput">1. الصق محتوى JSON</label><textarea class="form-control" dir="ltr" id="jsonInput" placeholder="[ ... ]" rows="8"></textarea></div>
                 <div class="text-center text-muted my-2 small"><span>أو</span></div>
-                <div class="mb-3"><label class="form-label fw-bold" for="fileInput">2. ارفع ملف search-index.json</label><input type="file" accept="application/json,.json" class="form-control" id="fileInput"></div>
-                <div class="d-grid mt-4"><button class="btn btn-primary btn-lg disabled disabled" id="renderBtn" disabled=""><i class="bi bi-play-fill me-2" aria-hidden="true"></i> عرض وتحليل البنية </button></div>
+                <div class="mb-3"><label class="form-label fw-bold" for="fileInput">2. ارفع ملفًا</label><input type="file" accept="application/json,.json,.csv" class="form-control" id="fileInput"></div>
+                <div class="d-grid mt-4 gap-2"><button class="btn btn-primary btn-lg disabled" id="renderBtn" disabled><span class="spinner-border spinner-border-sm me-2 d-none" role="status" aria-hidden="true"></span><span class="btn-text"><i class="bi bi-play-fill ms-2" aria-hidden="true"></i> عرض وتحليل البنية</span> </button><button class="btn btn-outline-secondary" id="loadSampleDataBtn" type="button"><i class="bi bi-magic ms-2"></i>تجربة ببيانات عينة</button></div>
                 <hr class="my-4">
                 <h3 class="h5">طبقات التحليل</h3>
-                <div class="btn-group w-100 mb-2" role="group" aria-label="View Modes"><button class="btn btn-secondary active" type="button" data-view-mode="linkEquity"><i class="bi bi-link-45deg ms-2" aria-hidden="true"></i>قوة الروابط</button><button class="btn btn-secondary" type="button" data-view-mode="crawlDepth"><i class="bi bi-distribute-vertical ms-2" aria-hidden="true"></i>عمق الزحف</button><button class="btn btn-secondary" type="button" data-view-mode="topicCluster"><i class="bi bi-palette-fill ms-2" aria-hidden="true"></i>المجموعات</button></div>
-                <div class="d-grid gap-2"><button class="btn btn-secondary d-none" id="toggleLabelsBtn" type="button"><i class="bi bi-chat-text ms-2"></i>إخفاء العناوين</button><button class="btn btn-outline-info d-none" id="togglePhysicsBtn" type="button"><i class="bi bi-activity ms-2"></i>إعادة تفعيل الحركة</button></div>
+                <div class="btn-group w-100 mb-2" role="group" aria-label="View Modes" id="view-modes-group"><button class="btn btn-secondary active" type="button" data-view-mode="linkEquity" title="عرض الصفحات حسب حالتها (عادية، يتيمة، noindex)"><i class="bi bi-link-45deg ms-2" aria-hidden="true"></i>قوة الروابط</button><button class="btn btn-secondary" type="button" data-view-mode="crawlDepth" title="عرض الصفحات حسب بعدها عن الصفحة الرئيسية"><i class="bi bi-distribute-vertical ms-2" aria-hidden="true"></i>عمق الزحف</button><button class="btn btn-secondary" type="button" data-view-mode="topicCluster" title="عرض الصفحات مجمعة حسب القسم"><i class="bi bi-palette-fill ms-2" aria-hidden="true"></i>المجموعات</button></div>
+                <div id="view-legend" class="p-2 my-2 rounded-2" aria-live="polite"></div>
+                <div class="d-none mt-3" id="topic-cluster-controls">
+                    <h4 class="h6">إعدادات المجموعات الموضوعية</h4>
+                    <p class="small text-muted">عرّف مجموعات باستخدام التعابير النمطية (Regex). سيتم تلوين الروابط التي تطابق النمط باللون المحدد. (مثال: `\/blog\/.*` لكل مقالات المدونة)</p>
+                    <div id="cluster-rules-container"></div>
+                    <div class="d-flex gap-2 mt-2"><button class="btn btn-sm btn-outline-success" id="addClusterRuleBtn" type="button"><i class="bi bi-plus-lg ms-1"></i> إضافة قاعدة</button><button class="btn btn-sm btn-primary" id="applyClusterRulesBtn" type="button"><i class="bi bi-check-lg ms-1"></i> تطبيق</button></div>
+                </div>
+                <hr class="my-4">
+                <h3 class="h5">أدوات التحكم بالرسم</h3>
+                <div class="d-grid gap-2 mb-2">
+                    <button class="btn btn-secondary d-none" id="toggleLabelsBtn" type="button"><i class="bi bi-chat-text ms-2"></i>إخفاء العناوين</button>
+                    <button class="btn btn-outline-info d-none" id="togglePhysicsBtn" type="button"><i class="bi bi-activity ms-2"></i>إعادة تفعيل الحركة</button>
+                </div>
+                <div class="d-grid">
+                    <button class="btn btn-outline-secondary d-none" id="clusterGraphBtn" type="button"><i class="bi bi-grid-3x3-gap-fill ms-2"></i> تجميع العقد الكبيرة</button>
+                </div>
             </div>
             <div class="col-12 col-lg-6 visualizer-column position-relative">
                 <h2 class="visually-hidden">الخريطة البصرية للموقع</h2><button class="btn btn-dark btn-sm d-none position-absolute top-0 end-0 m-2" id="fullscreenBtn" style="z-index:10;" title="وضع ملء الشاشة"><i class="bi bi-arrows-fullscreen"></i></button>
@@ -184,14 +199,28 @@
                 </div>
             </div>
             <div class="col-12 col-lg-3 p-4 bg-body-tertiary border-start" id="visualizer-sidebar">
-                <h2 class="visually-hidden">تفاصيل وتحليلات الخريطة</h2>
-                <div class="flex-shrink-0 border-bottom pb-3">
-                    <h3 class="fw-bold text-primary h6">ملخص التحليل</h3>
+                <div class="flex-shrink-0 border-bottom pb-3 mb-3">
+                    <h3 class="fw-bold text-primary h6 mb-0">ملخص التحليل</h3>
                     <div class="text-muted d-flex justify-content-between small mt-2"><span>إجمالي الصفحات:</span><strong id="visualizer-total-pages">0</strong></div>
                     <div class="text-muted d-flex justify-content-between small"><span>إجمالي الروابط:</span><strong id="visualizer-total-links">0</strong></div>
                 </div>
-                <div class="d-flex flex-column flex-grow-1 pt-3" style="min-height:0;">
-                    <h3 class="flex-shrink-0 h6 mb-3">قائمة الصفحات (مرتبة بالأهمية)</h3><input class="form-control-sm flex-shrink-0 form-control mb-2" type="search" id="visualizer-search" placeholder="ابحث عن صفحة...">
+                <div class="flex-shrink-0 border-bottom pb-3 mb-3" id="node-inspector" aria-live="polite">
+                    <div id="inspector-placeholder">
+                        <h3 class="h6">تفاصيل الصفحة</h3>
+                        <p class="text-muted small mb-0">انقر على أي صفحة في الخريطة لعرض تفاصيلها هنا.</p>
+                    </div>
+                    <div class="d-none" id="inspector-details">
+                        <h3 class="text-truncate h6 mb-2" id="inspector-title" title="عنوان الصفحة"></h3>
+                        <div class="d-flex flex-column gap-1 small">
+                            <div class="d-flex justify-content-between"><span class="text-muted">عمق الزحف:</span><strong id="inspector-depth"></strong></div>
+                            <div class="d-flex justify-content-between"><span class="text-muted">الروابط الداخلية الواردة:</span><strong id="inspector-inlinks"></strong></div>
+                            <div class="d-flex justify-content-between"><span class="text-muted">الروابط الداخلية الصادرة:</span><strong id="inspector-outlinks"></strong></div>
+                            <div class="d-flex justify-content-between"><span class="text-muted">الحالة:</span><strong id="inspector-status"></strong></div><a class="btn btn-outline-primary btn-sm mt-2" role="button" id="inspector-url" href="#" target="_blank" rel="noopener noreferrer" dir="ltr">فتح الرابط <i class="bi bi-box-arrow-up-right ms-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column flex-grow-1" style="min-height:0;">
+                    <h3 class="flex-shrink-0 h6 mb-3">قائمة الصفحات (مرتبة بالأهمية)</h3><input class="form-control-sm flex-shrink-0 form-control mb-2" type="search" dir="rtl" id="visualizer-search" placeholder="ابحث عن صفحة...">
                     <div id="visualizer-page-list-container">
                         <ul class="list-group list-group-flush" id="visualizer-page-list"></ul>
                     </div>
@@ -199,8 +228,25 @@
             </div>
         </div>
     </main>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:1100;">
+        <div class="toast jello animated hide" role="alert" data-bs-animation="false" id="appToast" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header"><i id="toast-icon" class="bi rounded ms-2"></i><strong class="mx-auto" id="toast-title"></strong><button class="btn-close ms-0" type="button" data-bs-dismiss="toast" aria-label="Close"></button></div>
+            <div class="toast-body" role="alert" id="toast-body"></div>
+        </div>
+    </div>
+    
+    <!-- Template for cluster rules -->
+    <div id="cluster-rule-template" class="d-none">
+        <div class="input-group input-group-sm mb-2 cluster-rule-item">
+            <input type="color" class="form-control-color cluster-color-input" value="#ff0000" title="اختر لون المجموعة">
+            <input type="text" class="form-control cluster-regex-input" placeholder="تعبير نمطي (Regex)..." dir="ltr">
+            <button class="btn btn-outline-danger remove-cluster-rule-btn" type="button" title="إزالة القاعدة"><i class="bi bi-trash"></i></button>
+        </div>
+    </div>
     <script src="../assets/bootstrap/js/bootstrap.min.js" defer></script>
     <script src="../assets/js/bs-init.js" defer></script>
+    <script src="assets/js/SiteVisualizerLab/enhancements.js" defer></script>
     <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js" defer></script>
     <script src="../assets/js/SiteVisualizerLab/site-visualizer-lab.js" defer></script>
 </body>
