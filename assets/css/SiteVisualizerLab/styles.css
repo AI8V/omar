@@ -52,8 +52,6 @@ main.container-fluid {
   overflow-y: auto;
 }
 
-/* ---[ وضع ملء الشاشة ]--- */
-
 body.fullscreen-mode .control-column, body.fullscreen-mode #visualizer-sidebar, body.fullscreen-mode .navbar {
   display: none !important;
 }
@@ -68,8 +66,6 @@ body.fullscreen-mode .visualizer-column {
   padding: 0 !important;
   z-index: 1000;
 }
-
-/* ---[ إصلاح الموبايل ]--- */
 
 @media (max-width: 991.98px) {
   html, body {
@@ -99,3 +95,68 @@ body.fullscreen-mode .visualizer-column {
   }
 }
 
+#view-legend {
+  background-color: var(--bs-body-bg);
+  border: 1px solid var(--bs-border-color-translucent);
+  font-size: 0.8rem;
+  transition: background-color 0.3s ease;
+}
+
+#view-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+#view-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+#view-legend .legend-color-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+#node-inspector h3 {
+  word-break: break-all;
+}
+
+#inspector-details strong {
+  color: var(--bs-primary);
+}
+
+#visualizer-page-list .list-group-item-action {
+  cursor: pointer;
+}
+
+/* Updated grid layout for render button */
+
+.d-grid.gap-2 {
+  grid-template-columns: 1fr auto;
+}
+
+.d-grid.gap-2 > .btn-outline-secondary {
+  padding-left: .75rem;
+  padding-right: .75rem;
+}
+
+/* Styles for Regex Cluster Controls */
+
+#topic-cluster-controls {
+  border: 1px solid var(--bs-border-color-translucent);
+  padding: 0.75rem;
+  border-radius: var(--bs-border-radius);
+  background-color: var(--bs-body-bg);
+}
+
+.cluster-rule-item .form-control-color {
+  max-width: 50px;
+}
