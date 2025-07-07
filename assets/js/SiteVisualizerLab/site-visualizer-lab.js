@@ -1,33 +1,37 @@
-// Mind & Machine - Site Visualizer Lab v5.2 (The Final Countdown Fix)
-console.log("✅ Site Visualizer Lab v5.2 (The Final Countdown Fix) is loading...");
+// Mind & Machine - Site Visualizer Lab v6.0 (The Architect Update)
+console.log("✅ Site Visualizer Lab v6.0 (The Architect Update) is loading...");
 
 document.addEventListener("DOMContentLoaded", function() {
     'use strict';
+    
+    const CLUSTER_THRESHOLD = 500; // Nodes above this will trigger clustering option
 
-    // ===================================================================
-    //  1. DOM Element Caching & State
-    // ===================================================================
-    let network = null;
-    let fullSearchIndex = [];
-    let currentNodes = null; 
-    let currentEdges = null;
-    let areLabelsVisible = true;
-    let originalNodeSettings = {};
-    let isPhysicsEnabled = true;
+    // State is managed globally for simplicity and inter-script communication
+    window.svl = {
+        network: null,
+        fullSearchIndex: [],
+        currentNodes: null,
+        currentEdges: null,
+        areLabelsVisible: true,
+        originalNodeSettings: {},
+        isPhysicsEnabled: true,
+        isClustered: false,
+    };
 
-    // ... DOM element constants ...
-    const jsonInput = document.getElementById('jsonInput');
-    const fileInput = document.getElementById('fileInput');
-    const renderBtn = document.getElementById('renderBtn');
-    const graphContainer = document.getElementById('site-graph-container');
-    const placeholder = document.getElementById('visualizerPlaceholder');
-    const viewModeButtons = document.querySelectorAll('[data-view-mode]');
-    const searchInput = document.getElementById('visualizer-search');
-    const toggleLabelsBtn = document.getElementById('toggleLabelsBtn');
-    const togglePhysicsBtn = document.getElementById('togglePhysicsBtn');
-    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    const dom = {
+        jsonInput: document.getElementById('jsonInput'),
+        fileInput: document.getElementById('fileInput'),
+        renderBtn: document.getElementById('renderBtn'),
+        graphContainer: document.getElementById('site-graph-container'),
+        placeholder: document.getElementById('visualizerPlaceholder'),
+        viewModeButtons: document.querySelectorAll('[data-view-mode]'),
+        searchInput: document.getElementById('visualizer-search'),
+        toggleLabelsBtn: document.getElementById('toggleLabelsBtn'),
+        togglePhysicsBtn: document.getElementById('togglePhysicsBtn'),
+        fullscreenBtn: document.getElementById('fullscreenBtn'),
+        clusterGraphBtn: document.getElementById('clusterGraphBtn'),
+    };
 
-    // ... Helper functions (sanitizeHTML, etc) ...
     function sanitizeHTML(str) {
         if (typeof str !== 'string' || !str) return '';
         const temp = document.createElement('div');
@@ -37,22 +41,23 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function truncateLabel(str, maxLength = 25) {
         if (!str || typeof str !== 'string') return '';
-        if (str.length <= maxLength) return str;
-        return str.substring(0, maxLength) + '…';
+        return str.length > maxLength ? str.substring(0, maxLength) + '…' : str;
     }
 
     const getDepthColor = (depth) => {
-        if (!fullSearchIndex || fullSearchIndex.length === 0) return '#cccccc';
-        const validDepths = fullSearchIndex.map(p => p.seo?.crawlDepth).filter(d => typeof d === 'number');
+        if (depth === null || typeof depth === 'undefined') return '#cccccc';
+        if (!window.svl.fullSearchIndex || window.svl.fullSearchIndex.length === 0) return '#cccccc';
+        const validDepths = window.svl.fullSearchIndex.map(p => p.seo?.crawlDepth).filter(d => typeof d === 'number');
         if (validDepths.length === 0) return '#cccccc';
         const maxDepth = Math.max(0, ...validDepths);
-        if (depth === 0) return '#28a745'; 
+        if (depth === 0) return '#28a745';
         if (maxDepth <= 1) return '#0dcaf0';
         const percentage = depth / maxDepth;
-        if (percentage <= 0.33) return '#0dcaf0'; 
+        if (percentage <= 0.33) return '#0dcaf0';
         if (percentage <= 0.66) return '#ffc107';
         return '#dc3545';
     };
+    window.svl.getDepthColor = getDepthColor;
 
     const stringToColor = (str) => {
         let hash = 0; if (!str) return '#cccccc';
@@ -61,14 +66,15 @@ document.addEventListener("DOMContentLoaded", function() {
             const value = (hash >> (i * 8)) & 0xFF; color += `00${value.toString(16)}`.slice(-2);
         } return color;
     };
-    
+    window.svl.stringToColor = stringToColor;
+
     function populateSidebar(searchIndex, edges) {
         document.getElementById('visualizer-total-pages').textContent = searchIndex.length;
         document.getElementById('visualizer-total-links').textContent = edges.length;
         const pageList = document.getElementById('visualizer-page-list');
         pageList.innerHTML = '';
         const fragment = document.createDocumentFragment();
-        const sortedIndex = searchIndex.slice().sort((a, b) => (b.seo?.internalLinkEquity || 0) - (a.seo?.internalLinkEquity || 0));
+        const sortedIndex = [...searchIndex].sort((a, b) => (b.seo?.internalLinkEquity || 0) - (a.seo?.internalLinkEquity || 0));
 
         sortedIndex.forEach(page => {
             const li = document.createElement('li');
@@ -85,258 +91,226 @@ document.addEventListener("DOMContentLoaded", function() {
             badgeSpan.textContent = page.seo?.internalLinkEquity || 0;
             li.appendChild(titleSpan);
             li.appendChild(badgeSpan);
-            li.addEventListener('click', () => focusOnNode(page.url));
+            li.addEventListener('click', () => {
+                if (window.svl.network && page.url) {
+                    window.svl.network.focus(page.url, { scale: 1.2, animation: true });
+                    window.svl.network.selectNodes([page.url]);
+                }
+            });
             fragment.appendChild(li);
         });
         pageList.appendChild(fragment);
     }
-     
-    function focusOnNode(nodeId) {
-        if (network && nodeId) {
-            network.selectNodes([nodeId]);
-        }
-    }
 
     function getFontSettings() {
         const isDarkMode = document.documentElement.getAttribute('data-bs-theme') === 'dark';
-        if (isDarkMode) {
-            return { color: '#FFFFFF', face: 'Tahoma', strokeWidth: 2, strokeColor: '#212529', size: 14 };
-        } else {
-            return { color: '#212529', face: 'Tahoma', strokeWidth: 4, strokeColor: '#FFFFFF', size: 14 };
-        }
+        return isDarkMode
+            ? { color: '#FFFFFF', face: 'Tahoma', strokeWidth: 2, strokeColor: '#212529', size: 14 }
+            : { color: '#212529', face: 'Tahoma', strokeWidth: 4, strokeColor: '#FFFFFF', size: 14 };
     }
-    
-    // ===================================================================
-    //  3. Core Logic
-    // ===================================================================
+    window.svl.getFontSettings = getFontSettings;
 
-    function processAndRender(jsonDataString) {
+    function resetUI() {
+        if (window.svl.network) {
+            window.svl.network.destroy();
+            window.svl.network = null;
+        }
+        Object.assign(window.svl, { fullSearchIndex: [], originalNodeSettings: {}, isClustered: false });
+        
+        dom.graphContainer.classList.add('d-none');
+        dom.placeholder.classList.remove('d-none');
+        dom.toggleLabelsBtn.classList.add('d-none');
+        dom.togglePhysicsBtn.classList.add('d-none');
+        dom.fullscreenBtn.classList.add('d-none');
+        dom.clusterGraphBtn.classList.add('d-none');
+
+        document.getElementById('visualizer-page-list').innerHTML = '';
+        document.getElementById('visualizer-total-pages').textContent = '0';
+        document.getElementById('visualizer-total-links').textContent = '0';
+        dom.searchInput.value = '';
+    }
+
+    function renderFromProcessedData({ fullSearchIndex, edges }) {
         try {
-            // Nuke all previous state. This part is correct.
-            if (network) network.destroy();
-            network = null;
-            fullSearchIndex = [];
-            originalNodeSettings = {};
-            currentNodes = new vis.DataSet();
-            currentEdges = new vis.DataSet();
-            document.getElementById('visualizer-page-list').innerHTML = '';
-            document.getElementById('visualizer-total-pages').textContent = '0';
-            document.getElementById('visualizer-total-links').textContent = '0';
-            document.getElementById('visualizer-search').value = '';
-
-            const data = JSON.parse(jsonDataString);
-            if (!Array.isArray(data) || data.length === 0) throw new Error("بيانات JSON غير صالحة أو فارغة.");
-            fullSearchIndex = data.filter(item => item && item.url); 
-            if (fullSearchIndex.length === 0) throw new Error("لم يتم العثور على صفحات صالحة (تحتوي على url) في البيانات.");
-
-            placeholder.classList.add('d-none');
-            graphContainer.classList.remove('d-none');
+            resetUI();
+            window.svl.fullSearchIndex = fullSearchIndex;
             
-            toggleLabelsBtn.classList.remove('d-none');
-            togglePhysicsBtn.classList.remove('d-none');
-            fullscreenBtn.classList.remove('d-none');
-            
-            viewModeButtons.forEach(btn => btn.classList.remove('active'));
+            dom.placeholder.classList.add('d-none');
+            dom.graphContainer.classList.remove('d-none');
+            dom.toggleLabelsBtn.classList.remove('d-none');
+            dom.togglePhysicsBtn.classList.remove('d-none');
+            dom.fullscreenBtn.classList.remove('d-none');
+
+            dom.viewModeButtons.forEach(btn => btn.classList.remove('active'));
             document.querySelector('[data-view-mode="linkEquity"]').classList.add('active');
 
-            createGraphData();
-            updateNodeDisplay('linkEquity'); 
+            createGraphData(edges);
+            updateNodeDisplay('linkEquity');
             renderGraph();
-
+            
         } catch (e) {
-            alert(`خطأ في معالجة البيانات: ${e.message}`);
-            console.error("Processing Error:", e);
-            graphContainer.classList.add('d-none');
-            placeholder.classList.remove('d-none');
-            toggleLabelsBtn.classList.add('d-none');
-            togglePhysicsBtn.classList.add('d-none');
-            fullscreenBtn.classList.add('d-none');
+            resetUI();
+            window.showToast?.(e.message, 'error');
+            console.error("Rendering Error:", e);
         }
     }
-    
-     function createGraphData() {
+    window.svl.renderFromProcessedData = renderFromProcessedData;
+
+    function createGraphData(edges) {
+        window.svl.currentNodes = new vis.DataSet();
+        window.svl.currentEdges = new vis.DataSet(edges);
+        
         const fontSettings = getFontSettings();
-        const newNodes = fullSearchIndex.map(page => {
+        const newNodes = window.svl.fullSearchIndex.map(page => {
             const tooltipElement = document.createElement('div');
             const pageTitle = page.title || page.url;
             const internalLinkEquity = page.seo?.internalLinkEquity || 0;
             const crawlDepth = page.seo?.crawlDepth ?? 'N/A';
-            const value = 1 + internalLinkEquity;
-            const safeTitle = sanitizeHTML(pageTitle);
-            tooltipElement.innerHTML = `<b>${safeTitle}</b><br>الروابط الواردة: ${internalLinkEquity}<br>العمق: ${crawlDepth}`;
-            return { id: page.url, value, title: tooltipElement, label: truncateLabel(pageTitle), font: { ...fontSettings } };
-        });
-        currentNodes.add(newNodes);
-
-        const pageUrls = new Set(fullSearchIndex.map(p => p.url));
-        const edgeAggregator = {};
-        fullSearchIndex.forEach(sourcePage => {
-            const outgoingLinks = sourcePage.seo?.contentAnalysis?.outgoingInternalLinks || [];
-            outgoingLinks.forEach(targetUrl => {
-                if (pageUrls.has(targetUrl) && sourcePage.url !== targetUrl) {
-                    const key = [sourcePage.url, targetUrl].sort().join('|');
-                    if (!edgeAggregator[key]) edgeAggregator[key] = { from: sourcePage.url, to: targetUrl, count: 0 };
-                    edgeAggregator[key].count++;
-                }
-            });
-        });
-        
-        const newEdges = Object.values(edgeAggregator).map(edgeInfo => {
-            const isBidirectional = edgeInfo.count > 1;
+            tooltipElement.innerHTML = `<b>${sanitizeHTML(pageTitle)}</b><br>الروابط الواردة: ${internalLinkEquity}<br>العمق: ${crawlDepth}`;
             return {
-                from: edgeInfo.from, to: edgeInfo.to, value: edgeInfo.count, 
-                length: 350 / edgeInfo.count,
-                title: isBidirectional ? `رابط متبادل (x${edgeInfo.count})` : 'رابط أحادي',
-                arrows: { to: { enabled: true, scaleFactor: 0.5 }, from: { enabled: isBidirectional, scaleFactor: 0.5 } }
+                id: page.url,
+                value: 1 + internalLinkEquity,
+                title: tooltipElement,
+                label: truncateLabel(pageTitle),
+                font: { ...fontSettings }
             };
         });
-        currentEdges.add(newEdges);
-        populateSidebar(fullSearchIndex, newEdges);
+        window.svl.currentNodes.add(newNodes);
+        
+        populateSidebar(window.svl.fullSearchIndex, edges);
     }
     
-    function updateNodeDisplay(displayMode) {
+    function updateNodeDisplay(displayMode, options = {}) {
+        if (!window.svl.currentNodes) return;
         const fontSettings = getFontSettings();
-        originalNodeSettings = {}; 
-        const nodesToUpdate = fullSearchIndex.map(page => {
+        window.svl.originalNodeSettings = {};
+        
+        const nodesToUpdate = window.svl.fullSearchIndex.map(page => {
             const pageTitle = page.title || page.url;
             let newProperties = { id: page.url, font: { ...fontSettings } };
+            
             switch (displayMode) {
                 case 'crawlDepth':
                     newProperties.color = getDepthColor(page.seo?.crawlDepth);
-                    newProperties.label = (page.seo?.crawlDepth ?? 'N/A').toString();
+                    newProperties.label = String(page.seo?.crawlDepth ?? 'N/A');
                     break;
                 case 'topicCluster':
-                    const firstSegment = (page.url || '').split('/')[1] || 'homepage';
-                    newProperties.color = stringToColor(firstSegment);
+                    let color = '#cccccc'; // Default color
+                    let matched = false;
+                    if (options.rules && options.rules.length > 0) {
+                        for (const rule of options.rules) {
+                            try {
+                                if (new RegExp(rule.pattern, 'i').test(page.url)) {
+                                    color = rule.color;
+                                    matched = true;
+                                    break;
+                                }
+                            } catch(e) { /* Ignore invalid regex */ }
+                        }
+                    }
+                    if (!matched) {
+                        const firstSegment = page.url.split('/')[3] || 'homepage';
+                        color = stringToColor(firstSegment);
+                    }
+                    newProperties.color = color;
                     break;
-                case 'linkEquity': default:
+                case 'linkEquity':
+                default:
                     newProperties.color = page.seo?.isOrphan ? '#f0ad4e' : (page.seo?.isNoIndex ? '#d9534f' : '#5bc0de');
                     newProperties.label = truncateLabel(pageTitle);
                     break;
             }
-            originalNodeSettings[page.url] = { color: newProperties.color, font: newProperties.font };
+            window.svl.originalNodeSettings[page.url] = { color: newProperties.color, font: newProperties.font };
             return newProperties;
         });
-        currentNodes.update(nodesToUpdate);
+        window.svl.currentNodes.update(nodesToUpdate);
     }
+    window.svl.updateNodeDisplay = updateNodeDisplay;
+    
+    function clusterGraph() {
+        if (!window.svl.network) return;
+        window.svl.isClustered = true;
+        const clusterOptions = {
+            joinCondition: (nodeOptions) => {
+                // Cluster nodes with more than 5 connections
+                return window.svl.network.getConnectedEdges(nodeOptions.id).length > 5;
+            },
+            clusterNodeProperties: {
+                shape: 'hexagon',
+                color: '#ffc107',
+                label: 'مجموعة',
+                font: { size: 20 },
+                allowSingleNodeCluster: true
+            }
+        };
+        window.svl.network.cluster(clusterOptions);
+        dom.clusterGraphBtn.innerHTML = '<i class="bi bi-grid-3x3-gap ms-2"></i> عرض كل العقد';
+    }
+    
+    function unclusterGraph() {
+        if (!window.svl.network || !window.svl.isClustered) return;
+        
+        // Open all clusters
+        const clusterNodeIds = window.svl.network.body.nodeIndices.filter(id => window.svl.network.isCluster(id));
+        clusterNodeIds.forEach(nodeId => {
+            if (window.svl.network.isCluster(nodeId)) {
+                window.svl.network.openCluster(nodeId);
+            }
+        });
+
+        window.svl.isClustered = false;
+        dom.clusterGraphBtn.innerHTML = '<i class="bi bi-grid-3x3-gap-fill ms-2"></i> تجميع العقد الكبيرة';
+        window.enhancements.onNodeSelection([]); // Reset selection styles
+    }
+
 
     function renderGraph() {
         const options = {
-             nodes: { shape: 'dot' },
-            edges: { scaling: { min: 0.5, max: 5, label: false }, color: { inherit: 'from', opacity: 0.4 }, smooth: { type: 'continuous' } },
-            physics: { 
-                enabled: true, forceAtlas2Based: { gravitationalConstant: -50, centralGravity: 0.01, springLength: 200, springConstant: 0.08, avoidOverlap: 0.5 }, 
-                maxVelocity: 50, solver: 'forceAtlas2Based', timestep: 0.5,
+            nodes: { shape: 'dot' },
+            edges: { scaling: { min: 0.5, max: 5 }, color: { inherit: 'from', opacity: 0.4 }, smooth: { type: 'continuous' } },
+            physics: {
+                enabled: true,
+                forceAtlas2Based: { gravitationalConstant: -50, centralGravity: 0.01, springLength: 200, springConstant: 0.08, avoidOverlap: 0.5 },
+                maxVelocity: 50,
+                solver: 'forceAtlas2Based',
                 stabilization: { iterations: 1000, fit: true, updateInterval: 25 }
             },
             interaction: { tooltipDelay: 200, hideEdgesOnDrag: true, navigationButtons: true, selectConnectedEdges: false },
         };
-        network = new vis.Network(graphContainer, { nodes: currentNodes, edges: currentEdges }, options);
+        window.svl.network = new vis.Network(dom.graphContainer, { nodes: window.svl.currentNodes, edges: window.svl.currentEdges }, options);
         
-        network.on("stabilizationIterationsDone", function () {
-            network.setOptions({ physics: false });
-            isPhysicsEnabled = false;
-            togglePhysicsBtn.innerHTML = '<i class="bi bi-activity ms-2"></i>إعادة تفعيل الحركة';
-            togglePhysicsBtn.classList.replace('btn-info', 'btn-outline-info');
+        window.svl.network.on("stabilizationIterationsDone", () => {
+            window.svl.network.setOptions({ physics: false });
+            window.svl.isPhysicsEnabled = false;
+            dom.togglePhysicsBtn.innerHTML = '<i class="bi bi-activity ms-2"></i>إعادة تفعيل الحركة';
+            dom.togglePhysicsBtn.classList.replace('btn-info', 'btn-outline-info');
         });
 
-        attachNetworkEvents();
-    }
-    
-    function attachNetworkEvents() {
-        if (!network) return;
-        network.on("select", function(params) {
-            const selectedNodeId = params.nodes.length > 0 ? params.nodes[0] : null;
-            
-            // 1. Update the FAST part of the UI immediately. This is safe.
-            document.querySelectorAll('#visualizer-page-list li').forEach(li => {
-                const isActive = li.dataset.nodeId === selectedNodeId;
-                li.classList.toggle('active', isActive);
-                if (isActive) li.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            });
-
-            // 2. Schedule the SLOW, DESTRUCTIVE part of the UI update to run later.
-            // This breaks the race condition.
-            setTimeout(() => {
-                if (!network) return; // The network might have been destroyed while we waited
-                
-                // We need to re-verify the selection, in case another event happened.
-                const currentSelection = network.getSelectedNodes();
-                const currentNodeId = currentSelection.length > 0 ? currentSelection[0] : null;
-
-                const allNodeIds = currentNodes.getIds();
-                const allEdges = currentEdges.get();
-
-                if (currentNodeId) {
-                    const connectedEdges = network.getConnectedEdges(currentNodeId);
-                    const connectedNodes = new Set([...network.getConnectedNodes(currentNodeId), currentNodeId]);
-                    const dimColor = 'rgba(200, 200, 200, 0.1)';
-                    
-                    const nodesToUpdate = allNodeIds.map(nodeId => (connectedNodes.has(nodeId))
-                        ? { id: nodeId, ...originalNodeSettings[nodeId] }
-                        : { id: nodeId, color: { background: dimColor, border: 'rgba(200, 200, 200, 0.2)' }, font: { color: dimColor, strokeColor: dimColor } }
-                    );
-                    currentNodes.update(nodesToUpdate);
-
-                    const connectedEdgeIds = new Set(connectedEdges);
-                    const edgesToUpdate = allEdges.map(edge => ({ id: edge.id, hidden: !connectedEdgeIds.has(edge.id) }));
-                    currentEdges.update(edgesToUpdate);
-                } else {
-                    // Reset all visuals if nothing is selected.
-                    const nodesToUpdate = allNodeIds.map(nodeId => ({ id: nodeId, ...originalNodeSettings[nodeId] }));
-                    currentNodes.update(nodesToUpdate);
-                    const edgesToUpdate = allEdges.map(edge => ({ id: edge.id, hidden: false }));
-                    currentEdges.update(edgesToUpdate);
-                }
-            }, 0);
-        });
+        // Handle clustering for large graphs
+        if (window.svl.currentNodes.length > CLUSTER_THRESHOLD) {
+            dom.clusterGraphBtn.classList.remove('d-none');
+            unclusterGraph(); // Ensure it starts unclustered
+        } else {
+            dom.clusterGraphBtn.classList.add('d-none');
+        }
     }
 
-    // ... handleFileLoad, initialize, etc. ...
-    function handleFileLoad(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            jsonInput.value = e.target.result;
-            checkRenderButtonState();
-            processAndRender(e.target.result);
-        };
-        reader.readAsText(file);
-    }
-    
     function checkRenderButtonState() {
-        const isDisabled = jsonInput.value.trim().length < 3;
-        renderBtn.disabled = isDisabled;
-        renderBtn.classList.toggle('disabled', isDisabled);
+        const hasJson = dom.jsonInput.value.trim().length > 3;
+        const hasFile = dom.fileInput.files.length > 0;
+        const isDisabled = !hasJson && !hasFile;
+        
+        dom.renderBtn.disabled = isDisabled;
+        dom.renderBtn.classList.toggle('disabled', isDisabled);
     }
     
     function initialize() {
-        checkRenderButtonState();
-        toggleLabelsBtn.classList.add('d-none');
-        togglePhysicsBtn.classList.add('d-none');
-        fullscreenBtn.classList.add('d-none');
+        resetUI();
         
-        renderBtn.addEventListener('click', () => processAndRender(jsonInput.value));
-        fileInput.addEventListener('change', handleFileLoad);
-        jsonInput.addEventListener('input', checkRenderButtonState);
+        dom.fileInput.addEventListener('change', checkRenderButtonState);
+        dom.jsonInput.addEventListener('input', checkRenderButtonState);
 
-        document.querySelectorAll('[data-bs-theme-value]').forEach(toggle => {
-            toggle.addEventListener('click', () => {
-                setTimeout(() => {
-                    if (network) {
-                        const currentViewMode = document.querySelector('[data-view-mode].active').dataset.viewMode;
-                        const selectedNodes = network.getSelectedNodes();
-                        updateNodeDisplay(currentViewMode);
-                        if (selectedNodes.length > 0) {
-                            network.selectNodes(selectedNodes);
-                        }
-                    }
-                }, 50);
-            });
-        });
-
-        searchInput.addEventListener('input', (e) => {
+        dom.searchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase().trim();
             document.querySelectorAll('#visualizer-page-list li').forEach(item => {
                 const itemText = item.dataset.pageTitle || '';
@@ -344,63 +318,59 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
 
-        viewModeButtons.forEach(button => {
+        dom.viewModeButtons.forEach(button => {
             button.addEventListener('click', () => {
-                if (!network) return; 
-                const selectedNodes = network.getSelectedNodes();
-                viewModeButtons.forEach(btn => btn.classList.remove('active'));
+                if (!window.svl.network) return;
+                const selectedNodes = window.svl.network.getSelectedNodes();
+                dom.viewModeButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
                 updateNodeDisplay(button.dataset.viewMode);
-                if (selectedNodes.length > 0) {
-                    network.selectNodes(selectedNodes);
-                }
+                if (window.enhancements) window.enhancements.onNodeSelection(selectedNodes);
             });
         });
 
-        toggleLabelsBtn.addEventListener('click', () => {
-            if (!network) return;
-            areLabelsVisible = !areLabelsVisible;
-            const nodesToUpdate = currentNodes.getIds().map(nodeId => {
-                return { 
-                    id: nodeId, 
-                    font: areLabelsVisible ? originalNodeSettings[nodeId].font : { size: 0 } 
-                };
-            });
-            currentNodes.update(nodesToUpdate);
-            toggleLabelsBtn.innerHTML = areLabelsVisible
+        dom.toggleLabelsBtn.addEventListener('click', () => {
+            if (!window.svl.currentNodes) return;
+            window.svl.areLabelsVisible = !window.svl.areLabelsVisible;
+            const nodesToUpdate = window.svl.currentNodes.getIds().map(nodeId => ({
+                id: nodeId,
+                font: window.svl.areLabelsVisible ? window.svl.originalNodeSettings[nodeId]?.font : { size: 0 }
+            }));
+            window.svl.currentNodes.update(nodesToUpdate);
+            dom.toggleLabelsBtn.innerHTML = window.svl.areLabelsVisible
                 ? '<i class="bi bi-chat-text ms-2"></i>إخفاء العناوين'
                 : '<i class="bi bi-chat-text-fill ms-2"></i>إظهار العناوين';
         });
         
-        togglePhysicsBtn.addEventListener('click', () => {
-            if (!network) return;
-            isPhysicsEnabled = !isPhysicsEnabled;
-            network.setOptions({ physics: isPhysicsEnabled });
-            if (isPhysicsEnabled) {
-                togglePhysicsBtn.innerHTML = '<i class="bi bi-pause-circle-fill ms-2"></i>إيقاف الحركة';
-                togglePhysicsBtn.classList.replace('btn-outline-info', 'btn-info');
+        dom.togglePhysicsBtn.addEventListener('click', () => {
+            if (!window.svl.network) return;
+            window.svl.isPhysicsEnabled = !window.svl.isPhysicsEnabled;
+            window.svl.network.setOptions({ physics: window.svl.isPhysicsEnabled });
+            dom.togglePhysicsBtn.innerHTML = window.svl.isPhysicsEnabled
+                ? '<i class="bi bi-pause-circle-fill ms-2"></i>إيقاف الحركة'
+                : '<i class="bi bi-activity ms-2"></i>إعادة تفعيل الحركة';
+            dom.togglePhysicsBtn.classList.toggle('btn-info', window.svl.isPhysicsEnabled);
+            dom.togglePhysicsBtn.classList.toggle('btn-outline-info', !window.svl.isPhysicsEnabled);
+        });
+        
+        dom.clusterGraphBtn.addEventListener('click', () => {
+            if (window.svl.isClustered) {
+                unclusterGraph();
             } else {
-                togglePhysicsBtn.innerHTML = '<i class="bi bi-activity ms-2"></i>إعادة تفعيل الحركة';
-                togglePhysicsBtn.classList.replace('btn-info', 'btn-outline-info');
+                clusterGraph();
             }
         });
 
-        fullscreenBtn.addEventListener('click', () => {
-            const body = document.body;
-            body.classList.toggle('fullscreen-mode');
-            const icon = fullscreenBtn.querySelector('i');
-            
-            if (body.classList.contains('fullscreen-mode')) {
-                icon.classList.replace('bi-arrows-fullscreen', 'bi-fullscreen-exit');
-                fullscreenBtn.setAttribute('title', 'الخروج من وضع ملء الشاشة');
-            } else {
-                icon.classList.replace('bi-fullscreen-exit', 'bi-arrows-fullscreen');
-                fullscreenBtn.setAttribute('title', 'وضع ملء الشاشة');
-            }
-            if (network) {
-                setTimeout(() => { network.fit(); }, 300);
-            }
+        dom.fullscreenBtn.addEventListener('click', () => {
+            document.body.classList.toggle('fullscreen-mode');
+            const isFullscreen = document.body.classList.contains('fullscreen-mode');
+            const icon = dom.fullscreenBtn.querySelector('i');
+            icon.className = isFullscreen ? 'bi bi-fullscreen-exit' : 'bi bi-arrows-fullscreen';
+            dom.fullscreenBtn.title = isFullscreen ? 'الخروج من وضع ملء الشاشة' : 'وضع ملء الشاشة';
+            if (window.svl.network) setTimeout(() => window.svl.network.fit(), 300);
         });
+
+        checkRenderButtonState();
     }
 
     initialize();
