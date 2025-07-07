@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // Init Web Worker
             try {
-                visualizerWorker = new Worker('../assets/js/SiteVisualizerLab/visualizer-worker.js');
+                visualizerWorker = new Worker('assets/js/SiteVisualizerLab/visualizer-worker.js');
                 visualizerWorker.onmessage = (e) => {
                     this.setLoadingState(false);
                     const { status, data, message } = e.data;
@@ -274,7 +274,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
             
             dom.loadSampleDataBtn.addEventListener('click', () => {
-                fetch('assets/js/sample-data.json')
+                fetch('assets/js/SiteVisualizerLab/sample-data.json')
                     .then(res => res.ok ? res.text() : Promise.reject('فشل تحميل الملف التجريبي.'))
                     .then(data => {
                         dom.jsonInput.value = data;
