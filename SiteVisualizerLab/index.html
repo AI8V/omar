@@ -169,10 +169,10 @@
                 <div class="mb-3"><label class="form-label fw-bold" for="jsonInput">1. الصق محتوى JSON</label><textarea class="form-control" dir="ltr" id="jsonInput" placeholder="[ ... ]" rows="8"></textarea></div>
                 <div class="text-center text-muted my-2 small"><span>أو</span></div>
                 <div class="mb-3"><label class="form-label fw-bold" for="fileInput">2. ارفع ملفًا</label><input type="file" accept="application/json,.json,.csv" class="form-control" id="fileInput"></div>
-                <div class="d-grid mt-4 gap-2"><button class="btn btn-primary btn-lg disabled disabled disabled" id="renderBtn" disabled=""><span class="spinner-border spinner-border-sm d-none me-2" role="status" aria-hidden="true"></span><span class="btn-text"><i class="bi bi-play-fill ms-2" aria-hidden="true"></i> عرض وتحليل البنية</span></button><button class="btn btn-outline-secondary" id="loadSampleDataBtn" type="button"><i class="bi bi-magic ms-2"></i>تجربة ببيانات عينة</button></div>
+                <div class="d-grid mt-4 gap-2"><button class="btn btn-primary btn-lg disabled disabled" id="renderBtn" disabled=""><span class="spinner-border spinner-border-sm d-none me-2" role="status" aria-hidden="true"></span><span class="btn-text"><i class="bi bi-play-fill ms-2" aria-hidden="true"></i> عرض وتحليل البنية</span></button><button class="btn btn-outline-secondary" id="loadSampleDataBtn" type="button"><i class="bi bi-magic ms-2"></i>تجربة ببيانات عينة</button></div>
                 <hr class="my-4">
                 <h3 class="h5">طبقات التحليل</h3>
-                <div class="btn-group w-100 mb-2" role="group" id="view-modes-group" aria-label="View Modes"><button class="btn btn-secondary active" type="button" data-view-mode="linkEquity" title="عرض الصفحات حسب حالتها (عادية، يتيمة، noindex)"><i class="bi bi-link-45deg ms-2" aria-hidden="true"></i>قوة الروابط</button><button class="btn btn-secondary" type="button" data-view-mode="crawlDepth" title="عرض الصفحات حسب بعدها عن الصفحة الرئيسية"><i class="bi bi-distribute-vertical ms-2" aria-hidden="true"></i>عمق الزحف</button><button class="btn btn-secondary" type="button" data-view-mode="topicCluster" title="عرض الصفحات مجمعة حسب القسم"><i class="bi bi-palette-fill ms-2" aria-hidden="true"></i>المجموعات</button></div>
+                <div class="btn-group w-100 mb-2" role="group" aria-label="View Modes" id="view-modes-group"><button class="btn btn-secondary active" type="button" data-view-mode="linkEquity" title="عرض الصفحات حسب حالتها (عادية، يتيمة، noindex)"><i class="bi bi-link-45deg ms-2" aria-hidden="true"></i>قوة الروابط</button><button class="btn btn-secondary" type="button" data-view-mode="crawlDepth" title="عرض الصفحات حسب بعدها عن الصفحة الرئيسية"><i class="bi bi-distribute-vertical ms-2" aria-hidden="true"></i>عمق الزحف</button><button class="btn btn-secondary" type="button" data-view-mode="topicCluster" title="عرض الصفحات مجمعة حسب القسم"><i class="bi bi-palette-fill ms-2" aria-hidden="true"></i>المجموعات</button></div>
                 <div id="view-legend" class="p-2 my-2 rounded-2" aria-live="polite"></div>
                 <div class="d-none mt-3" id="topic-cluster-controls">
                     <h4 class="h6">إعدادات المجموعات الموضوعية</h4>
@@ -223,7 +223,7 @@
         </div>
     </main>
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:1100;">
-        <div class="toast hide" role="alert" data-bs-animation="false" id="appToast" aria-live="assertive" aria-atomic="true">
+        <div class="toast jello animated hide" role="alert" data-bs-animation="false" id="appToast" aria-live="assertive" aria-atomic="true">
             <div class="toast-header"><i id="toast-icon" class="bi rounded ms-2"></i><strong class="mx-auto" id="toast-title"></strong><button class="btn-close ms-0" type="button" data-bs-dismiss="toast" aria-label="Close"></button></div>
             <div class="toast-body" role="alert" id="toast-body"></div>
         </div>
