@@ -124,67 +124,60 @@
     <link rel="stylesheet" href="assets/css/assets/styles.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Organization",
-          "name": "Ai8V | Mind & Machine",
-          "url": "https://ai8v.com/",
-          "logo": "https://ai8v.com/assets/img/logo.png",
-          "sameAs": [
-            "https://x.com/AmrAbssalam",
-            "https://www.linkedin.com/in/amrabdelsalam87/",
-            "https://github.com/AI8V",
-            "https://www.youtube.com/@4DigitalMarketer"
-          ]
-        },
-        {
-          "@type": "WebSite",
-          "@id": "https://ai8v.com/#website",
-          "url": "https://ai8v.com/",
-          "name": "Ai8V",
-          "publisher": {
-            "@type": "Organization",
-            "name": "Ai8V | Mind & Machine"
-          }
-        },
-        {
-          "@type": "SoftwareApplication",
-          "name": "Ai8V: All-in-One SEO Analysis & Website Crawler Tool",
-          "operatingSystem": "Web-based",
-          "applicationCategory": "DeveloperApplication",
-          "offers": {
-            "@type": "Offer",
-            "price": "0.00",
-            "priceCurrency": "USD"
-          },
-          "description": "جرّب Ai8V، أداة تحليل SEO وزاحف المواقع الشاملة. احصل على تقارير دقيقة، توصيات ذكية، وتصورات بيانية لبنية موقعك لتحسين ترتيبك في نتائج البحث.",
-          "url": "https://ai8v.com/",
-          "mainEntityOfPage": {
-            "@id": "https://ai8v.com/#website"
-          },
-          "hasPart": [
-            {
-              "@type": "SoftwareApplication",
-              "name": "Free SEO Log File Analyzer",
-              "url": "https://ai8v.com/LogFileAnalyzer/"
-            },
-            {
-              "@type": "SoftwareApplication",
-              "name": "Site Structure Visualizer & Crawl Map Generator",
-              "url": "https://ai8v.com/SiteVisualizerLab/"
-            },
-            {
-              "@type": "SoftwareApplication",
-              "name": "Intelligent Schema Markup Generator (JSON-LD)",
-              "url": "https://ai8v.com/SchemaArchitect/"
-            }
-          ]
-        }
+      "@type": "Organization",
+      "@id": "https://ai8v.com/#organization",
+      "name": "Ai8V | Mind & Machine",
+      "url": "https://ai8v.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://ai8v.com/assets/img/logo.png"
+      },
+      "sameAs": [
+        "https://x.com/AmrAbssalam",
+        "https://www.linkedin.com/in/amrabdelsalam87/",
+        "https://github.com/AI8V",
+        "https://www.youtube.com/@4DigitalMarketer"
       ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://ai8v.com/#website",
+      "url": "https://ai8v.com/",
+      "name": "Ai8V",
+      "publisher": {
+        "@id": "https://ai8v.com/#organization"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://ai8v.com/#software",
+      "name": "Ai8V: All-in-One SEO Analysis & Website Crawler Tool",
+      "mainEntityOfPage": {
+        "@id": "https://ai8v.com/#website"
+      },
+      "operatingSystem": "Web-based",
+      "applicationCategory": "DeveloperApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "USD"
+      },
+      "description": "جرّب Ai8V، أداة تحليل SEO وزاحف المواقع الشاملة. احصل على تقارير دقيقة، توصيات ذكية، وتصورات بيانية لبنية موقعك لتحسين ترتيبك في نتائج البحث.",
+      "url": "https://ai8v.com/",
+      "author": {
+         "@id": "https://ai8v.com/#organization"
+      },
+      "publisher": {
+         "@id": "https://ai8v.com/#organization"
+      }
     }
-    </script>
+  ]
+}
+</script>
 </head>
 
 <body><button id="darkModeToggle" class="dark-mode-toggle position-fixed top-0 start-0 m-3 z-3 rounded-pill py-2 px-3 border-0 text-white shadow-sm d-flex align-items-center gap-2 d-print-none" type="button" aria-label="تبديل الوضع الليلي"></button>
