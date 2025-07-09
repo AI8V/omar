@@ -145,13 +145,11 @@
 
 <body>
     <nav class="navbar navbar-expand-lg sticky-top bg-body shadow-sm">
-        <div class="container"><a class="navbar-brand" href="#"><i class="bi bi-server ms-2" aria-hidden="true"></i>Log File Analyzer</a><span class="fw-bold mx-auto navbar-text"><i class="bi bi-gem ms-2" aria-hidden="true"></i>Ai8V | Mind &amp; Machine</span>
-            <div class="dropdown"><button id="toolsMenu" class="btn btn-outline-primary btn-sm dropdown-toggle mt-2" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="تصفح جميع أدوات Ai8V"><i class="bi bi-tools ms-2" aria-hidden="true"></i> جميع الأدوات </button>
+        <div class="container"><a class="navbar-brand" href="#"><i class="bi bi-server ms-2" aria-hidden="true"></i>Log File Analyzer</a><span class="fw-bold mx-auto navbar-text"><i class="bi bi-gem ms-2" aria-hidden="true"></i>Ai8V | Mind & Machine</span>
+            <div class="dropdown"><button class="btn btn-outline-primary btn-sm dropdown-toggle mt-2" id="toolsMenu" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="تصفح جميع أدوات Ai8V"><i class="bi bi-tools ms-2" aria-hidden="true"></i> جميع الأدوات </button>
                 <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="toolsMenu">
                     <li><a class="d-flex align-items-center dropdown-item" href="/"><i class="bi bi-house-door-fill opacity-75 ms-2" aria-hidden="true"></i>الأداة الكاملة (الرئيسية)</a></li>
-                    <li>
-                        <hr class="dropdown-divider" />
-                    </li>
+                    <li><hr class="dropdown-divider"></li>
                     <li><a class="d-flex align-items-center dropdown-item" href="/SiteVisualizerLab/"><i class="bi bi-diagram-3-fill opacity-75 ms-2" aria-hidden="true"></i>المحلل البصري</a></li>
                     <li><a class="d-flex align-items-center dropdown-item" href="/LogFileAnalyzer/"><i class="bi bi-server opacity-75 ms-2" aria-hidden="true"></i>محلل السجلات</a></li>
                     <li><a class="d-flex align-items-center dropdown-item" href="/SchemaArchitect/"><i class="bi bi-bounding-box-circles opacity-75 ms-2" aria-hidden="true"></i>مهندس السكيما</a></li>
@@ -209,10 +207,10 @@
                     <h2 class="h3 mb-0"><i class="bi bi-server ms-2"></i>ملف السجلات</h2><button class="btn btn-outline-danger btn-sm d-none" id="clearBtn" data-cy="clear-btn" title="مسح النتائج والبدء من جديد"><i class="bi bi-trash3-fill"></i></button>
                 </div>
                 <div class="text-center border-2 drop-zone p-5 border-dashed rounded-3" id="dropZone"><i class="bi bi-cloud-arrow-up-fill" style="font-size:3rem;"></i>
-                    <p class="mt-3 mb-0" data-cy="dropzone-text">اسحب وأفلت ملف السجل هنا</p>
+                    <p class="mt-3 mb-0" id="dropZoneText" data-cy="dropzone-text">اسحب وأفلت ملف السجل هنا</p>
                     <p class="text-muted small">أو انقر للاختيار (يدعم .log, .txt, .zip)</p><input type="file" accept=".log,.txt,.zip" class="d-none" id="fileInput">
                 </div>
-                <div class="btn-group w-100 mt-3" role="group"><button class="btn btn-success disabled disabled ms-1" id="exportJsonBtn" data-cy="export-json-btn" disabled=""><i class="bi bi-file-earmark-code-fill ms-2"></i>JSON</button><button class="btn btn-outline-success disabled disabled me-1" id="exportCsvBtn" data-cy="export-csv-btn" disabled=""><i class="bi bi-file-earmark-spreadsheet-fill ms-2"></i>CSV</button></div>
+                <div class="btn-group w-100 mt-3" role="group"><button class="btn btn-success disabled disabled disabled ms-1" id="exportJsonBtn" data-cy="export-json-btn" disabled=""><i class="bi bi-file-earmark-code-fill ms-2"></i>JSON</button><button class="btn btn-outline-success disabled disabled disabled me-1" id="exportCsvBtn" data-cy="export-csv-btn" disabled=""><i class="bi bi-file-earmark-spreadsheet-fill ms-2"></i>CSV</button></div>
                 <div class="d-grid mt-2"><a class="btn btn-outline-secondary btn-sm" role="button" id="downloadSampleLink" href="../LogFileAnalyzer/sample-log-file.log.txt" download=""><i class="bi bi-cloud-download-fill me-2" aria-hidden="true"></i> ليس لديك ملف؟ حمّل ملف عينة للتجربة </a></div>
                 <div class="text-center my-4"><a class="btn btn-outline-primary" role="button" href="../LogFileAnalyzer/ghost.html"><i class="bi bi-ghost me-2"></i> ليس لديك ملف سجل؟ جرب مدقق الصحة التقنية </a></div>
                 <div class="mt-4"><label class="form-label" for="botFilterSelect">تصفية حسب نوع البوت:</label><select class="form-select" id="botFilterSelect">
@@ -250,7 +248,10 @@
                 <div class="text-center mt-3"><a class="text-decoration-none small" href="#" data-bs-toggle="modal" data-bs-target="#helpModal"><i class="bi bi-question-circle-fill ms-1"></i> كيف أحصل على هذا الملف؟ </a></div>
             </div>
             <div class="col-lg-8 col-xl-9">
-                <h2 class="h4 mb-4">لوحة معلومات تحليل السجلات</h2>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="h4 mb-0">لوحة معلومات تحليل السجلات</h2>
+                    <div class="d-none form-check form-switch" id="expertModeContainer"><input type="checkbox" class="form-check-input" id="expertModeToggle" role="switch"><label class="form-check-label small" for="expertModeToggle">وضع الخبير</label></div>
+                </div>
                 <div class="text-center text-muted p-5" id="resultsPlaceholder"><i class="bi bi-card-list" style="font-size:3rem;"></i>
                     <p class="mt-3">النتائج ستظهر هنا بعد التحليل...</p>
                 </div>
@@ -288,7 +289,7 @@
                         <div class="col-md-6 col-xl-3">
                             <div class="card h-100 text-center">
                                 <div class="card-body"><dl class="mb-0">
-                                    <dt class="text-muted card-subtitle mb-2">إجمالي الطلبات</dt>
+                                    <dt class="text-muted card-subtitle mb-2">إجمالي الطلبات <i class="bi bi-info-circle" data-bs-toggle="tooltip" title="إجمالي عدد الأسطر (الطلبات) في ملف السجل الذي تم رفعه."></i></dt>
                                     <dd id="totalHits" class="fs-2 fw-bold card-text mb-0 m-0">0</dd>
                                 </dl></div>
                             </div>
@@ -296,7 +297,7 @@
                         <div class="col-md-6 col-xl-3">
                             <div class="card h-100 bg-info-subtle text-center">
                                 <div class="card-body"><dl class="mb-0">
-                                    <dt id="filteredHitsLabel" class="text-muted card-subtitle mb-2">طلبات Googlebot</dt>
+                                    <dt id="filteredHitsLabel" class="text-muted card-subtitle mb-2">طلبات Googlebot <i class="bi bi-info-circle" data-bs-toggle="tooltip" title="إجمالي عدد الطلبات التي تطابق الفلتر المحدد (مثال: Googlebot فقط)."></i></dt>
                                     <dd id="filteredHits" class="fs-2 fw-bold card-text mb-0 m-0">0</dd>
                                 </dl></div>
                             </div>
@@ -304,7 +305,7 @@
                         <div class="col-md-6 col-xl-3">
                             <div class="card h-100 bg-success-subtle text-center">
                                 <div class="card-body"><dl class="mb-0">
-                                    <dt class="text-muted card-subtitle mb-2">طلبات ناجحة (2xx)</dt>
+                                    <dt class="text-muted card-subtitle mb-2">طلبات ناجحة (2xx) <i class="bi bi-info-circle" data-bs-toggle="tooltip" title="الطلبات التي تمت بنجاح (أكواد الحالة 200-299) بناءً على الفلتر الحالي."></i></dt>
                                     <dd id="successHits" class="fs-2 fw-bold card-text mb-0 m-0">0</dd>
                                 </dl></div>
                             </div>
@@ -312,7 +313,7 @@
                         <div class="col-md-6 col-xl-3">
                             <div class="card h-100 bg-danger-subtle text-center">
                                 <div class="card-body"><dl class="mb-0">
-                                    <dt class="text-muted card-subtitle mb-2">أخطاء (4xx/5xx)</dt>
+                                    <dt class="text-muted card-subtitle mb-2">أخطاء (4xx/5xx) <i class="bi bi-info-circle" data-bs-toggle="tooltip" title="الطلبات التي فشلت (أكواد الحالة 400-599). هذه الأخطاء تهدر ميزانية الزحف."></i></dt>
                                     <dd id="errorHits" class="fs-2 fw-bold card-text mb-0 m-0">0</dd>
                                 </dl><button class="btn btn-sm d-none mt-2 btn-danger-high-contrast" id="show404ModalBtn" type="button" data-bs-toggle="modal" data-bs-target="#notFoundModal" title="عرض تقرير مفصل بأخطاء 404 (صفحة غير موجودة)"><i class="bi bi-search ms-1" aria-hidden="true"></i> عرض تفاصيل 404</button></div>
                             </div>
@@ -321,16 +322,16 @@
                     <div class="row g-4 mb-5">
                         <div class="col-xl-8">
                             <div class="card h-100">
-                                <div class="card-header">
-                                    <h3 class="h6 mb-0">نشاط الزحف عبر الزمن</h3>
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h3 class="h6 mb-0">نشاط الزحف عبر الزمن</h3><button class="btn btn-outline-secondary btn-sm p-0 px-2" id="exportTrendChart" title="تصدير الرسم البياني كصورة"><i class="bi bi-download"></i></button>
                                 </div>
                                 <div class="card-body"><canvas id="crawlTrendChart"></canvas></div>
                             </div>
                         </div>
                         <div class="col-xl-4">
                             <div class="card h-100">
-                                <div class="card-header">
-                                    <h3 class="h6 mb-0">توزيع أكواد الحالة</h3>
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h3 class="h6 mb-0">توزيع أكواد الحالة</h3><button class="btn btn-outline-secondary btn-sm p-0 px-2" id="exportStatusChart" title="تصدير الرسم البياني كصورة"><i class="bi bi-download"></i></button>
                                 </div>
                                 <div class="card-body"><canvas id="statusCodesChart"></canvas></div>
                             </div>
@@ -340,8 +341,52 @@
                         <h3 class="h5 mb-3 border-bottom pb-2"><i class="text-warning bi bi-lightbulb-fill ms-2"></i>رؤى وتوصيات آلية</h3>
                         <ul class="list-group" id="insights-list"></ul>
                     </div>
-                    <h3 class="h5 mt-4" id="topPagesTitle">أهم الصفحات التي زارها Googlebot</h3>
-                    <div class="table-responsive">
+                    <div class="d-none" id="advancedAnalyticsContainer">
+                        <h3 class="h4 mt-5 mb-3 border-bottom pb-2"><i class="bi bi-binoculars-fill ms-2"></i> تحليلات متقدمة </h3>
+                        <div class="row g-4 mb-5">
+                            <div class="col-lg-6">
+                                <div class="card h-100">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h3 class="h6 mb-0">تحليل الزحف حسب نوع المحتوى</h3><button class="btn btn-outline-secondary btn-sm p-0 px-2" id="exportContentTypeChart" title="تصدير الرسم البياني كصورة"><i class="bi bi-download"></i></button>
+                                    </div>
+                                    <div class="card-body"><canvas id="contentTypeChart"></canvas></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="card h-100">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h3 class="h6 mb-0">تحليل الزحف حسب عمق الصفحة</h3><button class="btn btn-outline-secondary btn-sm p-0 px-2" id="exportCrawlDepthChart" title="تصدير الرسم البياني كصورة"><i class="bi bi-download"></i></button>
+                                    </div>
+                                    <div class="card-body"><canvas id="crawlDepthChart"></canvas></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="h6 mb-0">مركز قيادة وكلاء المستخدم غير المعروفين</h3>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small">انقر على أي صف للتحقيق في سلوكه، أو استخدم زر الإجراء لحظر البوتات الضارة. يعرض هذا الجدول وكلاء المستخدم الذين لم يتم تصنيفهم كبوتات معروفة.</p>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>وكيل المستخدم (User-Agent)</th>
+                                                <th class="text-center" style="width: 120px;">التصنيف</th>
+                                                <th class="text-center" style="width: 120px;">عدد الطلبات</th>
+                                                <th class="text-center" style="width: 90px;">الإجراء</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="topUserAgentsBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between mt-5">
+                        <h3 class="h5 mb-0" id="topPagesTitle">أهم الصفحات التي زارها Googlebot</h3><button class="btn btn-sm btn-outline-secondary d-none" id="resetTopPagesFilterBtn"><i class="bi bi-x-circle ms-1"></i>إعادة تعيين الفلتر</button>
+                    </div>
+                    <div class="table-responsive mt-3">
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
@@ -375,7 +420,7 @@
                         <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/SchemaArchitect/"><i class="bi bi-bounding-box-circles ms-2" aria-hidden="true"></i>مهندس السكيما</a></li>
                     </ul>
                 </div>
-               <div class="col-md-6 col-lg-3 text-end mb-4 mb-md-0">
+                <div class="col-md-6 col-lg-3 text-end mb-4 mb-md-0">
                     <h3 class="text-uppercase text-center d-flex justify-content-center mb-3 h5">مقالات ومصادر</h3>
                     <ul class="list-unstyled mb-0">
                         <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/what-is-crawl-budget"><i class="bi bi-book-half ms-2" aria-hidden="true"></i>شرح ميزانية الزحف</a></li>
@@ -391,7 +436,7 @@
                 </div>
             </div>
         </div>
-        <div class="text-center p-3" style="background-color:rgba(0, 0, 0, 0.05);"><span> © </span><script>document.write(new Date().getFullYear())</script><span> الحقوق محفوظة: </span><a class="text-body-secondary" href="https://ai8v.com/">Ai8V | Mind &amp; Machine</a></div>
+        <div class="text-center p-3" style="background-color:rgba(0, 0, 0, 0.05);"><span> © </span><script>document.write(new Date().getFullYear())</script><span> الحقوق محفوظة: </span><a class="text-body-secondary" href="https://ai8v.com/">Ai8V | Mind & Machine</a></div>
     </footer>
     <div class="modal fade" role="dialog" tabindex="-1" id="notFoundModal" aria-labelledby="notFoundModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
@@ -426,6 +471,27 @@
                     </div>
                 </div>
                 <div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal" type="button">إغلاق</button></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="blockUserAgentModal" aria-labelledby="blockUserAgentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title h5" id="blockUserAgentModalLabel"><i class="bi bi-shield-slash-fill ms-2 text-danger"></i> إنشاء قاعدة حظر</h4><button class="btn-close me-auto ms-0" aria-label="إغلاق" data-bs-dismiss="modal" type="button"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small">استخدم هذه القواعد الجاهزة لمنع وكيل المستخدم المحدد من الوصول إلى موقعك. انسخ القاعدة المناسبة لإعدادات خادمك.</p>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" for="robotsTxtRule">1. قاعدة لملف <code>robots.txt</code> (سهلة ولكن غير مضمونة)</label>
+                        <div class="input-group"><textarea class="form-control" id="robotsTxtRule" readonly="" rows="2" style="direction:ltr;"></textarea><button class="btn btn-outline-secondary copy-rule-btn" type="button" data-target-id="robotsTxtRule" title="نسخ القاعدة"><i class="bi bi-clipboard"></i></button></div>
+                    </div>
+                    <div>
+                        <label class="form-label fw-bold" for="htaccessRule">2. قاعدة لملف <code>.htaccess</code> (قوية لخوادم Apache/LiteSpeed)</label>
+                        <div class="input-group"><textarea class="form-control" id="htaccessRule" readonly="" rows="3" style="direction:ltr;"></textarea><button class="btn btn-outline-secondary copy-rule-btn" type="button" data-target-id="htaccessRule" title="نسخ القاعدة"><i class="bi bi-clipboard"></i></button></div>
+                    </div>
+                </div>
+                <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">إغلاق</button></div>
             </div>
         </div>
     </div>
