@@ -1,74 +1,155 @@
-// assets/js/js/LinkArchitect.worker.js 
+// --- START OF FILE: assets/js/js/LinkArchitect.worker.js (Final Production Version) ---
 'use strict';
 
-const STOP_WORDS = new Set(['من', 'في', 'على', 'إلى', 'عن', 'هو', 'هي', 'هذا', 'هذه', 'كان', 'يكون', 'قال', 'مع', 'the', 'a', 'an', 'is', 'in', 'on', 'of', 'for', 'to', 'and', 'or', 'but']);
+// This worker script is corrected to properly instantiate the compromise.js library
+// and implements the advanced, priority-based recommendation logic.
+try {
+    // Note: This path must be relative to the worker file's location.
+    importScripts('libs/compromise.min.js');
+} catch (e) {
+    console.error("Failed to load compromise.min.js in worker.", e);
+    // Inform the main thread about the critical failure to load a dependency.
+    self.postMessage({ error: "Failed to load NLP library.", details: e.message });
+    self.close(); // Terminate the worker as it cannot function.
+}
 
-function createSemanticFingerprint(page) {
-    if (!page || !page.seo) return null;
-    const allText = [(page.title || ''), (page.seo.h1 || ''), (page.description || ''), ...(page.tags || [])].join(' ').toLowerCase();
-    const keywords = allText.split(/[\s,،-]+/).filter(word => word && word.length > 2 && !STOP_WORDS.has(word));
-    const keywordFrequency = keywords.reduce((map, word) => { map[word] = (map[word] || 0) + 1; return map; }, {});
-    const topKeywords = Object.keys(keywordFrequency).sort((a, b) => keywordFrequency[b] - keywordFrequency[a]).slice(0, 10);
-    return {
-        id: page.id,
-        url: page.url,
-        title: page.title,
-        keywords: new Set(topKeywords),
-        linkEquity: page.seo.internalLinkEquity || 0,
-        outgoingLinks: page.seo.contentAnalysis?.internalLinks || 0
+// Check if the library loaded successfully before defining functions that use it.
+if (typeof compromise !== 'undefined') {
+
+    // A small set of common English stop words.
+    const STOP_WORDS = new Set(['the', 'a', 'an', 'is', 'in', 'on', 'of', 'for', 'to']);
+    const MAX_RECOMMENDATIONS_PER_PAGE = 5;
+
+    /**
+     * Creates a semantic profile of a page based on its title and description.
+     * @param {object} page - The page object from the search index. Assumed to have `linkEquity`.
+     * @returns {object|null} A fingerprint object or null if invalid.
+     */
+    function createSemanticFingerprint(page) {
+        if (!page || !page.title) return null;
+        const title = page.title;
+        const description = page.description || '';
+
+        // FIX: Instantiate compromise using the 'new' keyword, as required by v14+.
+        const doc = new compromise(title + '. ' + description);
+
+        const entities = doc.people().out('array')
+            .concat(doc.places().out('array'))
+            .concat(doc.organizations().out('array'));
+
+        return {
+            id: page.id,
+            url: page.url,
+            title: page.title,
+            // LOGIC: Capture linkEquity for priority scoring. Default to 1 if not present.
+            linkEquity: page.linkEquity || 1,
+            entities: new Set(entities.map(e => e.toLowerCase()).filter(e => !STOP_WORDS.has(e))),
+        };
+    }
+
+    /**
+     * Scans source content to find the BEST linking opportunity to a target page based on a priority score.
+     * @param {object} sourcePage - The page object to scan for linking opportunities.
+     * @param {object} targetFingerprint - The semantic fingerprint of the potential target page.
+     * @returns {object|null} The highest-priority linking opportunity object or null if none is found.
+     */
+    function findBestLinkingOpportunity(sourcePage, targetFingerprint) {
+        if (!sourcePage.content || !targetFingerprint || targetFingerprint.entities.size === 0) {
+            return null;
+        }
+
+        // FIX: Instantiate compromise using the 'new' keyword.
+        const sourceDoc = new compromise(sourcePage.content.replace(/<[^>]+>/g, ' '));
+        
+        // LOGIC: Find the opportunity with the highest score, not just the first one.
+        let bestOpportunity = null;
+
+        targetFingerprint.entities.forEach(entity => {
+            const matches = sourceDoc.match(entity);
+            if (!matches.found) return; // 'return' in forEach acts like 'continue'
+
+            const firstMatch = matches.first();
+            
+            // LOGIC: Do not suggest a link if the matched text is already inside an anchor tag.
+            if (firstMatch.parent().has('<a>')) return;
+
+            const anchorText = firstMatch.text('normal');
+            const context = firstMatch.parent().text('normal');
+
+            // LOGIC: Calculate a priority score to find the most valuable opportunity.
+            const priorityScore = (targetFingerprint.linkEquity * 5) + (anchorText.length * 3);
+
+            // LOGIC: Only replace the opportunity if the new one has a higher score.
+            if (!bestOpportunity || priorityScore > bestOpportunity.priority) {
+                bestOpportunity = {
+                    targetPageUrl: targetFingerprint.url,
+                    targetPageTitle: targetFingerprint.title,
+                    anchorText: anchorText,
+                    context: `...${context.trim()}...`,
+                    priority: Math.round(priorityScore)
+                };
+            }
+        });
+
+        return bestOpportunity;
+    }
+
+    /**
+     * Main function to generate internal linking recommendations.
+     * @param {Array<object>} searchIndex - The full search index data.
+     * @returns {Array<object>} An array of recommendations, sorted and enriched for the UI.
+     */
+    function generateRecommendations(searchIndex) {
+        const contentPages = searchIndex.filter(p => p.content && p.id);
+        if (contentPages.length < 2) {
+            return [];
+        }
+
+        const fingerprints = searchIndex.map(createSemanticFingerprint).filter(Boolean);
+        const allRecommendations = [];
+
+        contentPages.forEach(sourcePage => {
+            let opportunitiesForSourcePage = [];
+            fingerprints.forEach(targetFingerprint => {
+                if (sourcePage.id !== targetFingerprint.id) {
+                    const opp = findBestLinkingOpportunity(sourcePage, targetFingerprint);
+                    if (opp) {
+                        opportunitiesForSourcePage.push(opp);
+                    }
+                }
+            });
+
+            if (opportunitiesForSourcePage.length > 0) {
+                // LOGIC: Sort opportunities by priority and take the top N.
+                const sortedOpportunities = opportunitiesForSourcePage
+                    .sort((a, b) => b.priority - a.priority)
+                    .slice(0, MAX_RECOMMENDATIONS_PER_PAGE);
+                
+                // LOGIC: Push the final, enriched object required by the UI.
+                allRecommendations.push({
+                    sourcePageUrl: sourcePage.url,
+                    sourcePageTitle: sourcePage.title,
+                    opportunities: sortedOpportunities
+                });
+            }
+        });
+        return allRecommendations;
+    }
+
+    /**
+     * Worker message handler. Receives data from the main thread.
+     */
+    self.onmessage = (event) => {
+        try {
+            const recommendations = generateRecommendations(event.data);
+            self.postMessage(recommendations);
+        } catch (e) {
+            console.error("Error during recommendation generation in worker:", e);
+            self.postMessage({ error: "An unexpected error occurred during processing.", details: e.message });
+        } finally {
+            // Best practice: Ensure the worker always terminates after completing its single task.
+            self.close();
+        }
     };
 }
-
-function findBestLinkingOpportunity(sourcePage, targetFingerprint) {
-    if (!sourcePage.content || sourcePage.id === targetFingerprint.id) return null;
-    const bodyText = sourcePage.content.replace(/<style[^>]*>[\s\S]*?<\/style>|<script[^>]*>[\s\S]*?<\/script>|<[^>]+>/g, ' ');
-    let bestOpportunity = null;
-    targetFingerprint.keywords.forEach(keyword => {
-        const regex = new RegExp(`(?<!<a[^>]*>\\s*)\\b(${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})\\b(?!\\s*[^<]*<\\/a>)`, 'gi');
-        if (!regex.test(bodyText)) return;
-        const matchIndex = bodyText.toLowerCase().indexOf(keyword.toLowerCase());
-        const start = Math.max(0, matchIndex - 70);
-        const end = Math.min(bodyText.length, matchIndex + keyword.length + 70);
-        let context = bodyText.substring(start, end).trim().replace(/\s+/g, ' ');
-        context = (start > 0 ? '... ' : '') + context + (end < bodyText.length ? ' ...' : '');
-        
-        const outgoingLinksCount = sourcePage.seo?.contentAnalysis?.internalLinks ?? 0;
-        const priorityScore = (targetFingerprint.linkEquity * 5) + (20 / (1 + outgoingLinksCount)) + (keyword.length * 2);
-
-        if (!bestOpportunity || priorityScore > bestOpportunity.priority) {
-            bestOpportunity = { targetPageUrl: targetFingerprint.url, targetPageTitle: targetFingerprint.title, anchorText: keyword, context: context, priority: Math.round(priorityScore) };
-        }
-    });
-    return bestOpportunity;
-}
-
-function generateRecommendations(searchIndex) {
-    if (!searchIndex || searchIndex.length < 2) return [];
-    const contentPages = searchIndex.filter(p => p.content && p.seo);
-    if (contentPages.length < 2) return [];
-    
-    const fingerprints = searchIndex.map(createSemanticFingerprint).filter(Boolean);
-    const allRecommendations = [];
-
-    contentPages.forEach(sourcePage => {
-        const pageOpportunities = [];
-        fingerprints.forEach(targetFingerprint => {
-            const opportunity = findBestLinkingOpportunity(sourcePage, targetFingerprint);
-            if (opportunity) pageOpportunities.push(opportunity);
-        });
-        if (pageOpportunities.length > 0) {
-            allRecommendations.push({
-                sourcePageUrl: sourcePage.url,
-                sourcePageTitle: sourcePage.title,
-                opportunities: pageOpportunities.sort((a, b) => b.priority - a.priority).slice(0, 5)
-            });
-        }
-    });
-    return allRecommendations;
-}
-
-self.onmessage = function(event) {
-    const searchIndex = event.data;
-    const recommendations = generateRecommendations(searchIndex);
-    self.postMessage(recommendations);
-};
+// --- END OF FILE ---
