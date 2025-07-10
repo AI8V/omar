@@ -1,59 +1,122 @@
 // assets/js/js/LinkArchitect.worker.js 
 'use strict';
 
-const STOP_WORDS = new Set(['من', 'في', 'على', 'إلى', 'عن', 'هو', 'هي', 'هذا', 'هذه', 'كان', 'يكون', 'قال', 'مع', 'the', 'a', 'an', 'is', 'in', 'on', 'of', 'for', 'to', 'and', 'or', 'but']);
+// الخطوة 1: استيراد المكتبة لتصبح متاحة داخل العامل
+// تأكد من أن المسار صحيح نسبةً لمكان هذا الملف
+try {
+    importScripts('./libs/compromise.min.js');
+} catch (e) {
+    console.error("Failed to load compromise.min.js in worker. Make sure the path is correct.", e);
+    // إذا فشل تحميل المكتبة، أرسل رسالة خطأ للخيط الرئيسي
+    self.postMessage({ error: "Compromise library failed to load." });
+}
 
+const STOP_WORDS = new Set(['من', 'في', 'على', 'إلى', 'عن', 'هو', 'هي', 'هذا', 'هذه', 'كان', 'يكون', 'قال', 'مع', 'the', 'a', 'an', 'is', 'in', 'on', 'of', 'for', 'to', 'and', 'or', 'but', 'it', 'is', 'was', 'be']);
+
+/**
+ * [مُطوّر] ينشئ بصمة دلالية للصفحة باستخدام فهم اللغة الطبيعية.
+ * يستخرج الكيانات (الأسماء، الأماكن، المنظمات) والأسماء الهامة.
+ */
 function createSemanticFingerprint(page) {
-    if (!page || !page.seo) return null;
-    const allText = [(page.title || ''), (page.seo.h1 || ''), (page.description || ''), ...(page.tags || [])].join(' ').toLowerCase();
-    const keywords = allText.split(/[\s,،-]+/).filter(word => word && word.length > 2 && !STOP_WORDS.has(word));
-    const keywordFrequency = keywords.reduce((map, word) => { map[word] = (map[word] || 0) + 1; return map; }, {});
-    const topKeywords = Object.keys(keywordFrequency).sort((a, b) => keywordFrequency[b] - keywordFrequency[a]).slice(0, 10);
+    if (!page || !page.seo || !self.compromise) return null;
+    
+    // تجميع النصوص الهامة من الصفحة
+    const allText = [
+        (page.title || ''), 
+        (page.seo.h1 || ''), 
+        (page.description || ''), 
+        ...(page.tags || [])
+    ].join(' ').toLowerCase();
+
+    const doc = self.compromise(allText);
+
+    // استخراج الكيانات الرئيسية والأسماء (مع استبعاد الضمائر)
+    let keywords = new Set([
+        ...doc.nouns().not('#Pronoun').out('array'),
+        ...doc.people().out('array'),
+        ...doc.places().out('array'),
+        ...doc.organizations().out('array')
+    ]);
+
+    // تنقية الكلمات المفتاحية
+    const cleanedKeywords = new Set();
+    keywords.forEach(k => {
+        const cleaned = k.trim();
+        if (cleaned.length > 2 && !STOP_WORDS.has(cleaned)) {
+            cleanedKeywords.add(cleaned);
+        }
+    });
+
     return {
         id: page.id,
         url: page.url,
         title: page.title,
-        keywords: new Set(topKeywords),
-        linkEquity: page.seo.internalLinkEquity || 0,
-        outgoingLinks: page.seo.contentAnalysis?.internalLinks || 0
+        keywords: cleanedKeywords, // الآن هذه ليست مجرد كلمات، بل مفاهيم
+        linkEquity: page.seo.internalLinkEquity || 0
     };
 }
 
-function findBestLinkingOpportunity(sourcePage, targetFingerprint) {
+/**
+ * [مُطوّر] يبحث عن أفضل فرصة للربط باستخدام فهم السياق.
+ * يقترح عبارات كاملة كنص للرابط بدلاً من كلمات مفردة.
+ */
+function findBestLinkingOpportunity(sourcePage, targetFingerprint, sourceDoc) {
     if (!sourcePage.content || sourcePage.id === targetFingerprint.id) return null;
-    const bodyText = sourcePage.content.replace(/<style[^>]*>[\s\S]*?<\/style>|<script[^>]*>[\s\S]*?<\/script>|<[^>]+>/g, ' ');
+    
     let bestOpportunity = null;
+
     targetFingerprint.keywords.forEach(keyword => {
-        const regex = new RegExp(`(?<!<a[^>]*>\\s*)\\b(${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})\\b(?!\\s*[^<]*<\\/a>)`, 'gi');
-        if (!regex.test(bodyText)) return;
-        const matchIndex = bodyText.toLowerCase().indexOf(keyword.toLowerCase());
-        const start = Math.max(0, matchIndex - 70);
-        const end = Math.min(bodyText.length, matchIndex + keyword.length + 70);
-        let context = bodyText.substring(start, end).trim().replace(/\s+/g, ' ');
-        context = (start > 0 ? '... ' : '') + context + (end < bodyText.length ? ' ...' : '');
+        // ابحث عن الكلمة المفتاحية في محتوى الصفحة المصدر
+        const matches = sourceDoc.match(keyword);
+        if (!matches.found) return;
+
+        // خذ أفضل تطابق (يمكن تطوير هذا لاحقًا ليأخذ كل التطابقات)
+        const match = matches.first();
         
+        // ابحث عن العبارة الاسمية الكاملة التي تنتمي إليها الكلمة (هذه هي القوة الحقيقية)
+        let anchorPhrase = match.parent('NounPhrase');
+        let anchorText = (anchorPhrase.found ? anchorPhrase : match).text('clean');
+
+        // لا تقم بإنشاء رابط إذا كانت الكلمة موجودة بالفعل داخل رابط آخر
+        if (match.has('#Link')) {
+            return;
+        }
+
+        // احصل على السياق المحيط بالعبارة
+        const context = match.sentence().text('clean');
+
         const outgoingLinksCount = sourcePage.seo?.contentAnalysis?.internalLinks ?? 0;
-        const priorityScore = (targetFingerprint.linkEquity * 5) + (20 / (1 + outgoingLinksCount)) + (keyword.length * 2);
+        const priorityScore = (targetFingerprint.linkEquity * 5) + (20 / (1 + outgoingLinksCount)) + (anchorText.length * 1.5);
 
         if (!bestOpportunity || priorityScore > bestOpportunity.priority) {
-            bestOpportunity = { targetPageUrl: targetFingerprint.url, targetPageTitle: targetFingerprint.title, anchorText: keyword, context: context, priority: Math.round(priorityScore) };
+            bestOpportunity = {
+                targetPageUrl: targetFingerprint.url,
+                targetPageTitle: targetFingerprint.title,
+                anchorText: anchorText, // نص رابط ذكي
+                context: context,
+                priority: Math.round(priorityScore)
+            };
         }
     });
     return bestOpportunity;
 }
 
 function generateRecommendations(searchIndex) {
-    if (!searchIndex || searchIndex.length < 2) return [];
+    if (!searchIndex || searchIndex.length < 2 || !self.compromise) return [];
+    
     const contentPages = searchIndex.filter(p => p.content && p.seo);
     if (contentPages.length < 2) return [];
-    
+
     const fingerprints = searchIndex.map(createSemanticFingerprint).filter(Boolean);
     const allRecommendations = [];
 
     contentPages.forEach(sourcePage => {
+        // [تحسين أداء] قم بتحليل الصفحة المصدر مرة واحدة فقط
+        const sourceDoc = self.compromise(sourcePage.content);
+
         const pageOpportunities = [];
         fingerprints.forEach(targetFingerprint => {
-            const opportunity = findBestLinkingOpportunity(sourcePage, targetFingerprint);
+            const opportunity = findBestLinkingOpportunity(sourcePage, targetFingerprint, sourceDoc);
             if (opportunity) pageOpportunities.push(opportunity);
         });
         if (pageOpportunities.length > 0) {
@@ -68,6 +131,10 @@ function generateRecommendations(searchIndex) {
 }
 
 self.onmessage = function(event) {
+    if (!self.compromise) {
+        console.error("Compromise library is not available in worker.");
+        return;
+    }
     const searchIndex = event.data;
     const recommendations = generateRecommendations(searchIndex);
     self.postMessage(recommendations);
