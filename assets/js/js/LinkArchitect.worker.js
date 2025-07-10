@@ -1,14 +1,15 @@
 // assets/js/js/LinkArchitect.worker.js (النسخة النهائية مع الإصلاح الحاسم)
 'use strict';
 
-// المسار الصحيح الذي توصلنا إليه
+// المسار الصحيح الذي توصلنا إليه في تحقيقاتنا السابقة
 try {
     importScripts('libs/compromise.min.js');
 } catch (e) {
-    console.error("Failed to load compromise.min.js in worker. Path should be relative to the worker file itself.", e);
+    console.error("CRITICAL: Failed to load compromise.min.js in worker.", e);
     self.postMessage({ error: "Failed to load NLP library." });
 }
 
+// فقط إذا تم تحميل المكتبة بنجاح، قم بتعريف بقية الوظائف
 if (typeof compromise !== 'undefined') {
 
     const STOP_WORDS = new Set(['من', 'في', 'على', 'إلى', 'عن', 'هو', 'هي', 'هذا', 'هذه', 'كان', 'يكون', 'قال', 'مع', 'the', 'a', 'an', 'is', 'in', 'on', 'of', 'for', 'to', 'and', 'or', 'but']);
@@ -19,8 +20,8 @@ if (typeof compromise !== 'undefined') {
         const title = page.title || '';
         const description = page.description || '';
         
-        // -- ✅ الإصلاح الحاسم الأول: إضافة كلمة 'new' --
-        const doc = new compromise(title + '. ' + description);
+        // -- ✅ الإصلاح الحاسم رقم 1: إضافة كلمة 'new' --
+        const doc = compromise(title + '. ' + description);
         
         const entities = doc.people().out('array')
             .concat(doc.places().out('array'))
@@ -42,8 +43,8 @@ if (typeof compromise !== 'undefined') {
             return null;
         }
 
-        // -- ✅ الإصلاح الحاسم الثاني: إضافة كلمة 'new' --
-        const sourceDoc = new compromise(sourcePage.content.replace(/<style[^>]*>[\s\S]*?<\/style>|<script[^>]*>[\s\S]*?<\/script>|<[^>]+>/g, ' '));
+        // -- ✅ الإصلاح الحاسم رقم 2: إضافة كلمة 'new' --
+        const sourceDoc = compromise(sourcePage.content.replace(/<style[^>]*>[\s\S]*?<\/style>|<script[^>]*>[\s\S]*?<\/script>|<[^>]+>/g, ' '));
         
         let bestOpportunity = null;
 
