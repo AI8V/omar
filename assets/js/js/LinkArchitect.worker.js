@@ -1,4 +1,4 @@
-// assets/js/js/LinkArchitect.worker.js (النسخة النهائية والحاسمة)
+// assets/js/js/LinkArchitect.worker.js (النسخة النهائية والمحصّنة)
 'use strict';
 
 try {
@@ -13,13 +13,19 @@ if (typeof compromise !== 'undefined') {
     const STOP_WORDS = new Set(['the', 'a', 'an', 'is', 'in', 'on', 'of', 'for', 'to']);
 
     function createSemanticFingerprint(page) {
-        if (!page || !page.title) return null;
+        if (!page) return null;
         
-        const title = page.title;
+        const title = page.title || '';
         const description = page.description || '';
+        const textToAnalyze = (title + '. ' + description).trim();
         
-        // -- ✅ الإصلاح الحاسم والنهائي: إعادة 'new' بناءً على رسالة الخطأ القاطعة
-        const doc = new compromise(title + '. ' + description);
+        // -- ✅ الإصلاح الحاسم والنهائي: التحقق من وجود نص قبل استدعاء المكتبة --
+        // هذا يمنع تمرير بيانات فارغة تسبب انهيار المكتبة.
+        if (!textToAnalyze || textToAnalyze === '.') {
+            return null;
+        }
+
+        const doc = new compromise(textToAnalyze);
         
         const entities = doc.people().out('array')
             .concat(doc.places().out('array'))
@@ -35,12 +41,18 @@ if (typeof compromise !== 'undefined') {
     }
 
     function findBestLinkingOpportunity(sourcePage, targetFingerprint) {
-        if (!sourcePage.content || !targetFingerprint || targetFingerprint.entities.size === 0) {
+        if (!sourcePage || !sourcePage.content || !targetFingerprint || targetFingerprint.entities.size === 0) {
             return null;
         }
 
-        // -- ✅ الإصلاح الحاسم والنهائي: إعادة 'new' بناءً على رسالة الخطأ القاطعة
-        const sourceDoc = new compromise(sourcePage.content.replace(/<[^>]+>/g, ' '));
+        const bodyText = sourcePage.content.replace(/<[^>]+>/g, ' ').trim();
+
+        // -- ✅ الإصلاح الحاسم والنهائي: التحقق من وجود محتوى فعلي --
+        if (!bodyText) {
+            return null;
+        }
+
+        const sourceDoc = new compromise(bodyText);
         
         let bestOpportunity = null;
 
