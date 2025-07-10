@@ -1,11 +1,11 @@
-// assets/js/js/LinkArchitect.worker.js (النسخة النهائية الذكية والعاملة 100%)
+// assets/js/js/LinkArchitect.worker.js (النسخة النهائية مع الإصلاح الحاسم)
 'use strict';
 
+// المسار الصحيح الذي توصلنا إليه
 try {
-    // المسار الصحيح نسبة لموقع العامل
     importScripts('libs/compromise.min.js');
 } catch (e) {
-    console.error("Failed to load compromise.min.js in worker.", e);
+    console.error("Failed to load compromise.min.js in worker. Path should be relative to the worker file itself.", e);
     self.postMessage({ error: "Failed to load NLP library." });
 }
 
@@ -19,7 +19,7 @@ if (typeof compromise !== 'undefined') {
         const title = page.title || '';
         const description = page.description || '';
         
-        // -- ✅ الإصلاح 1: إضافة كلمة 'new' --
+        // -- ✅ الإصلاح الحاسم الأول: إضافة كلمة 'new' --
         const doc = new compromise(title + '. ' + description);
         
         const entities = doc.people().out('array')
@@ -42,7 +42,7 @@ if (typeof compromise !== 'undefined') {
             return null;
         }
 
-        // -- ✅ الإصلاح 2: إضافة كلمة 'new' هنا أيضًا --
+        // -- ✅ الإصلاح الحاسم الثاني: إضافة كلمة 'new' --
         const sourceDoc = new compromise(sourcePage.content.replace(/<style[^>]*>[\s\S]*?<\/style>|<script[^>]*>[\s\S]*?<\/script>|<[^>]+>/g, ' '));
         
         let bestOpportunity = null;
