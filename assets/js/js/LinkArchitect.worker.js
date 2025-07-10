@@ -4,7 +4,7 @@
 // الخطوة 1: استيراد المكتبة لتصبح متاحة داخل العامل
 // تأكد من أن المسار صحيح نسبةً لمكان هذا الملف
 try {
-    importScripts('./libs/compromise.min.js');
+    importScripts('assets/js/js/libs/compromise.min.js');
 } catch (e) {
     console.error("Failed to load compromise.min.js in worker. Make sure the path is correct.", e);
     // إذا فشل تحميل المكتبة، أرسل رسالة خطأ للخيط الرئيسي
