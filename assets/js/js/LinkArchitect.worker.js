@@ -1,4 +1,4 @@
-// assets/js/js/LinkArchitect.worker.js (النسخة النهائية المدمجة والمكتفية ذاتيًا)
+// assets/js/js/LinkArchitect.worker.js (النسخة النهائية والحاسمة)
 'use strict';
 
 // =================================================================================
@@ -9,10 +9,11 @@
 -
 `,m=function(e,t){let r=e.filter(e=>e.found);return t.pointer&&r.forEach((e,r)=>{let i=t.pointer[r];e.start=i[1],e.length=i[2]-i[1]}),r};class g extends d{constructor(e,t,r,i){super(r,i),this.docs=e,this.pointer=t,this.isA="List"}get length(){return this.docs.length}get found(){return this.docs.length>0}get wordCount(){return this.docs.reduce((e,t)=>e+t.wordCount,0)}get termList(){return this.docs.map(e=>e.terms)}slice(e,t){const r=this.docs.slice(e,t),i=this.pointer?this.pointer.slice(e,t):null;return new g(r,i,this.world,this)}eq(e){let t=this.docs[e]?this.docs[e].docs[0]:[];return new h([t],this.world,this)}term(e){const t=this.docs.map(t=>t.terms[e]);return new g(t,null,this.world,this)}terms(e){const t=this.docs.map(t=>t.terms[e]).filter(e=>e);return new g(t,null,this.world,this)}first(){const e=this.docs.map(e=>e.first());return new g(e,null,this.world,this)}firstTerm(){const e=this.docs.map(e=>e.firstTerm());return new g(e,null,this.world,this)}last(){const e=this.docs.map(e=>e.last());return new g(e,null,this.world,this)}lastTerm(){const e=this.docs.map(e=>e.lastTerm());return new g(e,null,this.world,this)}match(e,t,r){const i=m(this.docs.map(i=>i.match(e,t,r)),this);return new g(i,null,this.world,this)}matchOne(e,t){return this.match(e,t).eq(0)}if(e){const t=m(this.docs.map(t=>t.if(e)),this);return new g(t,null,this.world,this)}ifNo(e){const t=m(this.docs.map(t=>t.ifNo(e)),this);return new g(t,null,this.world,this)}has(e){return this.docs.some(t=>t.has(e))}before(e){const t=this.docs.map(t=>t.before(e).docs[0]||[]).filter(e=>e.length>0);return new h(t,this.world,this)}after(e){const t=this.docs.map(t=>t.after(e).docs[0]||[]).filter(e=>e.length>0);return new h(t,this.world,this)}get parent(){let e=[];return this.docs.forEach(t=>{e.push(t.parent)}),new g(e,null,this.world,this)}get parents(){return this.parent}get toJSON(){return()=>this.docs.map(e=>e.json())}get text(){return this.docs.map(e=>e.text())}get normal(){return this.docs.map(e=>e.normal())}get isPlural(){const e=this.docs.filter(e=>e.isPlural().found),t=e.map(e=>e.pointer);return new g(e,t,this.world,this)}get isSingular(){const e=this.docs.filter(e=>e.isSingular().found),t=e.map(e=>e.pointer);return new g(e,t,this.world,this)}clone(e){const t=this.docs.map(t=>t.clone(e));return new g(t,this.pointer,this.world,this)}map(e){const t=this.docs.map(e);return new g(t,this.pointer,this.world,this)}forEach(e){this.docs.forEach(e)}filter(e){const t=this.docs.filter(e),r=t.map(e=>e.pointer);return new g(t,r,this.world,this)}find(e){const t=this.docs.find(e);return t?new g([t],t.pointer,this.world,this):new g([],null,this.world,this)}some(e){return this.docs.some(e)}random(e=1){const t=[];let r=this.docs.slice(0);for(let i=0;i<e&&r.length>0;i++){let e=Math.floor(Math.random()*r.length);t.push(r[i]),r.splice(e,1)}const i=t.map(e=>e.pointer);return new g(t,i,this.world,this)}sort(e){const t=this.docs.slice(0);return t.sort(e),new g(t,null,this.world,this)}adverbs(){const e=this.docs.map(e=>e.adverbs());return new g(e,null,this.world,this)}conjunctions(){const e=this.docs.map(e=>e.conjunctions());return new g(e,null,this.world,this)}nouns(){const e=this.docs.map(e=>e.nouns());return new g(e,null,this.world,this)}prepositions(){const e=this.docs.map(e=>e.prepositions());return new g(e,null,this.world,this)}pronouns(){const e=this.docs.map(e=>e.pronouns());return new g(e,null,this.world,this)}verbs(){const e=this.docs.map(e=>e.verbs());return new g(e,null,this.world,this)}}var f,b={alias:{people:"Person",things:"Noun",places:"Place",organizations:"Organization",pronouns:"Pronoun",verbs:"Verb",adjectives:"Adjective",adverbs:"Adverb",conjunctions:"Conjunction",prepositions:"Preposition"},isA:{Adverb:"Adverb",Condition:"Condition",Conjunction:"Conjunction",Determiner:"Determiner",Expression:"Expression",Noun:"Noun",Preposition:"Preposition",Pronoun:"Pronoun",QuestionWord:"QuestionWord",Verb:"Verb",Value:"Value",Adjective:"Adjective",Date:"Date",Person:"Person",Place:"Place",Organization:"Organization"}};const w=function(e,t,r){let o={found:!1,pointer:null,docs:null};const n=function(e,t){const r=[];let i=0;return t.forEach(t=>{const o=e[i],n=o.slice(t.start,t.end);r.push(n),i+=1}),r},s=function(e,t){const r=e.length,i=t.length,o=[];if(0===r||0===i)return o;let n=e[0].length;for(let s=0;s<n;s++){let n=!0;for(let o=0;o<r;o++)if(!e[o][s]||!t[o](e[o][s]))return n=!1,o=r;n&&o.push(s)}return o}(e,r);if(0===s.length)return o;let a=function(e,t,r){let i=[];let o=0;let n=0;for(let t=0;t<e.length;t++){let s=e[t];if(s>o){let e=r.slice(n,t);e.length>0&&i.push(e),n=t}o=s+1}let s=r.slice(n,e.length);return s.length>0&&i.push(s),i}(s,0,s);o.found=!0;const l=a.map(t=>{const r=t[0];return{start:r,end:r+e.length}});return o.docs=n(e,l),o.pointer=l,o};class v{constructor(e,t,i,o){this._cache={},this.isA="Doc",this.document=[],this.methods={one:{},two:{},three:{}},this.model={one:{},two:{},three:{}},this.compute={};let n=Object.assign({},b,o);this.world=this,this.methods.one=Object.assign({},n.methods.one),this.methods.two=Object.assign({},n.methods.two),this.methods.three=Object.assign({},n.methods.three),this.model={one:Object.assign({},n.model.one),two:Object.assign({},n.model.two),three:Object.assign({},n.model.three)},this.compute=Object.assign({},n.compute),this.hooks=n.hooks||[],this.looks=n.looks||[],this.isFrozen=!1,i=i||{version:"1.0.0"},this.version=i.version,this.verbose=!1,this.dirty=!1;const s=this.methods.one.preTagger;this.document=s(e,this),s=this.methods.one.postTagger,this.document=s(this.document,this);let a=new h(this.document,this);return a.cache(),a}stats(){return{terms:this.wordCount,sentences:this.length}}}return f=v,Object.defineProperty(f.prototype,"isDoc",{get:()=>!0,configurable:!0}),f});
 // --- END of embedded compromise.min.js ---
-// ===============================================
+// =================================================================================
 // --- START of our Link Architect Logic ---
 
-// The `compromise` object is now guaranteed to exist, so we can use it directly.
+// The compromise object is now guaranteed to exist. We will trust the final console
+// error and use it as a function, not a class constructor.
 
 const STOP_WORDS = new Set(['the', 'a', 'an', 'is', 'in', 'on', 'of', 'for', 'to']);
 
@@ -22,7 +23,7 @@ function createSemanticFingerprint(page) {
     const title = page.title;
     const description = page.description || '';
     
-    // FINAL FIX: Use compromise as a function, not a class constructor.
+    // FINAL, DEFINITIVE FIX: Use compromise as a function.
     const doc = compromise(title + '. ' + description);
     
     const entities = doc.people().out('array')
@@ -43,7 +44,7 @@ function findBestLinkingOpportunity(sourcePage, targetFingerprint) {
         return null;
     }
 
-    // FINAL FIX: Use compromise as a function.
+    // FINAL, DEFINITIVE FIX: Use compromise as a function.
     const sourceDoc = compromise(sourcePage.content.replace(/<[^>]+>/g, ' '));
     
     let bestOpportunity = null;
