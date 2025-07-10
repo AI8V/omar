@@ -2,12 +2,14 @@
 'use strict';
 
 try {
+    // المسار الصحيح الذي توصلنا إليه
     importScripts('libs/compromise.min.js');
 } catch (e) {
     console.error("CRITICAL: Failed to load compromise.min.js in worker.", e);
     self.postMessage({ error: "Failed to load NLP library." });
 }
 
+// فقط إذا تم تحميل المكتبة بنجاح، قم بتعريف بقية الوظائف
 if (typeof compromise !== 'undefined') {
 
     const STOP_WORDS = new Set(['the', 'a', 'an', 'is', 'in', 'on', 'of', 'for', 'to']);
@@ -18,8 +20,8 @@ if (typeof compromise !== 'undefined') {
         const title = page.title;
         const description = page.description || '';
         
-        // -- ✅ الإصلاح الحاسم والنهائي: إعادة 'new' بناءً على رسالة الخطأ القاطعة
-        const doc = new compromise(title + '. ' + description);
+        // -- ✅ الإصلاح الحاسم والنهائي: إزالة 'new'. الإصدار 14.13.0 هو دالة.
+        const doc = compromise(title + '. ' + description);
         
         const entities = doc.people().out('array')
             .concat(doc.places().out('array'))
@@ -39,8 +41,8 @@ if (typeof compromise !== 'undefined') {
             return null;
         }
 
-        // -- ✅ الإصلاح الحاسم والنهائي: إعادة 'new' بناءً على رسالة الخطأ القاطعة
-        const sourceDoc = new compromise(sourcePage.content.replace(/<[^>]+>/g, ' '));
+        // -- ✅ الإصلاح الحاسم والنهائي: إزالة 'new'. الإصدار 14.13.0 هو دالة.
+        const sourceDoc = compromise(sourcePage.content.replace(/<[^>]+>/g, ' '));
         
         let bestOpportunity = null;
 
