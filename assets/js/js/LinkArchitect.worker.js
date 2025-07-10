@@ -5,7 +5,7 @@
 // العامل (Worker) يعمل في بيئة منفصلة، لذا يجب أن يقوم بتحميل المكتبة بنفسه.
 // تأكد من أن هذا المسار صحيح نسبةً إلى ملف index.html
 try {
-    importScripts('assets/js/js/libs/compromise.min.js');
+    importScripts('../assets/js/js/libs/compromise.min.js');
 } catch (e) {
     console.error("Failed to load compromise.min.js in worker. Make sure the path is correct.", e);
     // نرسل رسالة خطأ للخيط الرئيسي في حالة فشل التحميل
