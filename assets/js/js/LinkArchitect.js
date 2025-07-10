@@ -1,41 +1,34 @@
-// assets/js/LinkArchitect.js (النسخة الجديدة)
+// assets/js/js/LinkArchitect.js 
 window.LinkArchitect = (function() {
     'use strict';
 
     let architectWorker;
 
-    /**
-     * Main function to generate a prioritized list of linking recommendations.
-     * Uses a Web Worker to avoid blocking the main thread.
-     * @param {Array} searchIndex - The full search index array.
-     * @returns {Promise<Array>} A promise that resolves with the sorted list of recommendations.
-     */
     function generateRecommendations(searchIndex) {
         return new Promise((resolve, reject) => {
-            // التحقق من الشروط الأساسية قبل تشغيل العامل
-            if (!searchIndex || searchIndex.length < 2 || !searchIndex.some(p => p.content)) {
-                return resolve([]);
+            const contentPages = searchIndex.filter(p => p.content && p.seo);
+
+            if (!searchIndex || searchIndex.length < 2 || contentPages.length === 0) {
+                const error = new Error("No pages with full content were found. Please re-crawl the site and ensure the 'Do not save full content' checkbox is UNCHECKED to use the Link Architect.");
+                error.name = 'NoContentError';
+                return reject(error);
             }
 
-            // إنهاء أي عامل قديم إذا كان موجودًا
             if (architectWorker) {
                 architectWorker.terminate();
             }
 
-            // إنشاء عامل جديد
-            architectWorker = new Worker('assets/js/LinkArchitect.worker.js');
-
-            // إرسال البيانات إلى العامل
+            const workerPath = 'assets/js/js/LinkArchitect.worker.js';
+            architectWorker = new Worker(workerPath);
+            
             architectWorker.postMessage(searchIndex);
 
-            // الاستماع للنتائج من العامل
             architectWorker.onmessage = function(event) {
                 resolve(event.data);
-                architectWorker.terminate(); // إنهاء العامل بعد إرسال النتائج
+                architectWorker.terminate();
                 architectWorker = null;
             };
 
-            // التعامل مع الأخطاء
             architectWorker.onerror = function(error) {
                 console.error('Link Architect Worker Error:', error);
                 reject(error);
