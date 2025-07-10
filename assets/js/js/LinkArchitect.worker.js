@@ -1,7 +1,6 @@
-// assets/js/LinkArchitect.worker.js
+// assets/js/js/LinkArchitect.worker.js 
 'use strict';
 
-// نفس الدوال المساعدة والمنطق الحسابي تم نقلها إلى هنا
 const STOP_WORDS = new Set(['من', 'في', 'على', 'إلى', 'عن', 'هو', 'هي', 'هذا', 'هذه', 'كان', 'يكون', 'قال', 'مع', 'the', 'a', 'an', 'is', 'in', 'on', 'of', 'for', 'to', 'and', 'or', 'but']);
 
 function createSemanticFingerprint(page) {
@@ -10,7 +9,14 @@ function createSemanticFingerprint(page) {
     const keywords = allText.split(/[\s,،-]+/).filter(word => word && word.length > 2 && !STOP_WORDS.has(word));
     const keywordFrequency = keywords.reduce((map, word) => { map[word] = (map[word] || 0) + 1; return map; }, {});
     const topKeywords = Object.keys(keywordFrequency).sort((a, b) => keywordFrequency[b] - keywordFrequency[a]).slice(0, 10);
-    return { id: page.id, url: page.url, title: page.title, keywords: new Set(topKeywords), linkEquity: page.seo.internalLinkEquity || 0, outgoingLinks: page.seo.contentAnalysis?.internalLinks || 0 };
+    return {
+        id: page.id,
+        url: page.url,
+        title: page.title,
+        keywords: new Set(topKeywords),
+        linkEquity: page.seo.internalLinkEquity || 0,
+        outgoingLinks: page.seo.contentAnalysis?.internalLinks || 0
+    };
 }
 
 function findBestLinkingOpportunity(sourcePage, targetFingerprint) {
@@ -25,9 +31,12 @@ function findBestLinkingOpportunity(sourcePage, targetFingerprint) {
         const end = Math.min(bodyText.length, matchIndex + keyword.length + 70);
         let context = bodyText.substring(start, end).trim().replace(/\s+/g, ' ');
         context = (start > 0 ? '... ' : '') + context + (end < bodyText.length ? ' ...' : '');
-        const priorityScore = (targetFingerprint.linkEquity * 5) + (20 / (1 + sourcePage.seo.contentAnalysis.internalLinks)) + (keyword.length * 2);
+        
+        const outgoingLinksCount = sourcePage.seo?.contentAnalysis?.internalLinks ?? 0;
+        const priorityScore = (targetFingerprint.linkEquity * 5) + (20 / (1 + outgoingLinksCount)) + (keyword.length * 2);
+
         if (!bestOpportunity || priorityScore > bestOpportunity.priority) {
-            bestOpportunity = { targetPageUrl: targetFingerprint.url, targetPageTitle: targetFingerprint.title, anchorText: keyword, context, priority: Math.round(priorityScore) };
+            bestOpportunity = { targetPageUrl: targetFingerprint.url, targetPageTitle: targetFingerprint.title, anchorText: keyword, context: context, priority: Math.round(priorityScore) };
         }
     });
     return bestOpportunity;
@@ -37,8 +46,10 @@ function generateRecommendations(searchIndex) {
     if (!searchIndex || searchIndex.length < 2) return [];
     const contentPages = searchIndex.filter(p => p.content && p.seo);
     if (contentPages.length < 2) return [];
+    
     const fingerprints = searchIndex.map(createSemanticFingerprint).filter(Boolean);
     const allRecommendations = [];
+
     contentPages.forEach(sourcePage => {
         const pageOpportunities = [];
         fingerprints.forEach(targetFingerprint => {
@@ -56,10 +67,8 @@ function generateRecommendations(searchIndex) {
     return allRecommendations;
 }
 
-// الاستماع للرسائل من الخيط الرئيسي
 self.onmessage = function(event) {
     const searchIndex = event.data;
     const recommendations = generateRecommendations(searchIndex);
-    // إرسال النتائج مرة أخرى إلى الخيط الرئيسي
     self.postMessage(recommendations);
 };
