@@ -1,31 +1,27 @@
-// assets/js/js/LinkArchitect.worker.js (النسخة النهائية والمحصّنة)
+// assets/js/js/LinkArchitect.worker.js (النسخة النهائية والحاسمة)
 'use strict';
 
 try {
+    // المسار الصحيح الذي توصلنا إليه
     importScripts('libs/compromise.min.js');
 } catch (e) {
     console.error("CRITICAL: Failed to load compromise.min.js in worker.", e);
     self.postMessage({ error: "Failed to load NLP library." });
 }
 
+// فقط إذا تم تحميل المكتبة بنجاح، قم بتعريف بقية الوظائف
 if (typeof compromise !== 'undefined') {
 
     const STOP_WORDS = new Set(['the', 'a', 'an', 'is', 'in', 'on', 'of', 'for', 'to']);
 
     function createSemanticFingerprint(page) {
-        if (!page) return null;
+        if (!page || !page.title) return null;
         
-        const title = page.title || '';
+        const title = page.title;
         const description = page.description || '';
-        const textToAnalyze = (title + '. ' + description).trim();
         
-        // -- ✅ الإصلاح الحاسم والنهائي: التحقق من وجود نص قبل استدعاء المكتبة --
-        // هذا يمنع تمرير بيانات فارغة تسبب انهيار المكتبة.
-        if (!textToAnalyze || textToAnalyze === '.') {
-            return null;
-        }
-
-        const doc = new compromise(textToAnalyze);
+        // -- ✅ الإصلاح الحاسم والنهائي: إزالة 'new'. الإصدار 14.13.0 هو دالة.
+        const doc = compromise(title + '. ' + description);
         
         const entities = doc.people().out('array')
             .concat(doc.places().out('array'))
@@ -41,18 +37,12 @@ if (typeof compromise !== 'undefined') {
     }
 
     function findBestLinkingOpportunity(sourcePage, targetFingerprint) {
-        if (!sourcePage || !sourcePage.content || !targetFingerprint || targetFingerprint.entities.size === 0) {
+        if (!sourcePage.content || !targetFingerprint || targetFingerprint.entities.size === 0) {
             return null;
         }
 
-        const bodyText = sourcePage.content.replace(/<[^>]+>/g, ' ').trim();
-
-        // -- ✅ الإصلاح الحاسم والنهائي: التحقق من وجود محتوى فعلي --
-        if (!bodyText) {
-            return null;
-        }
-
-        const sourceDoc = new compromise(bodyText);
+        // -- ✅ الإصلاح الحاسم والنهائي: إزالة 'new'. الإصدار 14.13.0 هو دالة.
+        const sourceDoc = compromise(sourcePage.content.replace(/<[^>]+>/g, ' '));
         
         let bestOpportunity = null;
 
