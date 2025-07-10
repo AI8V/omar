@@ -964,6 +964,8 @@ const ProjectManager = (function (State, UI, Utils) {
             });
             advisorList.appendChild(fragment);
         }
+        // في ملف assets/js/js/script.js
+
         function renderArchitectRecommendations(recommendations) {
             const architectList = DOM.dom['architect-list'];
             const architectPlaceholder = DOM.dom.architectPlaceholder;
@@ -987,10 +989,15 @@ const ProjectManager = (function (State, UI, Utils) {
                 const collapseId = `architect-rec-${index}`;
                 const recElement = document.createElement('div');
                 recElement.className = 'accordion-item';
+
+                // -- ✅ التعديل الحاسم هنا: تغيير بنية زر الأكورديون --
                 recElement.innerHTML = `
                     <h2 class="accordion-header" id="heading-${collapseId}">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}">
-                            <span class="fw-bold me-2">من صفحة:</span> <span class="text-primary text-truncate">${rec.sourcePageTitle}</span>
+                            <div class="d-flex align-items-center w-100 overflow-hidden">
+                                <span class="fw-bold flex-shrink-0">من صفحة:</span>
+                                <span class="text-primary text-truncate mx-2" dir="ltr">${rec.sourcePageTitle}</span>
+                            </div>
                         </button>
                     </h2>
                     <div id="${collapseId}" class="accordion-collapse collapse" data-bs-parent="#architect-list">
@@ -1073,17 +1080,26 @@ const ProjectManager = (function (State, UI, Utils) {
             const architectPlaceholder = DOM.dom.architectPlaceholder;
             const architectList = DOM.dom['architect-list'];
             const architectCountBadge = DOM.dom['architect-count'];
+            
             architectList.innerHTML = '';
             architectCountBadge.classList.add('d-none');
             architectPlaceholder.textContent = 'جاري تحليل فرص الربط الداخلي... قد تستغرق هذه العملية بعض الوقت.';
             architectPlaceholder.classList.remove('d-none');
+            
             try {
                 const recommendations = await window.LinkArchitect.generateRecommendations(State.appState.searchIndex);
                 State.appState.architectRecommendations = recommendations;
                 renderArchitectRecommendations(recommendations);
             } catch (error) {
                 console.error("Link Architect failed to run:", error);
-                architectPlaceholder.textContent = 'حدث خطأ أثناء تشغيل مهندس الروابط. تحقق من الكونسول لمزيد من التفاصيل.';
+                // -- ✅ تعديل حاسم هنا --
+                if (error.name === 'NoContentError') {
+                    // إذا كان الخطأ هو عدم وجود محتوى، نعرض رسالة مخصصة
+                    architectPlaceholder.textContent = 'لتفعيل "مهندس الروابط"، يرجى إعادة زحف الموقع مع التأكد من **إلغاء تحديد** مربع "عدم حفظ المحتوى الكامل".';
+                } else {
+                    // لأي أخطاء أخرى، نعرض الرسالة العامة
+                    architectPlaceholder.textContent = 'حدث خطأ أثناء تشغيل مهندس الروابط. تحقق من الكونسول لمزيد من التفاصيل.';
+                }
             }
         }
         
