@@ -1,8 +1,9 @@
-// assets/js/ghost-crawler.js 
+// assets/js/LogFileAnalyzer/ghost-crawler.js
 
 (function() {
     'use strict';
 
+    // --- DOM Elements ---
     const startUrlInput = document.getElementById('startUrl');
     const startCrawlBtn = document.getElementById('startCrawlBtn');
     const progressSection = document.getElementById('progress-section');
@@ -10,25 +11,26 @@
     const statusText = document.getElementById('status-text');
     const crawlCounter = document.getElementById('crawl-counter');
     const resultsSection = document.getElementById('results-section');
-    const healthScoreEl = document.getElementById('health-score');
-    const brokenLinksCountEl = document.getElementById('broken-links-count');
-    const serverErrorsCountEl = document.getElementById('server-errors-count');
-    const issuesTableBody = document.getElementById('issues-table-body');
-    const exportVisualizerBtn = document.getElementById('exportVisualizerBtn');
-    
+    const resultsTableBody = document.getElementById('results-table-body');
+    const exportCsvBtn = document.getElementById('exportCsvBtn');
     const errorToastEl = document.getElementById('errorToast');
     const errorToast = bootstrap.Toast.getOrCreateInstance(errorToastEl);
     const toastBodyMessage = document.getElementById('toast-body-message');
 
-    let crawledUrls;
-    let queue;
-    let issues;
-    let healthScore;
+    // --- State Variables ---
     let origin;
-    let pageData;
-    let crawlMap;
+    let crawledUrls; // Set of URLs that have been processed from the queue
+    let queue; // Array of {url, depth} to be crawled
+    let pageData; // Map<url, {status, title, wordCount, depth, outgoingLinks: [{url, type, anchor}]}>
+    let allFoundLinks; // Set of all unique link URLs found on the site
+    let linkStatusCache; // Map<url, {error, status}> to store check results
+    let finalReport; // Array of objects representing each row in the final CSV
 
-
+    /**
+     * Normalizes a URL by removing the hash and trailing slash.
+     * @param {string} urlStr The URL to normalize.
+     * @returns {string} The normalized URL.
+     */
     function normalizeUrl(urlStr) {
         try {
             const urlObj = new URL(urlStr);
@@ -38,306 +40,337 @@
             }
             return urlObj.href;
         } catch (e) {
-            return urlStr;
+            return urlStr; // Return original if invalid
         }
     }
 
+    /**
+     * Displays a toast notification with an error message.
+     * @param {string} message The message to display.
+     */
     function showToast(message) {
-        if (toastBodyMessage) {
-            toastBodyMessage.innerText = message;
-            errorToast.show();
-        } else {
-            alert(message);
-        }
+        toastBodyMessage.innerText = message;
+        errorToast.show();
     }
 
-    startCrawlBtn.addEventListener('click', startCrawl);
-    if(exportVisualizerBtn) exportVisualizerBtn.addEventListener('click', exportForVisualizer);
-    
-    async function startCrawl() {
+    /**
+     * Resets all state variables and UI elements to start a new crawl.
+     */
+    function initializeCrawl() {
         const rawStartUrl = startUrlInput.value.trim();
         if (!rawStartUrl || !rawStartUrl.startsWith('https://')) {
-            showToast('يرجى إدخال رابط صحيح يبدأ بـ ://https');
-            return;
+            showToast('يرجى إدخال رابط صحيح يبدأ بـ https://');
+            return false;
         }
         
         const startUrl = normalizeUrl(rawStartUrl);
         origin = new URL(startUrl).origin;
 
+        // Reset state
         crawledUrls = new Set();
         queue = [{ url: startUrl, depth: 0 }];
-        issues = [];
         pageData = new Map();
-        crawlMap = [];
-        healthScore = 100;
-        
-        issuesTableBody.innerHTML = '';
+        allFoundLinks = new Set();
+        linkStatusCache = new Map();
+        finalReport = [];
+
+        // Reset UI
+        resultsTableBody.innerHTML = '';
         progressSection.classList.remove('d-none');
         resultsSection.classList.add('d-none');
-        if(exportVisualizerBtn) exportVisualizerBtn.classList.add('d-none');
+        exportCsvBtn.classList.add('d-none');
         startCrawlBtn.disabled = true;
         startCrawlBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جارِ الفحص...`;
-
-        processNextInQueue();
+        
+        return true;
     }
 
-    async function processNextInQueue() {
-        if (queue.length === 0 || crawledUrls.size >= 200) {
-            finishCrawl();
+    /**
+     * Main crawl loop (Phase 1: Crawl & Collect).
+     * Processes one URL from the queue at a time.
+     */
+    async function processQueue() {
+        if (queue.length === 0) {
+            await finishCrawl(); // Move to Phase 2
             return;
         }
 
-        const { url: currentUrl, depth: currentDepth } = queue.shift();
+        const { url: currentUrl, depth } = queue.shift();
         if (crawledUrls.has(currentUrl)) {
-            processNextInQueue();
+            processQueue(); // Skip if already processed
             return;
         }
-        
+
         crawledUrls.add(currentUrl);
-        updateProgress();
-        statusText.innerText = `يفحص الآن: ${currentUrl}`;
-            
+        updateProgress(crawledUrls.size, crawledUrls.size + queue.length, `المرحلة الأولى: يتم الآن فحص ${currentUrl}`);
+
         try {
-            const startTime = performance.now();
             const proxyUrl = `https://throbbing-dew-da3c.amr-omar304.workers.dev/?url=${encodeURIComponent(currentUrl)}`;
             const response = await fetch(proxyUrl);
-            const loadTime = Math.round(performance.now() - startTime);
+            
+            const pageInfo = {
+                status: response.status,
+                title: 'N/A',
+                wordCount: 0,
+                depth: depth,
+                outgoingLinks: []
+            };
+            pageData.set(currentUrl, pageInfo);
 
-            const newLinks = await analyzeResponse(currentUrl, response, currentDepth, loadTime);
+            if (response.ok && (response.headers.get('Content-Type') || '').includes('text/html')) {
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
 
-            if (newLinks) {
-                newLinks.forEach(link => {
-                    try {
-                        const absoluteUrl = normalizeUrl(new URL(link, origin).href);
-                        
-                        if (absoluteUrl.startsWith(origin) && !crawledUrls.has(absoluteUrl) && !queue.some(q => q.url === absoluteUrl)) {
-                            queue.push({ url: absoluteUrl, depth: currentDepth + 1 });
-                        }
-                    } catch(e) {
-                        console.warn(`Invalid URL found and skipped: ${link}`);
-                    }
-                });
+                pageInfo.title = doc.querySelector('title')?.innerText.trim() || '[لا يوجد عنوان]';
+                pageInfo.wordCount = (doc.body?.textContent || "").trim().split(/\s+/).filter(Boolean).length;
+
+                // Collect all links (anchors and images)
+                collectLinks(doc, currentUrl, pageInfo, depth);
             }
         } catch (error) {
-            console.error(`Failed to fetch ${currentUrl}:`, error);
-            addIssue('Fetch Error', `لا يمكن الوصول إلى الرابط.`, currentUrl);
-            healthScore -= 5;
+            console.error(`فشل جلب ${currentUrl}:`, error);
+            if (pageData.has(currentUrl)) {
+                pageData.get(currentUrl).status = 'Error: Fetch Failed';
+            }
         }
-        
-        setTimeout(processNextInQueue, 50);
+
+        setTimeout(processQueue, 50); // Small delay between requests
     }
-    
-    async function analyzeResponse(url, response, depth, loadTime) {
-        const pageObject = {
-            url: url,
-            title: '',
-            description: '',
-            category: 'زاحف SEO',
-            tags: [],
-            seo: { loadTime: loadTime, crawlDepth: depth, issues: [] },
-            issues: []
-        };
-        pageData.set(url, pageObject);
 
-        if (!response.ok) {
-            const errorType = response.status >= 500 ? 'Server Error (5xx)' : 'Broken Link (4xx)';
-            addIssue(errorType, `كود الحالة: ${response.status}`, url);
-            healthScore -= (response.status >= 500 ? 10 : 5);
-            return []; 
-        }
-        
-        const contentType = response.headers.get('Content-Type') || '';
-        if (!contentType.includes('text/html')) {
-            console.log(`Skipping HTML analysis for non-HTML content: ${url} (${contentType})`);
-            pageObject.title = `ملف (${contentType})`;
-            pageObject.description = `تم تخطي التحليل لملف غير نصي.`;
-            return []; 
-        }
-
-        const html = await response.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        
-        pageObject.title = doc.querySelector('title')?.innerText.trim() || '';
-        pageObject.description = doc.querySelector('meta[name="description"]')?.content.trim() || '';
-        pageObject.seo.h1 = doc.querySelector('h1')?.innerText.trim() || '';
-        pageObject.seo.lang = doc.documentElement.lang || 'N/A';
-        pageObject.seo.canonical = doc.querySelector('link[rel="canonical"]')?.href || url;
-        pageObject.seo.ogTitle = doc.querySelector('meta[property="og:title"]')?.content.trim() || pageObject.title;
-        pageObject.seo.ogImage = doc.querySelector('meta[property="og:image"]')?.content.trim() || '';
-        pageObject.seo.isNoIndex = doc.querySelector('meta[name="robots"][content*="noindex"]') !== null;
-        pageObject.seo.hasStructuredData = doc.querySelector('script[type="application/ld+json"]') !== null;
-        pageObject.seo.wordCount = (doc.body.textContent || "").trim().split(/\s+/).filter(Boolean).length;
-        
-        const images = doc.querySelectorAll('img');
-        pageObject.seo.imageAltInfo = {
-            total: images.length,
-            missing: Array.from(images).filter(img => !img.alt || !img.alt.trim()).length
-        };
-
-        if (!pageObject.title || pageObject.title.length < 10 || pageObject.title.length > 60) {
-            addIssue('SEO', `العنوان غير مثالي (الطول: ${pageObject.title.length}).`, url);
-            healthScore -= 2;
-        }
-        if (!pageObject.description || pageObject.description.length < 70 || pageObject.description.length > 160) {
-            addIssue('SEO', `الوصف التعريفي غير مثالي (الطول: ${pageObject.description.length}).`, url);
-            healthScore -= 2;
-        }
-        if (doc.querySelectorAll('h1').length !== 1) {
-            addIssue('Structure', `تم العثور على ${doc.querySelectorAll('h1').length} من وسوم H1 (المطلوب 1).`, url);
-            healthScore -= 5;
-        }
-        
-        const allLinks = Array.from(doc.querySelectorAll('a[href]'));
-        const outgoingInternalLinksAbs = [];
-        let externalLinksCount = 0;
-
-        allLinks.forEach(a => {
+    /**
+     * Extracts all links from a document and adds them to the crawl queue or data stores.
+     * @param {Document} doc The parsed HTML document.
+     * @param {string} sourceUrl The URL of the page being analyzed.
+     * @param {object} pageInfo The data object for the source page.
+     * @param {number} depth The crawl depth of the source page.
+     */
+    function collectLinks(doc, sourceUrl, pageInfo, depth) {
+        // Collect anchor links
+        doc.querySelectorAll('a[href]').forEach(a => {
             const href = a.getAttribute('href');
-            if (!href || href.startsWith('mailto:') || href.startsWith('tel:')) return;
-            try {
-                const absoluteUrl = new URL(href, origin).href;
-                if (absoluteUrl.startsWith(origin)) {
-                    outgoingInternalLinksAbs.push(normalizeUrl(absoluteUrl));
-                } else {
-                    externalLinksCount++;
-                }
-            } catch (e) { /* Invalid href, ignore */ }
-        });
-        
-        pageObject.seo.contentAnalysis = {
-            internalLinks: outgoingInternalLinksAbs.length,
-            externalLinks: externalLinksCount,
-            outgoingInternalLinks: outgoingInternalLinksAbs
-        };
+            if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:')) return;
 
-        return allLinks.map(a => a.getAttribute('href')).filter(Boolean);
+            try {
+                const absoluteUrl = normalizeUrl(new URL(href, sourceUrl).href);
+                allFoundLinks.add(absoluteUrl);
+                pageInfo.outgoingLinks.push({
+                    url: absoluteUrl,
+                    type: absoluteUrl.startsWith(origin) ? 'لينك داخلى' : 'لينك خارجى',
+                    anchor: a.innerText.trim() || '[نص فارغ]'
+                });
+
+                // Add internal, non-crawled URLs to the queue
+                if (absoluteUrl.startsWith(origin) && !crawledUrls.has(absoluteUrl) && !queue.some(q => q.url === absoluteUrl)) {
+                    queue.push({ url: absoluteUrl, depth: depth + 1 });
+                }
+            } catch (e) { console.warn(`رابط غير صالح في الصفحة ${sourceUrl}: ${href}`); }
+        });
+
+        // Collect image links
+        doc.querySelectorAll('img[src]').forEach(img => {
+            const src = img.getAttribute('src');
+            if (!src) return;
+            try {
+                const absoluteUrl = normalizeUrl(new URL(src, sourceUrl).href);
+                allFoundLinks.add(absoluteUrl);
+                pageInfo.outgoingLinks.push({
+                    url: absoluteUrl,
+                    type: 'صورة',
+                    anchor: img.alt.trim() || '[alt فارغ]'
+                });
+            } catch (e) { console.warn(`رابط صورة غير صالح في الصفحة ${sourceUrl}: ${src}`); }
+        });
     }
-    
-    function finishCrawl() {
-        statusText.innerText = 'اكتمل الفحص! جارِ حساب النتائج النهائية...';
-        finalizeCrawlMap();
+
+    /**
+     * Phase 2: Analyze & Report. Triggered after the crawl is complete.
+     */
+    async function finishCrawl() {
+        // 1. Check status of all unique links found
+        const linksArray = Array.from(allFoundLinks);
+        for (let i = 0; i < linksArray.length; i++) {
+            const link = linksArray[i];
+            updateProgress(i + 1, linksArray.length, `المرحلة الثانية: فحص حالة الروابط (${i + 1}/${linksArray.length})`);
+            await checkLinkStatus(link);
+        }
+
+        // 2. Build the final report by cross-referencing page data with link statuses
+        updateProgress(0, 1, 'المرحلة الثالثة: جاري تجميع التقرير النهائي...');
+        buildFinalReport();
+
+        // 3. Display results
         displayResults();
+        
+        // 4. Reset UI
         startCrawlBtn.disabled = false;
         startCrawlBtn.innerHTML = `<i class="bi bi-search ms-2"></i>ابدأ الفحص`;
-        statusText.innerText = 'اكتمل الفحص!';
+        statusBar.style.width = '100%';
+        statusText.innerText = `اكتمل الفحص! تم العثور على ${finalReport.length} مشكلة.`;
     }
+    
+    /**
+     * Checks the HTTP status of a single URL and caches the result.
+     * @param {string} url The URL to check.
+     */
+    async function checkLinkStatus(url) {
+        if (linkStatusCache.has(url)) return;
 
-    function finalizeCrawlMap() {
-        const allPages = Array.from(pageData.values());
+        try {
+            const proxyUrl = `https://throbbing-dew-da3c.amr-omar304.workers.dev/?url=${encodeURIComponent(url)}`;
+            const response = await fetch(proxyUrl, { method: 'HEAD', mode: 'cors' });
+            if (!response.ok) {
+                linkStatusCache.set(url, { error: true, status: response.status >= 500 ? '5xx' : `4xx (${response.status})` });
+            } else {
+                linkStatusCache.set(url, { error: false, status: response.status });
+            }
+        } catch (e) {
+            linkStatusCache.set(url, { error: true, status: 'Error: Unknown Host' });
+        }
+    }
+    
+    /**
+     * Iterates through all crawled pages and their links to build the final report of issues.
+     */
+    function buildFinalReport() {
+        const incomingLinksMap = new Map();
+        // Calculate incoming links for each page
+        for (const [sourceUrl, data] of pageData.entries()) {
+            data.outgoingLinks.forEach(link => {
+                if (link.url.startsWith(origin)) {
+                    if (!incomingLinksMap.has(link.url)) incomingLinksMap.set(link.url, 0);
+                    incomingLinksMap.set(link.url, incomingLinksMap.get(link.url) + 1);
+                }
+            });
+        }
+        
+        // Create the report rows
+        for (const [sourceUrl, data] of pageData.entries()) {
+            const outgoingErrors = new Map();
 
-        allPages.forEach(page => {
-            if (page.seo && page.seo.contentAnalysis) {
-                page.seo.contentAnalysis.outgoingInternalLinks.forEach(targetUrl => {
-                    if (pageData.has(targetUrl)) {
-                        const targetPage = pageData.get(targetUrl);
-                        if (!targetPage.seo.internalLinkEquity) {
-                            targetPage.seo.internalLinkEquity = 0;
-                        }
-                        targetPage.seo.internalLinkEquity++;
+            data.outgoingLinks.forEach(link => {
+                const statusInfo = linkStatusCache.get(link.url);
+                if (statusInfo && statusInfo.error) {
+                    const errorKey = `${link.url}|${link.anchor}`; // Group by URL and anchor text
+                    if (!outgoingErrors.has(errorKey)) {
+                        outgoingErrors.set(errorKey, { ...link, errorType: statusInfo.status, frequency: 0 });
                     }
+                    outgoingErrors.get(errorKey).frequency++;
+                }
+            });
+
+            if (outgoingErrors.size > 0) {
+                outgoingErrors.forEach(error => {
+                    finalReport.push({
+                        sourcePage: sourceUrl,
+                        pageTitle: data.title,
+                        pageStatus: data.status,
+                        errorLink: error.url,
+                        errorType: error.errorType,
+                        errorFrequency: error.frequency,
+                        linkType: error.type,
+                        anchorText: error.anchor,
+                        wordCount: data.wordCount,
+                        outgoingLinkCount: data.outgoingLinks.length,
+                        incomingLinkCount: incomingLinksMap.get(sourceUrl) || 0,
+                        depth: data.depth
+                    });
                 });
             }
-        });
-
-        allPages.forEach(page => {
-            if (page.seo && page.seo.internalLinkEquity === 0 && page.seo.crawlDepth > 0) {
-                page.seo.isOrphan = true;
-                addIssue('Structure', 'صفحة يتيمة (لا توجد روابط داخلية إليها)', page.url);
-            }
-        });
-        
-        crawlMap = allPages;
-    }
-
-    function addIssue(type, description, url) {
-        issues.push({ type, description, url });
-        if (pageData.has(url)) {
-            pageData.get(url).issues.push({ type, description });
         }
     }
 
-    function updateProgress() {
-        const queueSize = queue.length;
-        const crawledSize = crawledUrls.size;
-        const total = Math.min(200, queueSize + crawledSize);
-        crawlCounter.innerText = `${crawledSize}/${total}`;
-        const progressPercentage = total > 0 ? (crawledSize / total) * 100 : (queue.length > 0 ? 0 : 100);
-        statusBar.style.width = `${progressPercentage}%`;
-    }
-
+    /**
+     * Renders the final report into the HTML table.
+     */
     function displayResults() {
         resultsSection.classList.remove('d-none');
-        healthScoreEl.innerText = Math.max(0, Math.round(healthScore));
-        
-        brokenLinksCountEl.innerText = issues.filter(i => i.type.includes('4xx') || i.type.includes('Fetch Error')).length;
-        serverErrorsCountEl.innerText = issues.filter(i => i.type.includes('5xx')).length;
-
-        if (issues.length === 0) {
-            issuesTableBody.innerHTML = `<tr><td colspan="3" class="text-center text-success fw-bold">رائع! لم يتم العثور على مشاكل حرجة.</td></tr>`;
+        if (finalReport.length === 0) {
+            resultsTableBody.innerHTML = `<tr><td colspan="12" class="text-center text-success fw-bold p-4">رائع! لم يتم العثور على أي روابط معطلة.</td></tr>`;
         } else {
-            issuesTableBody.innerHTML = issues.sort((a, b) => getBadgeColor(b.type).localeCompare(getBadgeColor(a.type))).map(issue => `
+            resultsTableBody.innerHTML = finalReport.map(res => `
                 <tr>
-                    <td><span class="badge bg-${getBadgeColor(issue.type)}">${issue.type}</span></td>
-                    <td>${issue.description}</td>
-                    <td><a href="${issue.url}" target="_blank" rel="noopener noreferrer" class="text-truncate d-inline-block" style="max-width: 250px;">${issue.url}</a></td>
+                    <td class="text-truncate" style="max-width: 150px;"><a href="${res.sourcePage}" target="_blank" title="${res.sourcePage}">${res.sourcePage}</a></td>
+                    <td class="text-truncate" style="max-width: 200px;" title="${res.pageTitle}">${res.pageTitle}</td>
+                    <td><span class="badge bg-${String(res.pageStatus).startsWith('2') ? 'success' : 'warning'}">${res.pageStatus}</span></td>
+                    <td class="text-truncate" style="max-width: 150px;"><a href="${res.errorLink}" target="_blank" title="${res.errorLink}">${res.errorLink}</a></td>
+                    <td><span class="badge bg-danger">${res.errorType}</span></td>
+                    <td>${res.errorFrequency}</td>
+                    <td>${res.linkType}</td>
+                    <td class="text-truncate" style="max-width: 150px;" title="${res.anchorText}">${res.anchorText}</td>
+                    <td>${res.wordCount}</td>
+                    <td>${res.outgoingLinkCount}</td>
+                    <td>${res.incomingLinkCount}</td>
+                    <td>${res.depth}</td>
                 </tr>
             `).join('');
         }
-        
-        if (exportVisualizerBtn && crawlMap.length > 0) {
-            exportVisualizerBtn.classList.remove('d-none');
+        if (finalReport.length > 0) {
+            exportCsvBtn.classList.remove('d-none');
         }
     }
 
-    function getBadgeColor(type) {
-        if (type.includes('Error') || type.includes('4xx') || type.includes('5xx')) return 'danger';
-        if (type.includes('Structure')) return 'warning';
-        return 'info';
+    /**
+     * Updates the progress bar and status text.
+     */
+    function updateProgress(current, total, text) {
+        statusText.innerText = text;
+        crawlCounter.innerText = `${current}/${total}`;
+        const percentage = total > 0 ? (current / total) * 100 : 0;
+        statusBar.style.width = `${percentage}%`;
     }
 
-    function exportForVisualizer() {
-        if (!crawlMap || crawlMap.length === 0) {
-            showToast('لا توجد بيانات صالحة لتصديرها.');
+    /**
+     * Exports the final report to a CSV file.
+     */
+    function exportToCsv() {
+        if (!finalReport || finalReport.length === 0) {
+            showToast('لا توجد بيانات لتصديرها.');
             return;
         }
-        
-        const finalExportData = crawlMap.map((page, index) => {
-            const relativeUrl = page.url.replace(origin, '') || '/';
-            
-            const outgoingLinks = page.seo?.contentAnalysis?.outgoingInternalLinks || [];
 
-            const relativeOutgoingLinks = outgoingLinks
-                .map(link => link.replace(origin, '') || '/')
-                .filter(link => link !== relativeUrl);
+        const headers = [
+            "الصفحة", "العنوان", "حالة الصفحة", "رابط الخطأ", "نوع الخطأ",
+            "تكرار الخطأ", "نوع الرابط", "نص الرابط", "عدد كلمات الصفحة",
+            "عدد الروابط الصادرة", "عدد الروابط الواردة", "عمق الصفحة"
+        ];
 
-            return {
-                id: index + 1,
-                title: page.title,
-                description: page.description,
-                url: relativeUrl,
-                category: page.category,
-                tags: page.tags,
-                seo: {
-                    ...page.seo,
-                    contentAnalysis: {
-                        ...(page.seo?.contentAnalysis || {}),
-                        outgoingInternalLinks: relativeOutgoingLinks
-                    }
-                }
-            };
-        });
+        const escapeCsvField = (field) => {
+            const str = String(field ?? '');
+            if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                return `"${str.replace(/"/g, '""')}"`;
+            }
+            return str;
+        };
 
-        const dataStr = JSON.stringify(finalExportData, null, 2);
-        const blob = new Blob([dataStr], { type: 'application/json' });
+        const csvRows = [headers.join(',')];
+        for (const row of finalReport) {
+            const values = [
+                row.sourcePage, row.pageTitle, row.pageStatus, row.errorLink,
+                row.errorType, row.errorFrequency, row.linkType, row.anchorText,
+                row.wordCount, row.outgoingLinkCount, row.incomingLinkCount, row.depth
+            ].map(escapeCsvField);
+            csvRows.push(values.join(','));
+        }
+
+        const csvString = csvRows.join('\n');
+        const blob = new Blob([`\uFEFF${csvString}`], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'search-index.json';
+        a.download = `Ai8V_Crawl_Report_${origin.replace(/https?:\/\//, '')}.csv`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     }
+    
+    // --- Event Listeners ---
+    startCrawlBtn.addEventListener('click', () => {
+        if (initializeCrawl()) {
+            processQueue();
+        }
+    });
+    exportCsvBtn.addEventListener('click', exportToCsv);
 
 })();
