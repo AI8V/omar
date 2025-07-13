@@ -4,38 +4,28 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Ai8V | Mind &amp; Machine - SEO Tools for Professionals</title>
+    <title>Ai8V | Mind & Machine - SEO Tools for Professionals</title>
     <link rel="canonical" href="https://ai8v.com/LogFileAnalyzer/ghost.html">
     <meta property="og:url" content="https://ai8v.com/LogFileAnalyzer/ghost.html">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://throbbing-dew-da3c.amr-omar304.workers.dev https://api.allorigins.win; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com; img-src 'self' data: https://images.example.com; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; object-src 'none';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://throbbing-dew-da3c.amr-omar304.workers.dev https://api.allorigins.win; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com; img-src * data:; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; object-src 'none';">
     <meta name="description" content="مجموعة أدوات SEO متقدمة للمحترفين والوكالات، تتضمن زاحف مواقع، محلل سجلات، مهندس سكيما، والمزيد لتحسين أداء موقعك.">
     <script>
         (function() {
-
-            // JavaScript snippet handling Dark/Light mode switching
-
             const getStoredTheme = () => localStorage.getItem('theme');
             const setStoredTheme = theme => localStorage.setItem('theme', theme);
             const forcedTheme = document.documentElement.getAttribute('data-bss-forced-theme');
-
             const getPreferredTheme = () => {
-
                 if (forcedTheme) return forcedTheme;
-
                 const storedTheme = getStoredTheme();
                 if (storedTheme) {
                     return storedTheme;
                 }
-
                 const pageTheme = document.documentElement.getAttribute('data-bs-theme');
-
                 if (pageTheme) {
                     return pageTheme;
                 }
-
                 return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
             }
-
             const setTheme = theme => {
                 if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                     document.documentElement.setAttribute('data-bs-theme', 'dark');
@@ -43,40 +33,30 @@
                     document.documentElement.setAttribute('data-bs-theme', theme);
                 }
             }
-
             setTheme(getPreferredTheme());
-
             const showActiveTheme = (theme, focus = false) => {
                 const themeSwitchers = [].slice.call(document.querySelectorAll('.theme-switcher'));
-
                 if (!themeSwitchers.length) return;
-
                 document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
                     element.classList.remove('active');
                     element.setAttribute('aria-pressed', 'false');
                 });
-
                 for (const themeSwitcher of themeSwitchers) {
-
                     const btnToActivate = themeSwitcher.querySelector('[data-bs-theme-value="' + theme + '"]');
-
                     if (btnToActivate) {
                         btnToActivate.classList.add('active');
                         btnToActivate.setAttribute('aria-pressed', 'true');
                     }
                 }
             }
-
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
                 const storedTheme = getStoredTheme();
                 if (storedTheme !== 'light' && storedTheme !== 'dark') {
                     setTheme(getPreferredTheme());
                 }
             });
-
             window.addEventListener('DOMContentLoaded', () => {
                 showActiveTheme(getPreferredTheme());
-
                 document.querySelectorAll('[data-bs-theme-value]')
                     .forEach(toggle => {
                         toggle.addEventListener('click', (e) => {
@@ -130,7 +110,7 @@
                             <h1 class="fw-bold h2 mt-3">مدقق و كاشف المواقع</h1>
                             <p class="lead text-muted">اكتشف المشاكل التقنية في موقعك قبل أن يكتشفها Google.</p>
                         </div>
-                        <div class="input-group mb-3"><input class="form-control form-control-lg form-control form-control" type="url" dir="ltr" id="startUrl" placeholder="https://example.com" required=""><button class="btn btn-primary px-4" id="startCrawlBtn"><i class="bi bi-search ms-2" aria-hidden="true"></i>ابدأ الفحص</button></div>
+                        <div class="input-group mb-3"><input class="form-control form-control-lg form-control" type="url" dir="ltr" id="startUrl" placeholder="https://example.com" required=""><button class="btn btn-primary px-4" id="startCrawlBtn"><i class="bi bi-search ms-2" aria-hidden="true"></i>ابدأ الفحص</button></div>
                         <div class="form-text"><span>أدخل رابط الصفحة الرئيسية لموقعك ( يجب أن يبدأ بـ&nbsp;</span><span dir="ltr">( https://&nbsp;</span></div>
                         <div class="d-none mt-4" id="progress-section">
                             <div class="d-flex justify-content-between"><span id="status-text">بدء عملية الزحف...</span><span id="crawl-counter">0/0</span></div>
@@ -143,43 +123,30 @@
             </div>
         </div>
         <div class="d-none mt-5" id="results-section">
-            <h2 class="text-center mb-4 border-bottom pb-3">تقرير الصحة التقنية</h2>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card h-100 text-center shadow-sm">
-                        <div class="card-body">
-                            <h5 class="text-muted card-title">درجة الصحة</h5>
-                            <p class="fw-bold text-primary display-4" id="health-score">100</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-header fw-bold text-danger-emphasis bg-danger-subtle"><i class="bi bi-exclamation-octagon-fill ms-2" aria-hidden="true"></i><span>أخطاء حرجة</span></div>
-                        <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex justify-content-between align-items-center"><span>روابط معطلة (404)</span><span class="badge rounded-pill bg-danger" id="broken-links-count">0</span></li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center"><span>أخطاء الخادم (5xx)</span><span class="badge rounded-pill bg-danger" id="server-errors-count">0</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="card shadow-sm mt-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="h5 mb-0">قائمة المشاكل المكتشفة</h3><button class="btn btn-success btn-sm d-none" id="exportVisualizerBtn"><i class="bi bi-diagram-3-fill ms-2" aria-hidden="true"></i>تصدير للمحلل البصري </button>
+                    <h3 class="h5 mb-0">تقرير فحص الروابط</h3><button class="btn btn-success btn-sm d-none" id="exportCsvBtn"><i class="bi bi-file-earmark-spreadsheet ms-2" aria-hidden="true"></i>تصدير إلى CSV</button>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-striped table-hover mb-0">
                             <thead>
                                 <tr>
-                                    <th>المشكلة</th>
-                                    <th>الوصف</th>
-                                    <th>الرابط المصاب</th>
+                                    <th>الصفحة المصدر</th>
+                                    <th>عنوان الصفحة</th>
+                                    <th>حالة الصفحة</th>
+                                    <th>الرابط المعطوب</th>
+                                    <th>نوع الخطأ</th>
+                                    <th>التكرار</th>
+                                    <th>نوع الرابط</th>
+                                    <th>نص الرابط</th>
+                                    <th>عدد الكلمات</th>
+                                    <th>روابط صادرة</th>
+                                    <th>روابط واردة</th>
+                                    <th>العمق</th>
                                 </tr>
                             </thead>
-                            <tbody id="issues-table-body"></tbody>
+                            <tbody id="results-table-body"></tbody>
                         </table>
                     </div>
                 </div>
@@ -198,9 +165,9 @@
                     <h3 class="text-uppercase text-center mb-3 h5">مجموعة الأدوات</h3>
                     <ul class="list-unstyled mb-0">
                         <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/"><i class="bi bi-tools ms-2" aria-hidden="true"></i>الأداة الكاملة</a></li>
-                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/LogFileAnalyzer/"><i class="bi bi-server ms-2" aria-hidden="true"></i>محلل السجلات</a></li>
-                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/SiteVisualizerLab/"><i class="bi bi-diagram-3 ms-2" aria-hidden="true"></i>المحلل البصري</a></li>
-                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/SchemaArchitect/"><i class="bi bi-bounding-box-circles ms-2" aria-hidden="true"></i>مهندس السكيما</a></li>
+                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="../LogFileAnalyzer/index.html"><i class="bi bi-server ms-2" aria-hidden="true"></i>محلل السجلات</a></li>
+                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="../SiteVisualizerLab/index.html"><i class="bi bi-diagram-3 ms-2" aria-hidden="true"></i>المحلل البصري</a></li>
+                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="../SchemaArchitect/index.html"><i class="bi bi-bounding-box-circles ms-2" aria-hidden="true"></i>مهندس السكيما</a></li>
                     </ul>
                 </div>
                 <div class="col-md-6 col-lg-3 text-end mb-4 mb-md-0">
@@ -209,7 +176,7 @@
                         <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/what-is-crawl-budget"><i class="bi bi-book-half ms-2" aria-hidden="true"></i>شرح ميزانية الزحف</a></li>
                         <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/technical-seo-guide"><i class="bi bi-book-half ms-2" aria-hidden="true"></i>دليل الـ SEO التقني</a></li>
                         <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/schema-for-beginners"><i class="bi bi-book-half ms-2" aria-hidden="true"></i>فهم البيانات المنظمة</a></li>
-                        <li class="d-flex mb-2 mt-2 me-4"><a class="fw-bold text-decoration-none text-body-secondary" href="/blog/">كل المقالات...</a></li>
+                        <li class="d-flex mb-2 mt-2 me-4"><a class="fw-bold text-decoration-none text-body-secondary" href="/blog">كل المقالات...</a></li>
                     </ul>
                 </div>
                 <div class="col-md-12 col-lg-3 text-end text-lg-end mb-4 mb-md-0">
@@ -220,7 +187,7 @@
             </div>
         </div>
         <div class="text-center p-3" style="background-color:rgba(0, 0, 0, 0.05);"><span> © </span>
-            <div></div><span> الحقوق محفوظة: </span><a class="text-body-secondary" href="https://ai8v.com/">Ai8V | Mind &amp; Machine</a>
+            <div></div><span> الحقوق محفوظة: </span><a class="text-body-secondary" href="https://ai8v.com/">Ai8V | Mind & Machine</a>
         </div>
     </footer>
     <div class="toast-container position-fixed top-0 end-0 p-3">
