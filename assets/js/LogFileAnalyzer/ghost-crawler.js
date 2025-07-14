@@ -34,8 +34,8 @@
     let pageData;
     let allFoundLinks;
     let linkStatusCache;
-    let finalReport; // Array of issue objects ("chromosomes")
-    let robotsRules = null; // Will hold { allow: [], disallow: [] }
+    let finalReport;
+    let robotsRules = null;
 
     /**
      * Normalizes a URL by removing the hash and trailing slash.
@@ -76,11 +76,11 @@
 
         crawledUrls = new Set();
         queue = [{ url: startUrl, depth: 0 }];
-        pageData = new Map();
+        pageData = new Map(); // Will be keyed by CANONICAL URL
         allFoundLinks = new Set();
         linkStatusCache = new Map();
         finalReport = [];
-        robotsRules = null; // Reset rules for new crawl
+        robotsRules = null;
 
         resultsTableBody.innerHTML = '';
         progressSection.classList.remove('d-none');
@@ -94,14 +94,13 @@
 
     /**
      * Parses the content of a robots.txt file.
-     * Only considers rules for User-agent: *
      */
     function parseRobotsTxt(content) {
         const rules = { allow: [], disallow: [] };
-        let agentBlock = false; // Are we inside a "User-agent: *" block?
+        let agentBlock = false;
 
         content.split('\n').forEach(line => {
-            line = line.split('#')[0].trim(); // Remove comments and trim whitespace
+            line = line.split('#')[0].trim();
             if (!line) return;
 
             const [directive, value] = line.split(':').map(s => s.trim());
@@ -123,19 +122,16 @@
      * Checks if a URL is allowed to be crawled based on the parsed robots.txt rules.
      */
     function isAllowedByRobots(url) {
-        if (!robotsRules) return true; // Fail-safe if rules not loaded
+        if (!robotsRules) return true;
 
         const path = new URL(url).pathname;
 
-        // Check if disallowed. A simple startsWith check is used.
         const isDisallowed = robotsRules.disallow.some(rule => rule && path.startsWith(rule));
         if (!isDisallowed) {
-            return true; // Not disallowed, so it's definitely allowed.
+            return true;
         }
 
-        // It is disallowed. Now, check if an allow rule explicitly overrides it.
         const isAllowed = robotsRules.allow.some(rule => rule && path.startsWith(rule));
-        
         return isAllowed;
     }
 
@@ -154,7 +150,6 @@
             return;
         }
 
-        // --- NEW GATEKEEPER LOGIC ---
         if (!isAllowedByRobots(currentUrl)) {
             console.log(`Skipped by robots.txt: ${currentUrl}`);
             const mockPageInfo = {
@@ -165,17 +160,14 @@
                 incomingLinkCount: 0,
                 depth: depth
             };
-            addIssue(currentUrl, 
+            addIssue(currentUrl,
                 mockPageInfo,
                 'محظور بـ robots.txt',
-                SEVERITY.INFO,
-                { text: 'تم تخطي الزحف لهذه الصفحة احترامًا لقواعد robots.txt.' }
+                SEVERITY.INFO, { text: 'تم تخطي الزحف لهذه الصفحة احترامًا لقواعد robots.txt.' }
             );
-            // Don't add to crawledUrls, just skip processing and move to the next item
-            setTimeout(processQueue, 1); // Use timeout to avoid deep recursion
+            setTimeout(processQueue, 1);
             return;
         }
-        // --- END OF NEW LOGIC ---
 
         crawledUrls.add(currentUrl);
         updateProgress(crawledUrls.size, crawledUrls.size + queue.length, `المرحلة الأولى: يتم الآن فحص ${currentUrl}`);
@@ -186,15 +178,18 @@
             await analyzeResponse(response, currentUrl, depth);
         } catch (error) {
             console.error(`فشل جلب ${currentUrl}:`, error);
-            const errorInfo = { status: 'Error: Fetch Failed', depth: depth, title: '[فشل جلب الصفحة]', outgoingLinks: [], incomingLinkCount: 0 };
-            pageData.set(currentUrl, errorInfo);
+            // This error is for a specific URL, it might be a non-canonical one.
+            // We need a way to handle this without a canonical key. We'll handle it as a one-off issue.
+            const errorInfo = { status: 'Error: Fetch Failed', depth: depth, title: '[فشل جلب الصفحة]', outgoingLinks: [], incomingLinkCount: 0, wordCount: 0 };
+            addIssue(currentUrl, errorInfo, 'خطأ فادح في الجلب', SEVERITY.CRITICAL, { text: `فشل الاتصال بالرابط ${currentUrl}. قد يكون الخادم معطلاً.` });
+
         }
 
         setTimeout(processQueue, 50);
     }
 
     /**
-     * Analyzes the fetched response to extract page data ("Page Genes").
+     * [MODIFIED] Analyzes the fetched response and consolidates data based on the canonical URL.
      */
     async function analyzeResponse(response, currentUrl, depth) {
         const pageInfo = {
@@ -203,14 +198,13 @@
             title: '[لا يوجد عنوان]',
             description: '',
             h1s: [],
-            canonical: normalizeUrl(currentUrl),
+            canonical: normalizeUrl(currentUrl), // Default canonical is the URL itself
             isNoIndex: false,
             isNoFollow: false,
             wordCount: 0,
             outgoingLinks: [],
-            incomingLinkCount: 0,
+            incomingLinkCount: 0, // Will be calculated later
         };
-        pageData.set(currentUrl, pageInfo);
 
         if (response.ok && (response.headers.get('Content-Type') || '').includes('text/html')) {
             const html = await response.text();
@@ -220,23 +214,47 @@
             pageInfo.title = doc.querySelector('title')?.innerText.trim() || '[لا يوجد عنوان]';
             pageInfo.description = doc.querySelector('meta[name="description"]')?.content.trim() || '';
             pageInfo.h1s = Array.from(doc.querySelectorAll('h1')).map(h => h.innerText.trim()).filter(Boolean);
-            
+
             const canonicalLink = doc.querySelector('link[rel="canonical"]');
             if (canonicalLink && canonicalLink.href) {
                 try {
                     pageInfo.canonical = normalizeUrl(new URL(canonicalLink.href, currentUrl).href);
-                } catch(e) { /* Keep default canonical if href is invalid */ }
+                } catch (e) { /* Keep default canonical if href is invalid */ }
             }
-            
+
             const robotsMeta = doc.querySelector('meta[name="robots"]');
             const robotsContent = robotsMeta ? robotsMeta.content.toLowerCase() : '';
             pageInfo.isNoIndex = robotsContent.includes('noindex');
             pageInfo.isNoFollow = robotsContent.includes('nofollow');
             pageInfo.wordCount = (doc.body?.textContent || "").trim().split(/\s+/).filter(Boolean).length;
-            
+
             collectLinks(doc, currentUrl, pageInfo, depth);
         } else if (!response.ok) {
             pageInfo.title = '[فشل الزحف]';
+        }
+
+        // --- Canonical Consolidation Logic ---
+        const canonicalUrl = pageInfo.canonical;
+
+        if (!pageData.has(canonicalUrl)) {
+            // First time seeing this canonical. This page's info becomes the master record.
+            pageInfo.nonCanonicalSources = new Map(); // Will store other URLs that point to this canonical
+            pageData.set(canonicalUrl, pageInfo);
+        } else {
+            // This canonical already exists. The currentUrl is a duplicate/alternate.
+            const masterData = pageData.get(canonicalUrl);
+
+            // Merge outgoing links from the duplicate page into the master record.
+            masterData.outgoingLinks.push(...pageInfo.outgoingLinks);
+
+            // Record the non-canonical source URL and its own properties for later analysis.
+            masterData.nonCanonicalSources.set(currentUrl, {
+                status: pageInfo.status,
+                isNoIndex: pageInfo.isNoIndex
+                // Add other properties here if needed for specific checks
+            });
+
+            // The "master" data (title, h1, etc.) from the first-crawled page remains.
         }
     }
 
@@ -292,13 +310,13 @@
         updateProgress(0, 1, 'المرحلة الثالثة: جاري تجميع التقرير النهائي...');
         buildFinalReport();
         displayResults();
-        
+
         startCrawlBtn.disabled = false;
         startCrawlBtn.innerHTML = `<i class="bi bi-search ms-2"></i>ابدأ الفحص`;
         statusBar.style.width = '100%';
         statusText.innerText = `اكتمل الفحص! تم العثور على ${finalReport.length} مشكلة.`;
     }
-    
+
     /**
      * Checks the HTTP status of a single URL.
      */
@@ -332,15 +350,14 @@
     }
 
     /**
-     * Builds the final report by checking every page for all types of issues.
+     * [MODIFIED] Builds the final report by checking every CONSOLIDATED page for all types of issues.
      */
     function buildFinalReport() {
         const incomingLinksMap = new Map();
         const titleMap = new Map();
         const descriptionMap = new Map();
 
-        // Pre-analysis pass for duplicates and incoming links
-        // We iterate all found links, not just crawled pages, to build the incoming links map
+        // Pre-analysis pass for incoming links using the consolidated pageData
         for (const data of pageData.values()) {
             data.outgoingLinks.forEach(link => {
                 if (link.url.startsWith(origin)) {
@@ -349,59 +366,75 @@
             });
         }
         
-        // Update incoming link counts for all generated issues, including skipped ones
+        // Update incoming link counts for pre-existing issues (e.g., from robots.txt)
         finalReport.forEach(issue => {
             issue.incomingLinkCount = incomingLinksMap.get(issue.sourcePage) || 0;
         });
 
-        // Main assembly loop: Check each crawled page for issues
-        for (const [sourceUrl, data] of pageData.entries()) {
-            data.incomingLinkCount = incomingLinksMap.get(sourceUrl) || 0;
+        // Main assembly loop: Check each CONSOLIDATED (canonical) page for issues
+        for (const [canonicalUrl, data] of pageData.entries()) {
+            // This data object is the "master" record for the canonical URL
+            data.incomingLinkCount = incomingLinksMap.get(canonicalUrl) || 0;
 
-            if (data.status >= 400) addIssue(sourceUrl, data, 'خطأ زحف', SEVERITY.CRITICAL, { text: `الصفحة أعادت رمز الحالة ${data.status}` });
-            
+            // --- Issues on the master canonical page itself ---
+            if (data.status >= 400) addIssue(canonicalUrl, data, 'خطأ زحف', SEVERITY.CRITICAL, { text: `الصفحة الأساسية أعادت رمز الحالة ${data.status}` });
+
             data.outgoingLinks.forEach(link => {
                 const statusInfo = linkStatusCache.get(link.url);
-                if (statusInfo && statusInfo.error) addIssue(sourceUrl, data, 'رابط تالف', SEVERITY.CRITICAL, { errorLink: link.url, errorType: statusInfo.status, anchorText: link.anchor, linkType: link.type });
+                if (statusInfo && statusInfo.error) addIssue(canonicalUrl, data, 'رابط تالف', SEVERITY.CRITICAL, { errorLink: link.url, errorType: statusInfo.status, anchorText: link.anchor, linkType: link.type });
             });
 
-            if (data.isNoIndex) addIssue(sourceUrl, data, 'ممنوعة من الفهرسة (Noindex)', SEVERITY.HIGH, { text: 'تحتوي على وسم "noindex".' });
-            if (data.isNoFollow) addIssue(sourceUrl, data, 'الروابط لا تتبع (Nofollow)', SEVERITY.INFO, { text: 'تحتوي على وسم "nofollow".' });
-            
+            if (data.isNoIndex) addIssue(canonicalUrl, data, 'ممنوعة من الفهرسة (Noindex)', SEVERITY.HIGH, { text: 'تحتوي على وسم "noindex".' });
+            if (data.isNoFollow) addIssue(canonicalUrl, data, 'الروابط لا تتبع (Nofollow)', SEVERITY.INFO, { text: 'تحتوي على وسم "nofollow".' });
+
             if (!data.title || data.title === '[لا يوجد عنوان]') {
                  if (!titleMap.has(data.title)) titleMap.set(data.title, []);
-                 titleMap.get(data.title).push(sourceUrl);
-                 addIssue(sourceUrl, data, 'عنوان مفقود', SEVERITY.HIGH, { text: 'وسم <title> فارغ أو مفقود.' });
+                 titleMap.get(data.title).push(canonicalUrl);
+                 addIssue(canonicalUrl, data, 'عنوان مفقود', SEVERITY.HIGH, { text: 'وسم <title> فارغ أو مفقود.' });
             } else {
                 if (!titleMap.has(data.title)) titleMap.set(data.title, []);
                 const dups = titleMap.get(data.title);
-                dups.push(sourceUrl);
-                if (dups.length > 1 && dups[0] === sourceUrl) addIssue(sourceUrl, data, 'عنوان مكرر', SEVERITY.HIGH, { text: `مكرر في ${dups.length} صفحات.`, duplicates: dups });
+                dups.push(canonicalUrl);
+                if (dups.length > 1 && dups[0] === canonicalUrl) addIssue(canonicalUrl, data, 'عنوان مكرر', SEVERITY.HIGH, { text: `مكرر في ${dups.length} صفحات.`, duplicates: dups });
             }
             
             if (!data.description) {
                 if (!descriptionMap.has(data.description)) descriptionMap.set(data.description, []);
-                descriptionMap.get(data.description).push(sourceUrl);
-                addIssue(sourceUrl, data, 'وصف ميتا مفقود', SEVERITY.MEDIUM, { text: 'وسم <meta name="description"> فارغ أو مفقود.' });
+                descriptionMap.get(data.description).push(canonicalUrl);
+                addIssue(canonicalUrl, data, 'وصف ميتا مفقود', SEVERITY.MEDIUM, { text: 'وسم <meta name="description"> فارغ أو مفقود.' });
             } else {
                 if (!descriptionMap.has(data.description)) descriptionMap.set(data.description, []);
                 const dups = descriptionMap.get(data.description);
-                dups.push(sourceUrl);
-                if (dups.length > 1 && dups[0] === sourceUrl) addIssue(sourceUrl, data, 'وصف ميتا مكرر', SEVERITY.MEDIUM, { text: `مكرر في ${dups.length} صفحات.`, duplicates: dups });
+                dups.push(canonicalUrl);
+                if (dups.length > 1 && dups[0] === canonicalUrl) addIssue(canonicalUrl, data, 'وصف ميتا مكرر', SEVERITY.MEDIUM, { text: `مكرر في ${dups.length} صفحات.`, duplicates: dups });
             }
-            
-            if (data.h1s.length === 0) addIssue(sourceUrl, data, 'H1 مفقود', SEVERITY.HIGH, { text: 'الصفحة لا تحتوي على وسم <h1>.' });
-            else if (data.h1s.length > 1) addIssue(sourceUrl, data, 'H1 متعدد', SEVERITY.LOW, { text: `تم العثور على ${data.h1s.length} وسوم H1.`, h1s: data.h1s });
 
-            if (data.wordCount < LOW_WORD_COUNT_THRESHOLD && data.status < 400) addIssue(sourceUrl, data, 'محتوى ضعيف', SEVERITY.MEDIUM, { text: `عدد الكلمات (${data.wordCount}) أقل من (${LOW_WORD_COUNT_THRESHOLD}).` });
-            
-            if (normalizeUrl(sourceUrl) !== data.canonical) addIssue(sourceUrl, data, 'Canonical خاطئ', SEVERITY.HIGH, { text: `الرابط الأساسي المحدد لا يطابق رابط الصفحة.`, canonical: data.canonical });
-            
-            if (data.incomingLinkCount === 0 && data.depth > 0) addIssue(sourceUrl, data, 'صفحة يتيمة', SEVERITY.HIGH, { text: 'لم يتم العثور على روابط داخلية لهذه الصفحة.' });
+            if (data.h1s.length === 0) addIssue(canonicalUrl, data, 'H1 مفقود', SEVERITY.HIGH, { text: 'الصفحة لا تحتوي على وسم <h1>.' });
+            else if (data.h1s.length > 1) addIssue(canonicalUrl, data, 'H1 متعدد', SEVERITY.LOW, { text: `تم العثور على ${data.h1s.length} وسوم H1.`, h1s: data.h1s });
+
+            if (data.wordCount < LOW_WORD_COUNT_THRESHOLD && data.status < 400) addIssue(canonicalUrl, data, 'محتوى ضعيف', SEVERITY.MEDIUM, { text: `عدد الكلمات (${data.wordCount}) أقل من (${LOW_WORD_COUNT_THRESHOLD}).` });
+
+            // This check is valid: it confirms the canonical page points to itself.
+            if (normalizeUrl(canonicalUrl) !== data.canonical) addIssue(canonicalUrl, data, 'Canonical خاطئ', SEVERITY.HIGH, { text: `الرابط الأساسي المحدد لا يطابق رابط الصفحة.`, canonical: data.canonical });
+
+            if (data.incomingLinkCount === 0 && data.depth > 0) addIssue(canonicalUrl, data, 'صفحة يتيمة', SEVERITY.HIGH, { text: 'لم يتم العثور على روابط داخلية لهذه الصفحة.' });
+
+            // --- [NEW] Issues on non-canonical source pages ---
+            if (data.nonCanonicalSources) {
+                for (const [sourceUrl, sourceInfo] of data.nonCanonicalSources.entries()) {
+                    if (sourceInfo.status >= 400) {
+                        addIssue(canonicalUrl, data, 'نسخة بديلة بها خطأ', SEVERITY.HIGH, { text: `الرابط ${sourceUrl} (الذي يشير إلى هذا الكانونيكال) أعاد الحالة ${sourceInfo.status}.` });
+                    }
+                    if (sourceInfo.isNoIndex) {
+                        addIssue(canonicalUrl, data, 'نسخة بديلة ممنوعة من الفهرسة', SEVERITY.MEDIUM, { text: `الرابط ${sourceUrl} يحتوي على وسم noindex ولكنه يشير إلى هذه الصفحة.` });
+                    }
+                }
+            }
         }
 
         finalReport.sort((a, b) => a.issueSeverity.level - b.issueSeverity.level);
     }
+
 
     /**
      * Renders the final report into the HTML table.
@@ -413,9 +446,9 @@
             exportCsvBtn.classList.add('d-none');
             return;
         }
-        
+
         const formatDetails = (issue) => {
-            switch(issue.issueType) {
+            switch (issue.issueType) {
                 case 'رابط تالف':
                     return `<div class="d-flex flex-column"><span class="text-danger fw-bold">الخطأ: ${issue.issueDetails.errorType}</span><a href="${issue.issueDetails.errorLink}" target="_blank" class="text-truncate" style="max-width: 250px;" title="${issue.issueDetails.errorLink}">${issue.issueDetails.errorLink}</a><small class="text-muted">نص الرابط: <em>${issue.issueDetails.anchorText}</em></small></div>`;
                 case 'عنوان مكرر':
@@ -425,7 +458,10 @@
                 case 'H1 متعدد':
                     return `${issue.issueDetails.text}<br><small class="text-muted" dir="ltr">${issue.issueDetails.h1s.join(' | ')}</small>`;
                 case 'Canonical خاطئ':
-                     return `<div class="d-flex flex-column"><span>الرابط المحدد:</span><small class="text-muted text-truncate" style="max-width: 250px;" title="${issue.issueDetails.canonical}">${issue.issueDetails.canonical}</small></div>`;
+                    return `<div class="d-flex flex-column"><span>الرابط المحدد:</span><small class="text-muted text-truncate" style="max-width: 250px;" title="${issue.issueDetails.canonical}">${issue.issueDetails.canonical}</small></div>`;
+                case 'نسخة بديلة بها خطأ':
+                case 'نسخة بديلة ممنوعة من الفهرسة':
+                     return `<div class="d-flex flex-column"><span class="fw-bold">${issue.issueDetails.text}</span></div>`;
                 default:
                     return issue.issueDetails.text || 'N/A';
             }
@@ -446,7 +482,7 @@
             </tr>
         `).join('');
 
-        [...document.querySelectorAll('[data-bs-toggle="popover"]')].map(el => new bootstrap.Popover(el, {html: true}));
+        [...document.querySelectorAll('[data-bs-toggle="popover"]')].map(el => new bootstrap.Popover(el, { html: true }));
         exportCsvBtn.classList.remove('d-none');
     }
 
@@ -469,7 +505,7 @@
             return;
         }
 
-        const headers = ["الأهمية", "نوع المشكلة", "الصفحة المصدر", "التفاصيل", "عنوان الصفحة", "حالة الصفحة", "عدد الكلمات", "الروابط الصادرة", "الروابط الواردة", "عمق الصفحة"];
+        const headers = ["الأهمية", "نوع المشكلة", "الصفحة المصدر (الأساسية)", "التفاصيل", "عنوان الصفحة", "حالة الصفحة", "عدد الكلمات", "الروابط الصادرة", "الروابط الواردة", "عمق الصفحة"];
         const escapeCsvField = (field) => {
             const str = String(field ?? '');
             if (str.includes(',') || str.includes('"') || str.includes('\n')) {
@@ -478,13 +514,18 @@
             return str;
         };
         const formatDetailsForCsv = (issue) => {
-            switch(issue.issueType) {
-                case 'رابط تالف': return `الرابط: ${issue.issueDetails.errorLink}, الحالة: ${issue.issueDetails.errorType}, نص الرابط: ${issue.issueDetails.anchorText}`;
+            switch (issue.issueType) {
+                case 'رابط تالف':
+                    return `الرابط: ${issue.issueDetails.errorLink}, الحالة: ${issue.issueDetails.errorType}, نص الرابط: ${issue.issueDetails.anchorText}`;
                 case 'عنوان مكرر':
-                case 'وصف ميتا مكرر': return `${issue.issueDetails.text} الصفحات الأخرى: ${issue.issueDetails.duplicates.slice(1).join('; ')}`;
-                case 'H1 متعدد': return `الوسوم: ${issue.issueDetails.h1s.join(' | ')}`;
-                case 'Canonical خاطئ': return `الرابط المحدد: ${issue.issueDetails.canonical}`;
-                default: return issue.issueDetails.text || '';
+                case 'وصف ميتا مكرر':
+                    return `${issue.issueDetails.text} الصفحات الأخرى: ${issue.issueDetails.duplicates.slice(1).join('; ')}`;
+                case 'H1 متعدد':
+                    return `الوسوم: ${issue.issueDetails.h1s.join(' | ')}`;
+                case 'Canonical خاطئ':
+                    return `الرابط المحدد: ${issue.issueDetails.canonical}`;
+                default:
+                    return issue.issueDetails.text || '';
             }
         };
 
@@ -509,7 +550,7 @@
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     }
-    
+
     // --- Event Listeners ---
     startCrawlBtn.addEventListener('click', async () => {
         if (!initializeCrawl()) {
