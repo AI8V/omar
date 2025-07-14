@@ -35,6 +35,7 @@
     let allFoundLinks;
     let linkStatusCache;
     let finalReport; // Array of issue objects ("chromosomes")
+    let robotsRules = null; // Will hold { allow: [], disallow: [] }
 
     /**
      * Normalizes a URL by removing the hash and trailing slash.
@@ -79,6 +80,7 @@
         allFoundLinks = new Set();
         linkStatusCache = new Map();
         finalReport = [];
+        robotsRules = null; // Reset rules for new crawl
 
         resultsTableBody.innerHTML = '';
         progressSection.classList.remove('d-none');
@@ -88,6 +90,53 @@
         startCrawlBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جارِ الفحص...`;
 
         return true;
+    }
+
+    /**
+     * Parses the content of a robots.txt file.
+     * Only considers rules for User-agent: *
+     */
+    function parseRobotsTxt(content) {
+        const rules = { allow: [], disallow: [] };
+        let agentBlock = false; // Are we inside a "User-agent: *" block?
+
+        content.split('\n').forEach(line => {
+            line = line.split('#')[0].trim(); // Remove comments and trim whitespace
+            if (!line) return;
+
+            const [directive, value] = line.split(':').map(s => s.trim());
+
+            if (directive.toLowerCase() === 'user-agent') {
+                agentBlock = (value === '*');
+            } else if (agentBlock && value) {
+                if (directive.toLowerCase() === 'disallow') {
+                    rules.disallow.push(value);
+                } else if (directive.toLowerCase() === 'allow') {
+                    rules.allow.push(value);
+                }
+            }
+        });
+        return rules;
+    }
+
+    /**
+     * Checks if a URL is allowed to be crawled based on the parsed robots.txt rules.
+     */
+    function isAllowedByRobots(url) {
+        if (!robotsRules) return true; // Fail-safe if rules not loaded
+
+        const path = new URL(url).pathname;
+
+        // Check if disallowed. A simple startsWith check is used.
+        const isDisallowed = robotsRules.disallow.some(rule => rule && path.startsWith(rule));
+        if (!isDisallowed) {
+            return true; // Not disallowed, so it's definitely allowed.
+        }
+
+        // It is disallowed. Now, check if an allow rule explicitly overrides it.
+        const isAllowed = robotsRules.allow.some(rule => rule && path.startsWith(rule));
+        
+        return isAllowed;
     }
 
     /**
@@ -104,6 +153,29 @@
             processQueue();
             return;
         }
+
+        // --- NEW GATEKEEPER LOGIC ---
+        if (!isAllowedByRobots(currentUrl)) {
+            console.log(`Skipped by robots.txt: ${currentUrl}`);
+            const mockPageInfo = {
+                title: '[محظور بـ robots.txt]',
+                status: 'Skipped',
+                wordCount: 0,
+                outgoingLinks: [],
+                incomingLinkCount: 0,
+                depth: depth
+            };
+            addIssue(currentUrl, 
+                mockPageInfo,
+                'محظور بـ robots.txt',
+                SEVERITY.INFO,
+                { text: 'تم تخطي الزحف لهذه الصفحة احترامًا لقواعد robots.txt.' }
+            );
+            // Don't add to crawledUrls, just skip processing and move to the next item
+            setTimeout(processQueue, 1); // Use timeout to avoid deep recursion
+            return;
+        }
+        // --- END OF NEW LOGIC ---
 
         crawledUrls.add(currentUrl);
         updateProgress(crawledUrls.size, crawledUrls.size + queue.length, `المرحلة الأولى: يتم الآن فحص ${currentUrl}`);
@@ -268,23 +340,21 @@
         const descriptionMap = new Map();
 
         // Pre-analysis pass for duplicates and incoming links
-        for (const [url, data] of pageData.entries()) {
+        // We iterate all found links, not just crawled pages, to build the incoming links map
+        for (const data of pageData.values()) {
             data.outgoingLinks.forEach(link => {
                 if (link.url.startsWith(origin)) {
                     incomingLinksMap.set(link.url, (incomingLinksMap.get(link.url) || 0) + 1);
                 }
             });
-            if (data.title && data.title !== '[لا يوجد عنوان]') {
-                if (!titleMap.has(data.title)) titleMap.set(data.title, []);
-                titleMap.get(data.title).push(url);
-            }
-            if (data.description) {
-                if (!descriptionMap.has(data.description)) descriptionMap.set(data.description, []);
-                descriptionMap.get(data.description).push(url);
-            }
         }
         
-        // Main assembly loop: Check each page for issues
+        // Update incoming link counts for all generated issues, including skipped ones
+        finalReport.forEach(issue => {
+            issue.incomingLinkCount = incomingLinksMap.get(issue.sourcePage) || 0;
+        });
+
+        // Main assembly loop: Check each crawled page for issues
         for (const [sourceUrl, data] of pageData.entries()) {
             data.incomingLinkCount = incomingLinksMap.get(sourceUrl) || 0;
 
@@ -299,17 +369,25 @@
             if (data.isNoFollow) addIssue(sourceUrl, data, 'الروابط لا تتبع (Nofollow)', SEVERITY.INFO, { text: 'تحتوي على وسم "nofollow".' });
             
             if (!data.title || data.title === '[لا يوجد عنوان]') {
-                addIssue(sourceUrl, data, 'عنوان مفقود', SEVERITY.HIGH, { text: 'وسم <title> فارغ أو مفقود.' });
+                 if (!titleMap.has(data.title)) titleMap.set(data.title, []);
+                 titleMap.get(data.title).push(sourceUrl);
+                 addIssue(sourceUrl, data, 'عنوان مفقود', SEVERITY.HIGH, { text: 'وسم <title> فارغ أو مفقود.' });
             } else {
+                if (!titleMap.has(data.title)) titleMap.set(data.title, []);
                 const dups = titleMap.get(data.title);
-                if (dups && dups.length > 1 && dups[0] === sourceUrl) addIssue(sourceUrl, data, 'عنوان مكرر', SEVERITY.HIGH, { text: `مكرر في ${dups.length} صفحات.`, duplicates: dups });
+                dups.push(sourceUrl);
+                if (dups.length > 1 && dups[0] === sourceUrl) addIssue(sourceUrl, data, 'عنوان مكرر', SEVERITY.HIGH, { text: `مكرر في ${dups.length} صفحات.`, duplicates: dups });
             }
             
             if (!data.description) {
+                if (!descriptionMap.has(data.description)) descriptionMap.set(data.description, []);
+                descriptionMap.get(data.description).push(sourceUrl);
                 addIssue(sourceUrl, data, 'وصف ميتا مفقود', SEVERITY.MEDIUM, { text: 'وسم <meta name="description"> فارغ أو مفقود.' });
             } else {
+                if (!descriptionMap.has(data.description)) descriptionMap.set(data.description, []);
                 const dups = descriptionMap.get(data.description);
-                if (dups && dups.length > 1 && dups[0] === sourceUrl) addIssue(sourceUrl, data, 'وصف ميتا مكرر', SEVERITY.MEDIUM, { text: `مكرر في ${dups.length} صفحات.`, duplicates: dups });
+                dups.push(sourceUrl);
+                if (dups.length > 1 && dups[0] === sourceUrl) addIssue(sourceUrl, data, 'وصف ميتا مكرر', SEVERITY.MEDIUM, { text: `مكرر في ${dups.length} صفحات.`, duplicates: dups });
             }
             
             if (data.h1s.length === 0) addIssue(sourceUrl, data, 'H1 مفقود', SEVERITY.HIGH, { text: 'الصفحة لا تحتوي على وسم <h1>.' });
@@ -360,7 +438,7 @@
                 <td class="text-truncate" style="max-width: 150px;"><a href="${res.sourcePage}" target="_blank" title="${res.sourcePage}">${res.sourcePage}</a></td>
                 <td>${formatDetails(res)}</td>
                 <td class="text-truncate" style="max-width: 150px;" title="${res.pageTitle}">${res.pageTitle}</td>
-                <td><span class="badge bg-${String(res.pageStatus).startsWith('2') ? 'success' : 'warning'}">${res.pageStatus}</span></td>
+                <td><span class="badge bg-${String(res.pageStatus).startsWith('2') ? 'success' : String(res.pageStatus).startsWith('S') ? 'info' : 'warning'}">${res.pageStatus}</span></td>
                 <td>${res.wordCount}</td>
                 <td>${res.outgoingLinkCount}</td>
                 <td>${res.incomingLinkCount}</td>
@@ -433,10 +511,32 @@
     }
     
     // --- Event Listeners ---
-    startCrawlBtn.addEventListener('click', () => {
-        if (initializeCrawl()) {
-            processQueue();
+    startCrawlBtn.addEventListener('click', async () => {
+        if (!initializeCrawl()) {
+            return;
         }
+
+        // Phase 0: Fetch and parse robots.txt
+        updateProgress(0, 1, 'المرحلة 0: جارِ جلب وفهم ملف robots.txt...');
+        try {
+            const robotsUrl = `${origin}/robots.txt`;
+            const proxyUrl = `https://throbbing-dew-da3c.amr-omar304.workers.dev/?url=${encodeURIComponent(robotsUrl)}`;
+            const response = await fetch(proxyUrl);
+            if (response.ok) {
+                const text = await response.text();
+                robotsRules = parseRobotsTxt(text);
+                console.log("Parsed robots.txt rules:", robotsRules);
+            } else {
+                console.warn(`Could not fetch robots.txt (status: ${response.status}), assuming all is allowed.`);
+                robotsRules = { allow: [], disallow: [] }; // Assume all allowed if no file or error
+            }
+        } catch (e) {
+            console.warn("Could not fetch robots.txt, assuming all is allowed.", e);
+            robotsRules = { allow: [], disallow: [] };
+        }
+
+        // Now, start the main queue processing
+        processQueue();
     });
     exportCsvBtn.addEventListener('click', exportToCsv);
 
