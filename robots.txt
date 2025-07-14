@@ -8,7 +8,9 @@
 # =============================================================
 
 User-agent: *
-Disallow: /*.log.txt$
+# Disallow any file path ending with .log or similar extensions.
+# This is more compatible across different crawlers.
+Disallow: /*.log$
 
 # -------------------------------------------------------------
 # Sitemap location - A direct map for search engines.
