@@ -3,6 +3,16 @@
 (function() {
     'use strict';
 
+    // --- Constants ---
+    const LOW_WORD_COUNT_THRESHOLD = 250;
+    const SEVERITY = {
+        CRITICAL: { level: 0, text: 'حرجة', class: 'bg-danger' },
+        HIGH: { level: 1, text: 'عالية', class: 'bg-warning text-dark' },
+        MEDIUM: { level: 2, text: 'متوسطة', class: 'bg-info text-dark' },
+        LOW: { level: 3, text: 'منخفضة', class: 'bg-secondary' },
+        INFO: { level: 4, text: 'للعلم', class: 'bg-light text-dark border' }
+    };
+
     // --- DOM Elements ---
     const startUrlInput = document.getElementById('startUrl');
     const startCrawlBtn = document.getElementById('startCrawlBtn');
@@ -19,17 +29,15 @@
 
     // --- State Variables ---
     let origin;
-    let crawledUrls; // Set of URLs that have been processed from the queue
-    let queue; // Array of {url, depth} to be crawled
-    let pageData; // Map<url, {status, title, wordCount, depth, outgoingLinks: [{url, type, anchor}]}>
-    let allFoundLinks; // Set of all unique link URLs found on the site
-    let linkStatusCache; // Map<url, {error, status}> to store check results
-    let finalReport; // Array of objects representing each row in the final CSV
+    let crawledUrls;
+    let queue;
+    let pageData;
+    let allFoundLinks;
+    let linkStatusCache;
+    let finalReport; // Array of issue objects ("chromosomes")
 
     /**
      * Normalizes a URL by removing the hash and trailing slash.
-     * @param {string} urlStr The URL to normalize.
-     * @returns {string} The normalized URL.
      */
     function normalizeUrl(urlStr) {
         try {
@@ -40,13 +48,12 @@
             }
             return urlObj.href;
         } catch (e) {
-            return urlStr; // Return original if invalid
+            return urlStr;
         }
     }
 
     /**
      * Displays a toast notification with an error message.
-     * @param {string} message The message to display.
      */
     function showToast(message) {
         toastBodyMessage.innerText = message;
@@ -62,11 +69,10 @@
             showToast('يرجى إدخال رابط صحيح يبدأ بـ https://');
             return false;
         }
-        
+
         const startUrl = normalizeUrl(rawStartUrl);
         origin = new URL(startUrl).origin;
 
-        // Reset state
         crawledUrls = new Set();
         queue = [{ url: startUrl, depth: 0 }];
         pageData = new Map();
@@ -74,30 +80,28 @@
         linkStatusCache = new Map();
         finalReport = [];
 
-        // Reset UI
         resultsTableBody.innerHTML = '';
         progressSection.classList.remove('d-none');
         resultsSection.classList.add('d-none');
         exportCsvBtn.classList.add('d-none');
         startCrawlBtn.disabled = true;
         startCrawlBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جارِ الفحص...`;
-        
+
         return true;
     }
 
     /**
      * Main crawl loop (Phase 1: Crawl & Collect).
-     * Processes one URL from the queue at a time.
      */
     async function processQueue() {
         if (queue.length === 0) {
-            await finishCrawl(); // Move to Phase 2
+            await finishCrawl();
             return;
         }
 
         const { url: currentUrl, depth } = queue.shift();
         if (crawledUrls.has(currentUrl)) {
-            processQueue(); // Skip if already processed
+            processQueue();
             return;
         }
 
@@ -107,46 +111,68 @@
         try {
             const proxyUrl = `https://throbbing-dew-da3c.amr-omar304.workers.dev/?url=${encodeURIComponent(currentUrl)}`;
             const response = await fetch(proxyUrl);
-            
-            const pageInfo = {
-                status: response.status,
-                title: 'N/A',
-                wordCount: 0,
-                depth: depth,
-                outgoingLinks: []
-            };
-            pageData.set(currentUrl, pageInfo);
-
-            if (response.ok && (response.headers.get('Content-Type') || '').includes('text/html')) {
-                const html = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-
-                pageInfo.title = doc.querySelector('title')?.innerText.trim() || '[لا يوجد عنوان]';
-                pageInfo.wordCount = (doc.body?.textContent || "").trim().split(/\s+/).filter(Boolean).length;
-
-                // Collect all links (anchors and images)
-                collectLinks(doc, currentUrl, pageInfo, depth);
-            }
+            await analyzeResponse(response, currentUrl, depth);
         } catch (error) {
             console.error(`فشل جلب ${currentUrl}:`, error);
-            if (pageData.has(currentUrl)) {
-                pageData.get(currentUrl).status = 'Error: Fetch Failed';
-            }
+            const errorInfo = { status: 'Error: Fetch Failed', depth: depth, title: '[فشل جلب الصفحة]', outgoingLinks: [], incomingLinkCount: 0 };
+            pageData.set(currentUrl, errorInfo);
         }
 
-        setTimeout(processQueue, 50); // Small delay between requests
+        setTimeout(processQueue, 50);
     }
 
     /**
-     * Extracts all links from a document and adds them to the crawl queue or data stores.
-     * @param {Document} doc The parsed HTML document.
-     * @param {string} sourceUrl The URL of the page being analyzed.
-     * @param {object} pageInfo The data object for the source page.
-     * @param {number} depth The crawl depth of the source page.
+     * Analyzes the fetched response to extract page data ("Page Genes").
+     */
+    async function analyzeResponse(response, currentUrl, depth) {
+        const pageInfo = {
+            status: response.status,
+            depth: depth,
+            title: '[لا يوجد عنوان]',
+            description: '',
+            h1s: [],
+            canonical: normalizeUrl(currentUrl),
+            isNoIndex: false,
+            isNoFollow: false,
+            wordCount: 0,
+            outgoingLinks: [],
+            incomingLinkCount: 0,
+        };
+        pageData.set(currentUrl, pageInfo);
+
+        if (response.ok && (response.headers.get('Content-Type') || '').includes('text/html')) {
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            pageInfo.title = doc.querySelector('title')?.innerText.trim() || '[لا يوجد عنوان]';
+            pageInfo.description = doc.querySelector('meta[name="description"]')?.content.trim() || '';
+            pageInfo.h1s = Array.from(doc.querySelectorAll('h1')).map(h => h.innerText.trim()).filter(Boolean);
+            
+            const canonicalLink = doc.querySelector('link[rel="canonical"]');
+            if (canonicalLink && canonicalLink.href) {
+                try {
+                    pageInfo.canonical = normalizeUrl(new URL(canonicalLink.href, currentUrl).href);
+                } catch(e) { /* Keep default canonical if href is invalid */ }
+            }
+            
+            const robotsMeta = doc.querySelector('meta[name="robots"]');
+            const robotsContent = robotsMeta ? robotsMeta.content.toLowerCase() : '';
+            pageInfo.isNoIndex = robotsContent.includes('noindex');
+            pageInfo.isNoFollow = robotsContent.includes('nofollow');
+            pageInfo.wordCount = (doc.body?.textContent || "").trim().split(/\s+/).filter(Boolean).length;
+            
+            collectLinks(doc, currentUrl, pageInfo, depth);
+        } else if (!response.ok) {
+            pageInfo.title = '[فشل الزحف]';
+        }
+    }
+
+
+    /**
+     * Extracts all links from a document.
      */
     function collectLinks(doc, sourceUrl, pageInfo, depth) {
-        // Collect anchor links
         doc.querySelectorAll('a[href]').forEach(a => {
             const href = a.getAttribute('href');
             if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:')) return;
@@ -160,14 +186,12 @@
                     anchor: a.innerText.trim() || '[نص فارغ]'
                 });
 
-                // Add internal, non-crawled URLs to the queue
                 if (absoluteUrl.startsWith(origin) && !crawledUrls.has(absoluteUrl) && !queue.some(q => q.url === absoluteUrl)) {
                     queue.push({ url: absoluteUrl, depth: depth + 1 });
                 }
             } catch (e) { console.warn(`رابط غير صالح في الصفحة ${sourceUrl}: ${href}`); }
         });
 
-        // Collect image links
         doc.querySelectorAll('img[src]').forEach(img => {
             const src = img.getAttribute('src');
             if (!src) return;
@@ -184,25 +208,19 @@
     }
 
     /**
-     * Phase 2: Analyze & Report. Triggered after the crawl is complete.
+     * Phase 2: Analyze & Report.
      */
     async function finishCrawl() {
-        // 1. Check status of all unique links found
         const linksArray = Array.from(allFoundLinks);
         for (let i = 0; i < linksArray.length; i++) {
-            const link = linksArray[i];
             updateProgress(i + 1, linksArray.length, `المرحلة الثانية: فحص حالة الروابط (${i + 1}/${linksArray.length})`);
-            await checkLinkStatus(link);
+            await checkLinkStatus(linksArray[i]);
         }
 
-        // 2. Build the final report by cross-referencing page data with link statuses
         updateProgress(0, 1, 'المرحلة الثالثة: جاري تجميع التقرير النهائي...');
         buildFinalReport();
-
-        // 3. Display results
         displayResults();
         
-        // 4. Reset UI
         startCrawlBtn.disabled = false;
         startCrawlBtn.innerHTML = `<i class="bi bi-search ms-2"></i>ابدأ الفحص`;
         statusBar.style.width = '100%';
@@ -210,74 +228,101 @@
     }
     
     /**
-     * Checks the HTTP status of a single URL and caches the result.
-     * @param {string} url The URL to check.
+     * Checks the HTTP status of a single URL.
      */
     async function checkLinkStatus(url) {
         if (linkStatusCache.has(url)) return;
-
         try {
             const proxyUrl = `https://throbbing-dew-da3c.amr-omar304.workers.dev/?url=${encodeURIComponent(url)}`;
             const response = await fetch(proxyUrl, { method: 'HEAD', mode: 'cors' });
-            if (!response.ok) {
-                linkStatusCache.set(url, { error: true, status: response.status >= 500 ? '5xx' : `4xx (${response.status})` });
-            } else {
-                linkStatusCache.set(url, { error: false, status: response.status });
-            }
+            linkStatusCache.set(url, { error: !response.ok, status: response.status });
         } catch (e) {
-            linkStatusCache.set(url, { error: true, status: 'Error: Unknown Host' });
+            linkStatusCache.set(url, { error: true, status: 'Error: Host' });
         }
     }
-    
+
     /**
-     * Iterates through all crawled pages and their links to build the final report of issues.
+     * Helper to add a new issue to the final report.
+     */
+    function addIssue(sourceUrl, pageInfo, issueType, issueSeverity, issueDetails) {
+        finalReport.push({
+            sourcePage: sourceUrl,
+            pageTitle: pageInfo.title,
+            pageStatus: pageInfo.status,
+            wordCount: pageInfo.wordCount,
+            outgoingLinkCount: pageInfo.outgoingLinks.length,
+            incomingLinkCount: pageInfo.incomingLinkCount,
+            depth: pageInfo.depth,
+            issueType: issueType,
+            issueSeverity: issueSeverity,
+            issueDetails: issueDetails,
+        });
+    }
+
+    /**
+     * Builds the final report by checking every page for all types of issues.
      */
     function buildFinalReport() {
         const incomingLinksMap = new Map();
-        // Calculate incoming links for each page
-        for (const [sourceUrl, data] of pageData.entries()) {
+        const titleMap = new Map();
+        const descriptionMap = new Map();
+
+        // Pre-analysis pass for duplicates and incoming links
+        for (const [url, data] of pageData.entries()) {
             data.outgoingLinks.forEach(link => {
                 if (link.url.startsWith(origin)) {
-                    if (!incomingLinksMap.has(link.url)) incomingLinksMap.set(link.url, 0);
-                    incomingLinksMap.set(link.url, incomingLinksMap.get(link.url) + 1);
+                    incomingLinksMap.set(link.url, (incomingLinksMap.get(link.url) || 0) + 1);
                 }
             });
-        }
-        
-        // Create the report rows
-        for (const [sourceUrl, data] of pageData.entries()) {
-            const outgoingErrors = new Map();
-
-            data.outgoingLinks.forEach(link => {
-                const statusInfo = linkStatusCache.get(link.url);
-                if (statusInfo && statusInfo.error) {
-                    const errorKey = `${link.url}|${link.anchor}`; // Group by URL and anchor text
-                    if (!outgoingErrors.has(errorKey)) {
-                        outgoingErrors.set(errorKey, { ...link, errorType: statusInfo.status, frequency: 0 });
-                    }
-                    outgoingErrors.get(errorKey).frequency++;
-                }
-            });
-
-            if (outgoingErrors.size > 0) {
-                outgoingErrors.forEach(error => {
-                    finalReport.push({
-                        sourcePage: sourceUrl,
-                        pageTitle: data.title,
-                        pageStatus: data.status,
-                        errorLink: error.url,
-                        errorType: error.errorType,
-                        errorFrequency: error.frequency,
-                        linkType: error.type,
-                        anchorText: error.anchor,
-                        wordCount: data.wordCount,
-                        outgoingLinkCount: data.outgoingLinks.length,
-                        incomingLinkCount: incomingLinksMap.get(sourceUrl) || 0,
-                        depth: data.depth
-                    });
-                });
+            if (data.title && data.title !== '[لا يوجد عنوان]') {
+                if (!titleMap.has(data.title)) titleMap.set(data.title, []);
+                titleMap.get(data.title).push(url);
+            }
+            if (data.description) {
+                if (!descriptionMap.has(data.description)) descriptionMap.set(data.description, []);
+                descriptionMap.get(data.description).push(url);
             }
         }
+        
+        // Main assembly loop: Check each page for issues
+        for (const [sourceUrl, data] of pageData.entries()) {
+            data.incomingLinkCount = incomingLinksMap.get(sourceUrl) || 0;
+
+            if (data.status >= 400) addIssue(sourceUrl, data, 'خطأ زحف', SEVERITY.CRITICAL, { text: `الصفحة أعادت رمز الحالة ${data.status}` });
+            
+            data.outgoingLinks.forEach(link => {
+                const statusInfo = linkStatusCache.get(link.url);
+                if (statusInfo && statusInfo.error) addIssue(sourceUrl, data, 'رابط تالف', SEVERITY.CRITICAL, { errorLink: link.url, errorType: statusInfo.status, anchorText: link.anchor, linkType: link.type });
+            });
+
+            if (data.isNoIndex) addIssue(sourceUrl, data, 'ممنوعة من الفهرسة (Noindex)', SEVERITY.HIGH, { text: 'تحتوي على وسم "noindex".' });
+            if (data.isNoFollow) addIssue(sourceUrl, data, 'الروابط لا تتبع (Nofollow)', SEVERITY.INFO, { text: 'تحتوي على وسم "nofollow".' });
+            
+            if (!data.title || data.title === '[لا يوجد عنوان]') {
+                addIssue(sourceUrl, data, 'عنوان مفقود', SEVERITY.HIGH, { text: 'وسم <title> فارغ أو مفقود.' });
+            } else {
+                const dups = titleMap.get(data.title);
+                if (dups && dups.length > 1 && dups[0] === sourceUrl) addIssue(sourceUrl, data, 'عنوان مكرر', SEVERITY.HIGH, { text: `مكرر في ${dups.length} صفحات.`, duplicates: dups });
+            }
+            
+            if (!data.description) {
+                addIssue(sourceUrl, data, 'وصف ميتا مفقود', SEVERITY.MEDIUM, { text: 'وسم <meta name="description"> فارغ أو مفقود.' });
+            } else {
+                const dups = descriptionMap.get(data.description);
+                if (dups && dups.length > 1 && dups[0] === sourceUrl) addIssue(sourceUrl, data, 'وصف ميتا مكرر', SEVERITY.MEDIUM, { text: `مكرر في ${dups.length} صفحات.`, duplicates: dups });
+            }
+            
+            if (data.h1s.length === 0) addIssue(sourceUrl, data, 'H1 مفقود', SEVERITY.HIGH, { text: 'الصفحة لا تحتوي على وسم <h1>.' });
+            else if (data.h1s.length > 1) addIssue(sourceUrl, data, 'H1 متعدد', SEVERITY.LOW, { text: `تم العثور على ${data.h1s.length} وسوم H1.`, h1s: data.h1s });
+
+            if (data.wordCount < LOW_WORD_COUNT_THRESHOLD && data.status < 400) addIssue(sourceUrl, data, 'محتوى ضعيف', SEVERITY.MEDIUM, { text: `عدد الكلمات (${data.wordCount}) أقل من (${LOW_WORD_COUNT_THRESHOLD}).` });
+            
+            if (normalizeUrl(sourceUrl) !== data.canonical) addIssue(sourceUrl, data, 'Canonical خاطئ', SEVERITY.HIGH, { text: `الرابط الأساسي المحدد لا يطابق رابط الصفحة.`, canonical: data.canonical });
+            
+            if (data.incomingLinkCount === 0 && data.depth > 0) addIssue(sourceUrl, data, 'صفحة يتيمة', SEVERITY.HIGH, { text: 'لم يتم العثور على روابط داخلية لهذه الصفحة.' });
+        }
+
+        finalReport.sort((a, b) => a.issueSeverity.level - b.issueSeverity.level);
     }
 
     /**
@@ -286,28 +331,45 @@
     function displayResults() {
         resultsSection.classList.remove('d-none');
         if (finalReport.length === 0) {
-            resultsTableBody.innerHTML = `<tr><td colspan="12" class="text-center text-success fw-bold p-4">رائع! لم يتم العثور على أي روابط معطلة.</td></tr>`;
-        } else {
-            resultsTableBody.innerHTML = finalReport.map(res => `
-                <tr>
-                    <td class="text-truncate" style="max-width: 150px;"><a href="${res.sourcePage}" target="_blank" title="${res.sourcePage}">${res.sourcePage}</a></td>
-                    <td class="text-truncate" style="max-width: 200px;" title="${res.pageTitle}">${res.pageTitle}</td>
-                    <td><span class="badge bg-${String(res.pageStatus).startsWith('2') ? 'success' : 'warning'}">${res.pageStatus}</span></td>
-                    <td class="text-truncate" style="max-width: 150px;"><a href="${res.errorLink}" target="_blank" title="${res.errorLink}">${res.errorLink}</a></td>
-                    <td><span class="badge bg-danger">${res.errorType}</span></td>
-                    <td>${res.errorFrequency}</td>
-                    <td>${res.linkType}</td>
-                    <td class="text-truncate" style="max-width: 150px;" title="${res.anchorText}">${res.anchorText}</td>
-                    <td>${res.wordCount}</td>
-                    <td>${res.outgoingLinkCount}</td>
-                    <td>${res.incomingLinkCount}</td>
-                    <td>${res.depth}</td>
-                </tr>
-            `).join('');
+            resultsTableBody.innerHTML = `<tr><td colspan="10" class="text-center text-success fw-bold p-4">رائع! لم يتم العثور على أي مشاكل تقنية.</td></tr>`;
+            exportCsvBtn.classList.add('d-none');
+            return;
         }
-        if (finalReport.length > 0) {
-            exportCsvBtn.classList.remove('d-none');
-        }
+        
+        const formatDetails = (issue) => {
+            switch(issue.issueType) {
+                case 'رابط تالف':
+                    return `<div class="d-flex flex-column"><span class="text-danger fw-bold">الخطأ: ${issue.issueDetails.errorType}</span><a href="${issue.issueDetails.errorLink}" target="_blank" class="text-truncate" style="max-width: 250px;" title="${issue.issueDetails.errorLink}">${issue.issueDetails.errorLink}</a><small class="text-muted">نص الرابط: <em>${issue.issueDetails.anchorText}</em></small></div>`;
+                case 'عنوان مكرر':
+                case 'وصف ميتا مكرر':
+                    const otherPages = issue.issueDetails.duplicates.slice(1);
+                    return `${issue.issueDetails.text} <a tabindex="0" class="badge bg-primary-subtle text-primary-emphasis rounded-pill" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="الصفحات المكررة" data-bs-content="${otherPages.join('<br>')}">${otherPages.length}+</a>`;
+                case 'H1 متعدد':
+                    return `${issue.issueDetails.text}<br><small class="text-muted" dir="ltr">${issue.issueDetails.h1s.join(' | ')}</small>`;
+                case 'Canonical خاطئ':
+                     return `<div class="d-flex flex-column"><span>الرابط المحدد:</span><small class="text-muted text-truncate" style="max-width: 250px;" title="${issue.issueDetails.canonical}">${issue.issueDetails.canonical}</small></div>`;
+                default:
+                    return issue.issueDetails.text || 'N/A';
+            }
+        };
+
+        resultsTableBody.innerHTML = finalReport.map(res => `
+            <tr>
+                <td><span class="badge ${res.issueSeverity.class}">${res.issueSeverity.text}</span></td>
+                <td class="fw-bold">${res.issueType}</td>
+                <td class="text-truncate" style="max-width: 150px;"><a href="${res.sourcePage}" target="_blank" title="${res.sourcePage}">${res.sourcePage}</a></td>
+                <td>${formatDetails(res)}</td>
+                <td class="text-truncate" style="max-width: 150px;" title="${res.pageTitle}">${res.pageTitle}</td>
+                <td><span class="badge bg-${String(res.pageStatus).startsWith('2') ? 'success' : 'warning'}">${res.pageStatus}</span></td>
+                <td>${res.wordCount}</td>
+                <td>${res.outgoingLinkCount}</td>
+                <td>${res.incomingLinkCount}</td>
+                <td>${res.depth}</td>
+            </tr>
+        `).join('');
+
+        [...document.querySelectorAll('[data-bs-toggle="popover"]')].map(el => new bootstrap.Popover(el, {html: true}));
+        exportCsvBtn.classList.remove('d-none');
     }
 
     /**
@@ -329,12 +391,7 @@
             return;
         }
 
-        const headers = [
-            "الصفحة", "العنوان", "حالة الصفحة", "رابط الخطأ", "نوع الخطأ",
-            "تكرار الخطأ", "نوع الرابط", "نص الرابط", "عدد كلمات الصفحة",
-            "عدد الروابط الصادرة", "عدد الروابط الواردة", "عمق الصفحة"
-        ];
-
+        const headers = ["الأهمية", "نوع المشكلة", "الصفحة المصدر", "التفاصيل", "عنوان الصفحة", "حالة الصفحة", "عدد الكلمات", "الروابط الصادرة", "الروابط الواردة", "عمق الصفحة"];
         const escapeCsvField = (field) => {
             const str = String(field ?? '');
             if (str.includes(',') || str.includes('"') || str.includes('\n')) {
@@ -342,13 +399,23 @@
             }
             return str;
         };
+        const formatDetailsForCsv = (issue) => {
+            switch(issue.issueType) {
+                case 'رابط تالف': return `الرابط: ${issue.issueDetails.errorLink}, الحالة: ${issue.issueDetails.errorType}, نص الرابط: ${issue.issueDetails.anchorText}`;
+                case 'عنوان مكرر':
+                case 'وصف ميتا مكرر': return `${issue.issueDetails.text} الصفحات الأخرى: ${issue.issueDetails.duplicates.slice(1).join('; ')}`;
+                case 'H1 متعدد': return `الوسوم: ${issue.issueDetails.h1s.join(' | ')}`;
+                case 'Canonical خاطئ': return `الرابط المحدد: ${issue.issueDetails.canonical}`;
+                default: return issue.issueDetails.text || '';
+            }
+        };
 
         const csvRows = [headers.join(',')];
         for (const row of finalReport) {
             const values = [
-                row.sourcePage, row.pageTitle, row.pageStatus, row.errorLink,
-                row.errorType, row.errorFrequency, row.linkType, row.anchorText,
-                row.wordCount, row.outgoingLinkCount, row.incomingLinkCount, row.depth
+                row.issueSeverity.text, row.issueType, row.sourcePage, formatDetailsForCsv(row),
+                row.pageTitle, row.pageStatus, row.wordCount, row.outgoingLinkCount,
+                row.incomingLinkCount, row.depth
             ].map(escapeCsvField);
             csvRows.push(values.join(','));
         }
@@ -358,7 +425,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `Ai8V_Crawl_Report_${origin.replace(/https?:\/\//, '')}.csv`;
+        a.download = `Ai8V_Tech_Audit_Report_${origin.replace(/https?:\/\//, '')}.csv`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
