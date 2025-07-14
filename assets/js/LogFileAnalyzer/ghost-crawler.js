@@ -16,6 +16,8 @@
     // --- DOM Elements ---
     const startUrlInput = document.getElementById('startUrl');
     const startCrawlBtn = document.getElementById('startCrawlBtn');
+    const crawlDelayInput = document.getElementById('crawlDelay');
+    const maxDepthInput = document.getElementById('maxDepth');
     const progressSection = document.getElementById('progress-section');
     const statusBar = document.getElementById('progress-bar');
     const statusText = document.getElementById('status-text');
@@ -36,6 +38,8 @@
     let linkStatusCache;
     let finalReport;
     let robotsRules = null;
+    let crawlDelayValue;
+    let maxDepthValue;
 
     /**
      * Normalizes a URL by removing the hash and trailing slash.
@@ -73,6 +77,16 @@
 
         const startUrl = normalizeUrl(rawStartUrl);
         origin = new URL(startUrl).origin;
+        
+        // Read and validate advanced settings
+        crawlDelayValue = parseInt(crawlDelayInput.value, 10);
+        if (isNaN(crawlDelayValue) || crawlDelayValue < 0) {
+            crawlDelayValue = 100; // Fallback
+        }
+        maxDepthValue = parseInt(maxDepthInput.value, 10);
+        if (isNaN(maxDepthValue) || maxDepthValue < 0) {
+            maxDepthValue = 10; // Fallback
+        }
 
         crawledUrls = new Set();
         queue = [{ url: startUrl, depth: 0 }];
@@ -145,6 +159,12 @@
         }
 
         const { url: currentUrl, depth } = queue.shift();
+        
+        if (depth > maxDepthValue) {
+            processQueue(); // Skip processing, move to the next item
+            return;
+        }
+        
         if (crawledUrls.has(currentUrl)) {
             processQueue();
             return;
@@ -178,14 +198,12 @@
             await analyzeResponse(response, currentUrl, depth);
         } catch (error) {
             console.error(`فشل جلب ${currentUrl}:`, error);
-            // This error is for a specific URL, it might be a non-canonical one.
-            // We need a way to handle this without a canonical key. We'll handle it as a one-off issue.
             const errorInfo = { status: 'Error: Fetch Failed', depth: depth, title: '[فشل جلب الصفحة]', outgoingLinks: [], incomingLinkCount: 0, wordCount: 0 };
             addIssue(currentUrl, errorInfo, 'خطأ فادح في الجلب', SEVERITY.CRITICAL, { text: `فشل الاتصال بالرابط ${currentUrl}. قد يكون الخادم معطلاً.` });
 
         }
 
-        setTimeout(processQueue, 50);
+        setTimeout(processQueue, crawlDelayValue);
     }
 
     /**
@@ -237,24 +255,15 @@
         const canonicalUrl = pageInfo.canonical;
 
         if (!pageData.has(canonicalUrl)) {
-            // First time seeing this canonical. This page's info becomes the master record.
-            pageInfo.nonCanonicalSources = new Map(); // Will store other URLs that point to this canonical
+            pageInfo.nonCanonicalSources = new Map();
             pageData.set(canonicalUrl, pageInfo);
         } else {
-            // This canonical already exists. The currentUrl is a duplicate/alternate.
             const masterData = pageData.get(canonicalUrl);
-
-            // Merge outgoing links from the duplicate page into the master record.
             masterData.outgoingLinks.push(...pageInfo.outgoingLinks);
-
-            // Record the non-canonical source URL and its own properties for later analysis.
             masterData.nonCanonicalSources.set(currentUrl, {
                 status: pageInfo.status,
                 isNoIndex: pageInfo.isNoIndex
-                // Add other properties here if needed for specific checks
             });
-
-            // The "master" data (title, h1, etc.) from the first-crawled page remains.
         }
     }
 
@@ -275,9 +284,12 @@
                     type: absoluteUrl.startsWith(origin) ? 'لينك داخلى' : 'لينك خارجى',
                     anchor: a.innerText.trim() || '[نص فارغ]'
                 });
-
+                
+                // Add to queue only if it's internal, not crawled, not in queue, and within max depth
                 if (absoluteUrl.startsWith(origin) && !crawledUrls.has(absoluteUrl) && !queue.some(q => q.url === absoluteUrl)) {
-                    queue.push({ url: absoluteUrl, depth: depth + 1 });
+                    if ((depth + 1) <= maxDepthValue) {
+                        queue.push({ url: absoluteUrl, depth: depth + 1 });
+                    }
                 }
             } catch (e) { console.warn(`رابط غير صالح في الصفحة ${sourceUrl}: ${href}`); }
         });
@@ -357,7 +369,6 @@
         const titleMap = new Map();
         const descriptionMap = new Map();
 
-        // Pre-analysis pass for incoming links using the consolidated pageData
         for (const data of pageData.values()) {
             data.outgoingLinks.forEach(link => {
                 if (link.url.startsWith(origin)) {
@@ -366,17 +377,13 @@
             });
         }
         
-        // Update incoming link counts for pre-existing issues (e.g., from robots.txt)
         finalReport.forEach(issue => {
             issue.incomingLinkCount = incomingLinksMap.get(issue.sourcePage) || 0;
         });
 
-        // Main assembly loop: Check each CONSOLIDATED (canonical) page for issues
         for (const [canonicalUrl, data] of pageData.entries()) {
-            // This data object is the "master" record for the canonical URL
             data.incomingLinkCount = incomingLinksMap.get(canonicalUrl) || 0;
 
-            // --- Issues on the master canonical page itself ---
             if (data.status >= 400) addIssue(canonicalUrl, data, 'خطأ زحف', SEVERITY.CRITICAL, { text: `الصفحة الأساسية أعادت رمز الحالة ${data.status}` });
 
             data.outgoingLinks.forEach(link => {
@@ -414,12 +421,10 @@
 
             if (data.wordCount < LOW_WORD_COUNT_THRESHOLD && data.status < 400) addIssue(canonicalUrl, data, 'محتوى ضعيف', SEVERITY.MEDIUM, { text: `عدد الكلمات (${data.wordCount}) أقل من (${LOW_WORD_COUNT_THRESHOLD}).` });
 
-            // This check is valid: it confirms the canonical page points to itself.
             if (normalizeUrl(canonicalUrl) !== data.canonical) addIssue(canonicalUrl, data, 'Canonical خاطئ', SEVERITY.HIGH, { text: `الرابط الأساسي المحدد لا يطابق رابط الصفحة.`, canonical: data.canonical });
 
             if (data.incomingLinkCount === 0 && data.depth > 0) addIssue(canonicalUrl, data, 'صفحة يتيمة', SEVERITY.HIGH, { text: 'لم يتم العثور على روابط داخلية لهذه الصفحة.' });
 
-            // --- [NEW] Issues on non-canonical source pages ---
             if (data.nonCanonicalSources) {
                 for (const [sourceUrl, sourceInfo] of data.nonCanonicalSources.entries()) {
                     if (sourceInfo.status >= 400) {
@@ -557,7 +562,6 @@
             return;
         }
 
-        // Phase 0: Fetch and parse robots.txt
         updateProgress(0, 1, 'المرحلة 0: جارِ جلب وفهم ملف robots.txt...');
         try {
             const robotsUrl = `${origin}/robots.txt`;
@@ -569,14 +573,13 @@
                 console.log("Parsed robots.txt rules:", robotsRules);
             } else {
                 console.warn(`Could not fetch robots.txt (status: ${response.status}), assuming all is allowed.`);
-                robotsRules = { allow: [], disallow: [] }; // Assume all allowed if no file or error
+                robotsRules = { allow: [], disallow: [] }; 
             }
         } catch (e) {
             console.warn("Could not fetch robots.txt, assuming all is allowed.", e);
             robotsRules = { allow: [], disallow: [] };
         }
 
-        // Now, start the main queue processing
         processQueue();
     });
     exportCsvBtn.addEventListener('click', exportToCsv);
