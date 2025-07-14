@@ -112,6 +112,21 @@
                         </div>
                         <div class="input-group mb-3"><input class="form-control form-control-lg form-control" type="url" dir="ltr" id="startUrl" placeholder="https://example.com" required=""><button class="btn btn-primary px-4" id="startCrawlBtn"><i class="bi bi-search ms-2" aria-hidden="true"></i>ابدأ الفحص</button></div>
                         <div class="form-text"><span>أدخل رابط الصفحة الرئيسية لموقعك ( يجب أن يبدأ بـ </span><span dir="ltr">( https:// </span></div>
+                        
+                        <div class="mt-4 p-3 bg-body-tertiary rounded border">
+                            <h3 class="h6 fw-bold mb-3">إعدادات الفحص المتقدمة</h3>
+                            <div class="row g-3 align-items-center">
+                                <div class="col-sm-6">
+                                    <label for="crawlDelay" class="form-label small">التأخير (ms)</label>
+                                    <input type="number" class="form-control" id="crawlDelay" value="100" min="0" title="فترة الانتظار بالمللي ثانية بين كل طلب لتجنب حظر الخادم.">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="maxDepth" class="form-label small">أقصى عمق</label>
+                                    <input type="number" class="form-control" id="maxDepth" value="10" min="0" title="أقصى عمق للروابط الداخلية سيتم فحصها (0 للصفحة الرئيسية فقط).">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="d-none mt-4" id="progress-section">
                             <div class="d-flex justify-content-between"><span id="status-text">بدء عملية الزحف...</span><span id="crawl-counter">0/0</span></div>
                             <div class="progress mt-2" style="height:10px;">
