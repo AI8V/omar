@@ -1,11 +1,16 @@
 # =============================================================
 # Ai8V | Mind & Machine - Robots Exclusion Protocol File
 # =============================================================
+#
+# This file instructs web crawlers on which pages or files
+# the crawler can or can't request from your site.
+#
+# =============================================================
 
-# Allow all reputable crawlers (Google, Bing, etc.)
 User-agent: *
-Allow: /
+Disallow: /*.log.txt$
 
-# Specify the location of the sitemap to help crawlers
-# discover all important pages efficiently.
+# -------------------------------------------------------------
+# Sitemap location - A direct map for search engines.
+# -------------------------------------------------------------
 Sitemap: https://ai8v.com/sitemap.xml
