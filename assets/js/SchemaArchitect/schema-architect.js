@@ -21,6 +21,7 @@
     const copyEnhancedPromptBtn = document.getElementById('copyEnhancedPromptBtn');
     let selectedPrimaryType = null;
     
+    // --- منطقة المُعرّفات المخصصة ---
     const customFaqItem = document.getElementById('customFaqItem');
     const customFaqQuestion = document.getElementById('customFaqQuestion');
     const customFaqAnswer = document.getElementById('customFaqAnswer');
@@ -41,6 +42,8 @@
     const customOrgLogo = document.getElementById('customOrgLogo');
     const customOrgAddress = document.getElementById('customOrgAddress');
     const customOrgTelephone = document.getElementById('customOrgTelephone');
+    // ** الإضافة الجديدة: مُعرّف مسار التنقل **
+    const customBreadcrumbItem = document.getElementById('customBreadcrumbItem');
 
 
     // ===================================================================
@@ -48,7 +51,8 @@
     // ===================================================================
     
     function getSelector(inputElement, defaultSelector) {
-        return inputElement.value.trim() || defaultSelector;
+        // تم التأكد من أن هذه الوظيفة تعمل كما هي دون تعديل
+        return inputElement && inputElement.value.trim() ? inputElement.value.trim() : defaultSelector;
     }
 
     function convertToISODuration(text) {
@@ -82,7 +86,8 @@
             analyzeOrganizationEntities(doc),
             analyzeHowToEntities(doc),
             analyzeRecipeEntities(doc),
-            analyzeFaqEntities(doc)
+            analyzeFaqEntities(doc),
+            analyzeBreadcrumbEntities(doc) // ** الإضافة الجديدة: استدعاء محلل مسار التنقل **
         );
         const pageTitle = doc.querySelector('title')?.textContent.trim();
         if (pageTitle && !entities.some(e => e.schemaProp === 'name')) {
@@ -133,6 +138,32 @@
             entities.push({ name: 'تاريخ النشر', value: displayDate, schemaProp: 'datePublished', rawValue: dateObj.toISOString(), type: 'Article' });
         }
         return entities;
+    }
+    
+    // ** الإضافة الجديدة: وظيفة تحليل مسار التنقل الكاملة **
+    function analyzeBreadcrumbEntities(doc) {
+        const itemSelector = getSelector(customBreadcrumbItem, 'nav[aria-label="breadcrumb"] ol li, .breadcrumb li, [class*="breadcrumbs"] li');
+        const items = Array.from(doc.querySelectorAll(itemSelector));
+
+        if (items.length > 1) { // يجب أن يكون هناك أكثر من عنصر واحد ليكون مسارًا صالحًا
+            const breadcrumbItems = items.map(item => {
+                const link = item.querySelector('a');
+                const name = item.textContent.trim();
+                const url = link ? new URL(link.getAttribute('href'), doc.baseURI).href : null;
+                return { name, url };
+            }).filter(i => i.name);
+
+            if (breadcrumbItems.length > 1) {
+                return [{ 
+                    name: 'مسار التنقل (Breadcrumb)', 
+                    value: breadcrumbItems.map(i => i.name).join(' > '), 
+                    schemaProp: 'itemListElement', 
+                    type: 'Breadcrumb', 
+                    rawValue: breadcrumbItems 
+                }];
+            }
+        }
+        return [];
     }
 
     function analyzeFaqEntities(doc) {
@@ -310,7 +341,7 @@
                  entities.push({ name: 'هاتف المنظمة', value: phone, schemaProp: 'telephone', type: 'Organization' });
              }
         }
-        return entities;
+        return [];
     }
 
     function inferCurrency(text) {
@@ -325,11 +356,12 @@
 
     function suggestSchema(entities) {
         const suggestions = [{ type: 'WebPage', confidence: 0.5, reason: "الخيار الافتراضي لأي صفحة ويب." }];
-        const hierarchy = ['Product', 'Review', 'Recipe', 'HowTo', 'Event', 'Article', 'Organization', 'FAQPage'];
+        // ** الإضافة الجديدة: إضافة BreadcrumbList إلى التسلسل الهرمي للاقتراحات **
+        const hierarchy = ['Product', 'Review', 'Recipe', 'HowTo', 'Event', 'Article', 'Organization', 'FAQPage', 'BreadcrumbList'];
         const foundTypes = [...new Set(entities.map(e => e.type).filter(Boolean))];
         
         hierarchy.forEach(type => {
-            let typeToFind = type.replace('Page', '');
+            let typeToFind = type.replace('Page', '').replace('List', ''); // لتتوافق مع النوع الداخلي
             if (foundTypes.includes(typeToFind)) {
                 let reason = '', confidence = 0.85;
                 if (type === 'Product') { reason = "تم العثور على سعر للمنتج."; confidence = 0.98; }
@@ -340,6 +372,8 @@
                 if (type === 'Article') { reason = "تم العثور على تاريخ نشر أو مؤلف."; confidence = 0.85; }
                 if (type === 'Organization') { reason = "تم العثور على بيانات منظمة (شعار، عنوان)."; confidence = 0.80; }
                 if (type === 'FAQPage') { reason = "تم العثور على بنية أسئلة وأجوبة."; confidence = 0.90; }
+                // ** الإضافة الجديدة: سبب وثقة اقتراح BreadcrumbList **
+                if (type === 'BreadcrumbList') { reason = "تم العثور على مسار تنقل (Breadcrumb)."; confidence = 0.96; }
                 suggestions.push({ type, confidence, reason });
             }
         });
@@ -367,6 +401,7 @@
         const mainDesc = entities.find(e => e.schemaProp === 'description');
         if (mainDesc) schema.description = mainDesc.value;
 
+        // ** الإضافة الجديدة: إضافة معالج BreadcrumbList إلى الخريطة **
         const populationMap = { 
             'Article': populateArticleProperties, 
             'Product': populateProductProperties,
@@ -375,7 +410,8 @@
             'HowTo': populateHowToProperties, 
             'FAQPage': populateFaqProperties, 
             'Event': populateEventProperties, 
-            'Organization': populateOrganizationProperties 
+            'Organization': populateOrganizationProperties,
+            'BreadcrumbList': populateBreadcrumbProperties
         };
         if(populationMap[primaryType]) {
             populationMap[primaryType](schema, entities, true);
@@ -395,7 +431,11 @@
         entities.forEach(entity => {
             if (!entity.type) return;
             
-            const schemaType = entity.type === 'FAQ' ? 'FAQPage' : entity.type;
+            // ** الإضافة الجديدة: مطابقة النوع الداخلي (Breadcrumb) مع النوع الرسمي (BreadcrumbList) **
+            let schemaType = entity.type;
+            if (schemaType === 'FAQ') schemaType = 'FAQPage';
+            if (schemaType === 'Breadcrumb') schemaType = 'BreadcrumbList';
+
 
             if(primaryType === 'Product' && (schemaType === 'Recipe' || schemaType === 'HowTo' || schemaType === 'Review')) {
                 return; 
@@ -410,6 +450,11 @@
 
         if(nestedSchemas.length > 0) schema.hasPart = nestedSchemas;
         
+        // ** إضافة جديدة: إزالة mainEntityOfPage من BreadcrumbList لأنه غير مطلوب **
+        if(primaryType === 'BreadcrumbList'){
+            delete schema.mainEntityOfPage;
+        }
+
         return schema;
     }
     
@@ -420,7 +465,8 @@
         
         const mainDesc = entities.find(e => e.schemaProp === 'description');
         if (mainDesc) fragment.description = mainDesc.value;
-
+        
+        // ** الإضافة الجديدة: إضافة معالج BreadcrumbList إلى الخريطة هنا أيضًا **
         const populationMap = { 
             'Product': populateProductProperties, 
             'Recipe': populateRecipeProperties,
@@ -428,14 +474,35 @@
             'HowTo': populateHowToProperties, 
             'FAQPage': populateFaqProperties,
             'Event': populateEventProperties, 
-            'Organization': populateOrganizationProperties 
+            'Organization': populateOrganizationProperties,
+            'BreadcrumbList': populateBreadcrumbProperties 
         };
         if(populationMap[type]) {
             populationMap[type](fragment, entities, false);
         }
         
-        return Object.keys(fragment).length > 2 ? fragment : null;
+        return Object.keys(fragment).length > (type === 'BreadcrumbList' ? 1 : 2) ? fragment : null;
     }
+    
+    // ** الإضافة الجديدة: وظيفة بناء سكيما BreadcrumbList الكاملة **
+    function populateBreadcrumbProperties(schema, entities) {
+        const breadcrumbEntity = entities.find(e => e.type === 'Breadcrumb');
+        if(breadcrumbEntity && breadcrumbEntity.rawValue) {
+            schema.itemListElement = breadcrumbEntity.rawValue.map((item, index) => {
+                const listItem = {
+                    "@type": "ListItem",
+                    "position": index + 1,
+                    "name": item.name
+                };
+                // إضافة رابط "item" فقط إذا كان موجودًا (العنصر الأخير قد لا يكون رابطًا)
+                if (item.url) {
+                    listItem.item = item.url;
+                }
+                return listItem;
+            });
+        }
+    }
+
 
     function populateArticleProperties(schema, entities) {
         entities.filter(e => e.type === 'Article').forEach(e => {
@@ -631,6 +698,8 @@
                 if (entity.type === 'HowTo') badgeColor = 'bg-primary';
                 if (entity.type === 'Event') badgeColor = 'bg-info-subtle text-info-emphasis border border-info-subtle';
                 if (entity.type === 'Organization') badgeColor = 'bg-dark';
+                // ** الإضافة الجديدة: لون شارة مخصص لـ Breadcrumb **
+                if (entity.type === 'Breadcrumb') badgeColor = 'bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle';
                 
                 html += `
                     <div class="card p-3 mb-2 entity-card">
@@ -675,6 +744,22 @@
         let previewHtml = '';
         const type = schema['@type'];
         switch (type) {
+            // ** الإضافة الجديدة: حالة المعاينة الكاملة لـ BreadcrumbList **
+            case 'BreadcrumbList':
+                if (schema.itemListElement && schema.itemListElement.length > 0) {
+                    previewHtml = `
+                        <nav aria-label="breadcrumb">
+                          <ol class="breadcrumb" style="font-size: 0.9rem;">
+                            ${schema.itemListElement.map((item, index) => {
+                                const isLast = index === schema.itemListElement.length - 1;
+                                return `<li class="breadcrumb-item ${isLast ? 'active" aria-current="page' : ''}">
+                                            ${item.item && !isLast ? `<a href="#" onclick="return false;">${item.name}</a>` : item.name}
+                                        </li>`;
+                            }).join('')}
+                          </ol>
+                        </nav>`;
+                }
+                break;
             case 'Product':
                 previewHtml = `
                     <div class="card">
