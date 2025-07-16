@@ -18,6 +18,11 @@
     const sgePreviewContainer = document.getElementById('sge-preview');
     const sgePreviewContent = document.getElementById('sge-preview-content');
 
+    // --- تعديل 1: إضافة متغيرات للزر الجديد وتخزين الاختيار ---
+    const copyEnhancedPromptBtn = document.getElementById('copyEnhancedPromptBtn');
+    let selectedPrimaryType = null;
+    // -----------------------------------------------------------
+
     const customFaqItem = document.getElementById('customFaqItem');
     const customFaqQuestion = document.getElementById('customFaqQuestion');
     const customFaqAnswer = document.getElementById('customFaqAnswer');
@@ -563,7 +568,6 @@
                 if (entity.type === 'Recipe') badgeColor = 'bg-danger';
                 if (entity.type === 'HowTo') badgeColor = 'bg-primary';
                 if (entity.type === 'Event') badgeColor = 'bg-info-subtle text-info-emphasis border border-info-subtle';
-                // CHANGE: Replaced bg-dark-subtle with bg-dark for better contrast.
                 if (entity.type === 'Organization') badgeColor = 'bg-dark';
                 
                 html += `
@@ -726,7 +730,11 @@
         generatedCode.value = '';
         sgePreviewContainer.style.display = 'none';
         updateActionButtonsState(false);
-        
+        // --- تعديل: تعطيل الزر الجديد عند بدء تحليل جديد ---
+        copyEnhancedPromptBtn.disabled = true;
+        selectedPrimaryType = null; // إعادة تعيين الاختيار
+        // --------------------------------------------------
+
         try {
             let contentToAnalyze = html;
             if (!contentToAnalyze && url) {
@@ -744,13 +752,16 @@
 
             if (suggestions.length > 0) {
                 const bestType = suggestions[0].type;
+                // --- تعديل: تخزين الاختيار التلقائي وتفعيل الزر ---
+                selectedPrimaryType = bestType;
+                copyEnhancedPromptBtn.disabled = false;
+                // ----------------------------------------------------
                 updateSchemaOutput(bestType);
                 updateActionButtonsState(true);
                 const bestSuggestionEl = document.querySelector(`.schema-suggestion[data-schema-type="${bestType}"]`);
                 if (bestSuggestionEl) bestSuggestionEl.classList.add('border-primary', 'border-2');
             }
 
-            // Accessibility improvement for schema suggestions
             document.querySelectorAll('.schema-suggestion').forEach(el => {
                 const selectAction = () => {
                     document.querySelectorAll('.schema-suggestion').forEach(s => {
@@ -759,7 +770,13 @@
                     });
                     el.classList.add('border-primary', 'border-2');
                     el.setAttribute('aria-pressed', 'true');
-                    updateSchemaOutput(el.dataset.schemaType);
+                    
+                    const schemaType = el.dataset.schemaType;
+                    // --- تعديل: تحديث الاختيار عند النقر اليدوي ---
+                    selectedPrimaryType = schemaType;
+                    copyEnhancedPromptBtn.disabled = false; // التأكد من أن الزر مفعل
+                    // ---------------------------------------------
+                    updateSchemaOutput(schemaType);
                 };
                 
                 el.addEventListener('click', selectAction);
@@ -836,5 +853,42 @@
                 });
         }
     });
+
+    // --- تعديل: إضافة منطق عمل زر نسخ البرومبت المحسن ---
+    copyEnhancedPromptBtn.addEventListener('click', () => {
+        if (copyEnhancedPromptBtn.disabled || !selectedPrimaryType) {
+            return; // لا تفعل شيئًا إذا كان الزر معطلاً أو لم يتم الاختيار
+        }
+
+        // قم بتوليد البرومبت الديناميكي باستخدام وحدتنا الجديدة
+        // نتأكد من أن الوحدة `DynamicPromptGenerator` متاحة في النطاق العام
+        if (typeof DynamicPromptGenerator !== 'undefined') {
+            const promptToCopy = DynamicPromptGenerator.generate(selectedPrimaryType);
+
+            if (promptToCopy) {
+                // استخدم Clipboard API لنسخ البرومبت
+                navigator.clipboard.writeText(promptToCopy)
+                    .then(() => {
+                        copyEnhancedPromptBtn.innerHTML = '<i class="bi bi-check-lg ms-2"></i> تم النسخ بنجاح!';
+                        copyEnhancedPromptBtn.classList.remove('btn-warning');
+                        copyEnhancedPromptBtn.classList.add('btn-success');
+                        
+                        setTimeout(() => {
+                            copyEnhancedPromptBtn.innerHTML = '<i class="bi bi-robot ms-2"></i> نسخ برومبت التحسين الكامل';
+                            copyEnhancedPromptBtn.classList.remove('btn-success');
+                            copyEnhancedPromptBtn.classList.add('btn-warning');
+                        }, 2500);
+                    })
+                    .catch(err => {
+                        console.error('فشل في نسخ البرومبت: ', err);
+                        alert('عذرًا، فشلت عملية النسخ.');
+                    });
+            }
+        } else {
+            console.error('خطأ: وحدة `DynamicPromptGenerator` غير معرفة.');
+            alert('حدث خطأ في تحميل مكونات الصفحة.');
+        }
+    });
+    // -----------------------------------------------------
 
 })();
