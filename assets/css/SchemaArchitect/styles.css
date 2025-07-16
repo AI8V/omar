@@ -55,3 +55,11 @@
 [data-bs-theme="dark"] .text-high-contrast-success {
   color: #75b798;
 }
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: " / ";
+  float: right;
+  padding-left: 0.5rem;
+  padding-right: 0;
+}
+
