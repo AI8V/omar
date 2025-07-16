@@ -18,11 +18,9 @@
     const sgePreviewContainer = document.getElementById('sge-preview');
     const sgePreviewContent = document.getElementById('sge-preview-content');
 
-    // --- تعديل 1: إضافة متغيرات للزر الجديد وتخزين الاختيار ---
     const copyEnhancedPromptBtn = document.getElementById('copyEnhancedPromptBtn');
     let selectedPrimaryType = null;
-    // -----------------------------------------------------------
-
+    
     const customFaqItem = document.getElementById('customFaqItem');
     const customFaqQuestion = document.getElementById('customFaqQuestion');
     const customFaqAnswer = document.getElementById('customFaqAnswer');
@@ -33,6 +31,8 @@
     const customRecipePrepTime = document.getElementById('customRecipePrepTime');
     const customRecipeCookTime = document.getElementById('customRecipeCookTime');
     const customRecipeIngredients = document.getElementById('customRecipeIngredients');
+    const customReviewRating = document.getElementById('customReviewRating');
+    const customReviewItemName = document.getElementById('customReviewItemName');
     const customHowToStep = document.getElementById('customHowToStep');
     const customHowToText = document.getElementById('customHowToText');
     const customEventStartDate = document.getElementById('customEventStartDate');
@@ -46,13 +46,7 @@
     // ===================================================================
     //  2. Core Analysis & Helper Functions
     // ===================================================================
-
-    /**
-     * Gets a CSS selector from a custom input field, or returns a default if the input is empty.
-     * @param {HTMLInputElement} inputElement - The input element for the custom selector.
-     * @param {string} defaultSelector - The default selector string to use.
-     * @returns {string} The chosen CSS selector.
-     */
+    
     function getSelector(inputElement, defaultSelector) {
         return inputElement.value.trim() || defaultSelector;
     }
@@ -67,7 +61,6 @@
         const minuteMatch = text.match(minuteRegex);
         if (hourMatch) hours = parseInt(hourMatch[1], 10);
         if (minuteMatch) minutes = parseInt(minuteMatch[1], 10);
-        // If no units found, assume minutes for plain numbers
         if (!hourMatch && !minuteMatch && /^\d+$/.test(text.trim())) {
              minutes = parseInt(text.trim(), 10);
         }
@@ -84,6 +77,7 @@
         entities = entities.concat(
             analyzePrimaryEntities(doc),
             analyzeProductEntities(doc),
+            analyzeReviewEntities(doc), 
             analyzeEventEntities(doc),
             analyzeOrganizationEntities(doc),
             analyzeHowToEntities(doc),
@@ -198,6 +192,28 @@
         
         return entities;
     }
+    
+    function analyzeReviewEntities(doc) {
+        const entities = [];
+        const ratingSelector = getSelector(customReviewRating, '[class*="rating"], [itemprop="ratingValue"]');
+        const itemNameSelector = getSelector(customReviewItemName, '.reviewed-item-name');
+
+        const ratingEl = doc.querySelector(ratingSelector);
+        if (ratingEl) {
+            const ratingText = ratingEl.getAttribute('content') || ratingEl.textContent.trim();
+            const ratingValue = ratingText.match(/(\d+(\.\d+)?)/);
+            if (ratingValue && ratingValue[0]) {
+                 entities.push({ name: 'تقييم المراجعة', value: ratingValue[0], schemaProp: 'reviewRating', type: 'Review' });
+            }
+        }
+        
+        const itemNameEl = doc.querySelector(itemNameSelector);
+        if (itemNameEl) {
+            entities.push({ name: 'اسم العنصر المُرَاجَع', value: itemNameEl.textContent.trim(), schemaProp: 'itemName', type: 'Review' });
+        }
+
+        return entities;
+    }
 
     function analyzeRecipeEntities(doc) {
         const entities = [];
@@ -309,7 +325,7 @@
 
     function suggestSchema(entities) {
         const suggestions = [{ type: 'WebPage', confidence: 0.5, reason: "الخيار الافتراضي لأي صفحة ويب." }];
-        const hierarchy = ['Product', 'Recipe', 'HowTo', 'Event', 'Article', 'Organization', 'FAQPage'];
+        const hierarchy = ['Product', 'Review', 'Recipe', 'HowTo', 'Event', 'Article', 'Organization', 'FAQPage'];
         const foundTypes = [...new Set(entities.map(e => e.type).filter(Boolean))];
         
         hierarchy.forEach(type => {
@@ -317,6 +333,7 @@
             if (foundTypes.includes(typeToFind)) {
                 let reason = '', confidence = 0.85;
                 if (type === 'Product') { reason = "تم العثور على سعر للمنتج."; confidence = 0.98; }
+                if (type === 'Review') { reason = "تم العثور على بيانات تقييم."; confidence = 0.97; }
                 if (type === 'Recipe') { reason = "تم العثور على قائمة مكونات."; confidence = 0.95; }
                 if (type === 'HowTo') { reason = "تم العثور على بنية خطوات إرشادية."; confidence = 0.92; }
                 if (type === 'Event') { reason = "تم العثور على تاريخ أو مكان للحدث."; confidence = 0.90; }
@@ -352,7 +369,8 @@
 
         const populationMap = { 
             'Article': populateArticleProperties, 
-            'Product': populateProductProperties, 
+            'Product': populateProductProperties,
+            'Review': populateReviewProperties,
             'Recipe': populateRecipeProperties, 
             'HowTo': populateHowToProperties, 
             'FAQPage': populateFaqProperties, 
@@ -366,9 +384,12 @@
         const nestedSchemas = [];
         const processedNestedTypes = new Set();
         
-        // Business Rule: If primary is Recipe, HowTo instructions are merged, not nested.
         if(primaryType === 'Recipe' && entities.some(e => e.type === 'HowTo')) {
             processedNestedTypes.add('HowTo');
+        }
+        
+        if(primaryType === 'Review' && entities.some(e => e.type === 'Product')) {
+            processedNestedTypes.add('Product');
         }
 
         entities.forEach(entity => {
@@ -376,12 +397,10 @@
             
             const schemaType = entity.type === 'FAQ' ? 'FAQPage' : entity.type;
 
-            // Business Rule (Doctrine of Primary Intent): Do not nest Recipe/HowTo under Product.
-            if(primaryType === 'Product' && (schemaType === 'Recipe' || schemaType === 'HowTo')) {
+            if(primaryType === 'Product' && (schemaType === 'Recipe' || schemaType === 'HowTo' || schemaType === 'Review')) {
                 return; 
             }
             
-            // Avoid re-processing the primary type or creating certain duplicate high-level types.
             if (schemaType !== primaryType && !['Article', 'Event', 'Organization'].includes(schemaType) && !processedNestedTypes.has(schemaType)) {
                 const fragment = buildSchemaFragment(schemaType, entities);
                 if (fragment) nestedSchemas.push(fragment);
@@ -404,7 +423,8 @@
 
         const populationMap = { 
             'Product': populateProductProperties, 
-            'Recipe': populateRecipeProperties, 
+            'Recipe': populateRecipeProperties,
+            'Review': populateReviewProperties,
             'HowTo': populateHowToProperties, 
             'FAQPage': populateFaqProperties,
             'Event': populateEventProperties, 
@@ -414,7 +434,6 @@
             populationMap[type](fragment, entities, false);
         }
         
-        // A fragment is only useful if it has more than just a type and shared properties.
         return Object.keys(fragment).length > 2 ? fragment : null;
     }
 
@@ -462,8 +481,51 @@
         });
         
         if (offer.price) {
-            if (!offer.priceCurrency) offer.priceCurrency = "USD"; // Default currency
+            if (!offer.priceCurrency) offer.priceCurrency = "USD";
             schema.offers = offer;
+        }
+    }
+
+    function populateReviewProperties(schema, entities, isPrimary) {
+        const reviewEntities = entities.filter(e => e.type === 'Review');
+        const authorEntity = entities.find(e => e.type === 'Article' && e.schemaProp === 'author');
+        const dateEntity = entities.find(e => e.type === 'Article' && e.schemaProp === 'datePublished');
+
+        if(authorEntity) schema.author = { "@type": "Person", "name": authorEntity.value };
+        if(dateEntity) schema.datePublished = dateEntity.rawValue || dateEntity.value;
+        
+        const ratingEntity = reviewEntities.find(e => e.schemaProp === 'reviewRating');
+        if(ratingEntity) {
+            schema.reviewRating = {
+                "@type": "Rating",
+                "ratingValue": ratingEntity.value,
+                "bestRating": "5" 
+            };
+        }
+        
+        const itemReviewed = {"@type": "Thing"};
+        const itemNameEntity = reviewEntities.find(e => e.schemaProp === 'itemName');
+        const generalNameEntity = entities.find(e => e.schemaProp === 'name');
+        
+        if (itemNameEntity) {
+            itemReviewed.name = itemNameEntity.value;
+        } else if (isPrimary && generalNameEntity && !schema.name.toLowerCase().includes('review')) {
+            itemReviewed.name = generalNameEntity.value;
+        } else {
+            const productContextualName = entities.find(e => e.type === 'Product' && e.schemaProp === 'contextualName');
+            if (productContextualName) itemReviewed.name = productContextualName.value;
+        }
+
+        const productEntities = entities.filter(e => e.type === 'Product');
+        if (productEntities.length > 0) {
+            itemReviewed["@type"] = "Product";
+            const imageEntity = entities.find(e => e.schemaProp === 'image');
+            if(imageEntity) itemReviewed.image = imageEntity.value;
+            populateProductProperties(itemReviewed, productEntities, false); 
+        }
+        
+        if(itemReviewed.name) {
+            schema.itemReviewed = itemReviewed;
         }
     }
 
@@ -476,7 +538,6 @@
         }
         
         recipeEntities.forEach(e => {
-            // Use the ISO duration for time properties
             if (e.schemaProp === 'prepTime' || e.schemaProp === 'cookTime') {
                 if(e.rawValue) schema[e.schemaProp] = e.rawValue;
             } else if (e.schemaProp !== 'contextualName') {
@@ -565,6 +626,7 @@
                 if (entity.type === 'Article') badgeColor = 'bg-info text-dark';
                 if (entity.type === 'FAQ') badgeColor = 'bg-warning text-dark';
                 if (entity.type === 'Product') badgeColor = 'bg-success';
+                if (entity.type === 'Review') badgeColor = 'bg-warning';
                 if (entity.type === 'Recipe') badgeColor = 'bg-danger';
                 if (entity.type === 'HowTo') badgeColor = 'bg-primary';
                 if (entity.type === 'Event') badgeColor = 'bg-info-subtle text-info-emphasis border border-info-subtle';
@@ -623,6 +685,29 @@
                                 ${schema.offers ? `<strong class="text-high-contrast-success">${schema.offers.price} ${schema.offers.priceCurrency}</strong>` : ''}
                                 ${schema.brand ? `<span class="text-muted d-block">بواسطة: ${schema.brand.name}</span>` : ''}
                             </p>
+                        </div>
+                    </div>`;
+                break;
+            case 'Review':
+                const rating = schema.reviewRating?.ratingValue;
+                const item = schema.itemReviewed?.name;
+                let starsHtml = '';
+                if(rating){
+                    const filledStars = Math.round(parseFloat(rating));
+                    for(let i=0; i < 5; i++){
+                        starsHtml += `<i class="bi ${i < filledStars ? 'bi-star-fill text-warning' : 'bi-star'}"></i>`;
+                    }
+                }
+                 previewHtml = `
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">${item ? `مراجعة لـ: ${item}` : (schema.name || 'مراجعة')}</h4>
+                            ${rating ? `
+                            <p class="card-text mb-1" title="التقييم: ${rating} من 5">
+                                ${starsHtml}
+                                <span class="ms-2 fw-bold">${rating} / 5</span>
+                            </p>` : ''}
+                            ${schema.author ? `<span class="text-muted d-block small">بواسطة: ${schema.author.name}</span>` : ''}
                         </div>
                     </div>`;
                 break;
@@ -730,10 +815,8 @@
         generatedCode.value = '';
         sgePreviewContainer.style.display = 'none';
         updateActionButtonsState(false);
-        // --- تعديل: تعطيل الزر الجديد عند بدء تحليل جديد ---
         copyEnhancedPromptBtn.disabled = true;
-        selectedPrimaryType = null; // إعادة تعيين الاختيار
-        // --------------------------------------------------
+        selectedPrimaryType = null;
 
         try {
             let contentToAnalyze = html;
@@ -752,10 +835,8 @@
 
             if (suggestions.length > 0) {
                 const bestType = suggestions[0].type;
-                // --- تعديل: تخزين الاختيار التلقائي وتفعيل الزر ---
                 selectedPrimaryType = bestType;
                 copyEnhancedPromptBtn.disabled = false;
-                // ----------------------------------------------------
                 updateSchemaOutput(bestType);
                 updateActionButtonsState(true);
                 const bestSuggestionEl = document.querySelector(`.schema-suggestion[data-schema-type="${bestType}"]`);
@@ -772,10 +853,8 @@
                     el.setAttribute('aria-pressed', 'true');
                     
                     const schemaType = el.dataset.schemaType;
-                    // --- تعديل: تحديث الاختيار عند النقر اليدوي ---
                     selectedPrimaryType = schemaType;
-                    copyEnhancedPromptBtn.disabled = false; // التأكد من أن الزر مفعل
-                    // ---------------------------------------------
+                    copyEnhancedPromptBtn.disabled = false;
                     updateSchemaOutput(schemaType);
                 };
                 
@@ -854,19 +933,15 @@
         }
     });
 
-    // --- تعديل: إضافة منطق عمل زر نسخ البرومبت المحسن ---
     copyEnhancedPromptBtn.addEventListener('click', () => {
         if (copyEnhancedPromptBtn.disabled || !selectedPrimaryType) {
-            return; // لا تفعل شيئًا إذا كان الزر معطلاً أو لم يتم الاختيار
+            return;
         }
 
-        // قم بتوليد البرومبت الديناميكي باستخدام وحدتنا الجديدة
-        // نتأكد من أن الوحدة `DynamicPromptGenerator` متاحة في النطاق العام
         if (typeof DynamicPromptGenerator !== 'undefined') {
             const promptToCopy = DynamicPromptGenerator.generate(selectedPrimaryType);
 
             if (promptToCopy) {
-                // استخدم Clipboard API لنسخ البرومبت
                 navigator.clipboard.writeText(promptToCopy)
                     .then(() => {
                         copyEnhancedPromptBtn.innerHTML = '<i class="bi bi-check-lg ms-2"></i> تم النسخ بنجاح!';
@@ -889,6 +964,5 @@
             alert('حدث خطأ في تحميل مكونات الصفحة.');
         }
     });
-    // -----------------------------------------------------
 
 })();
