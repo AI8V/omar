@@ -249,9 +249,14 @@
                     <div class="btn-group" role="group"><button id="copyBtn" class="btn btn-success btn-sm disabled disabled disabled" disabled><i class="bi bi-clipboard-check ms-1" aria-hidden="true"></i> نسخ </button><button id="downloadBtn" class="btn btn-secondary btn-sm disabled disabled disabled" disabled><i class="bi bi-download ms-1" aria-hidden="true"></i> تحميل </button><button id="validateBtn" class="btn btn-info btn-sm disabled disabled disabled" disabled><i class="bi bi-google ms-1" aria-hidden="true"></i> تحقق </button></div>
                 </div>
                 <div class="card-body p-0"><textarea id="generatedCode" class="border-0 form-control" dir="ltr" placeholder="سيظهر الكود هنا..." readonly rows="15"></textarea></div>
-            </div>
-            <div id="sge-preview" class="mt-4" style="display: none;">
-                <h3 class="h6"><i class="text-warning bi bi-stars ms-2"></i>معاينة محتملة في Google SGE</h3>
+             </div>
+                <div class="d-grid mt-3">
+                <button class="btn btn-warning btn-lg" id="copyEnhancedPromptBtn" type="button" disabled>
+                    <i class="bi bi-robot ms-2"></i> نسخ برومبت التحسين الكامل
+                </button>
+                </div>
+                <div id="sge-preview" class="mt-4" style="display: none;">
+                            <h3 class="h6"><i class="text-warning bi bi-stars ms-2"></i>معاينة محتملة في Google SGE</h3>
                 <div class="alert alert-info small" role="alert"><i class="bi bi-robot ms-2" aria-hidden="true"></i><span>هذه معاينة تخيلية لكيفية استخدام جوجل لهذه البيانات المنظمة لتوليد إجابات مباشرة.</span></div>
                 <div id="sge-preview-content"></div>
             </div>
@@ -281,7 +286,7 @@
                         <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/what-is-crawl-budget"><i class="bi bi-book-half ms-2" aria-hidden="true"></i>شرح ميزانية الزحف</a></li>
                         <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/technical-seo-guide"><i class="bi bi-book-half ms-2" aria-hidden="true"></i>دليل الـ SEO التقني</a></li>
                         <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/schema-for-beginners"><i class="bi bi-book-half ms-2" aria-hidden="true"></i>فهم البيانات المنظمة</a></li>
-                        <li class="d-flex mb-2 mt-2 me-4"><a class="fw-bold text-decoration-none text-body-secondary" href="/blog/">كل المقالات...</a></li>
+                        <li class="d-flex mb-2 mt-2 me-4"><a class="fw-bold text-decoration-none text-body-secondary" href="/blog">كل المقالات...</a></li>
                     </ul>
                 </div>
                 <div class="col-md-12 col-lg-3 text-end text-lg-end mb-4 mb-md-0">
@@ -295,6 +300,7 @@
     </footer>
     <script src="../assets/bootstrap/js/bootstrap.min.js" defer></script>
     <script src="../assets/js/bs-init.js" defer></script>
+    <script src="../assets/js/SchemaArchitect/dynamicPromptGenerator.js" defer></script>
     <script src="../assets/js/SchemaArchitect/schema-architect.js" defer></script>
 </body>
 
