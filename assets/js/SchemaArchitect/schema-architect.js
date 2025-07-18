@@ -42,7 +42,6 @@
     const customOrgLogo = document.getElementById('customOrgLogo');
     const customOrgAddress = document.getElementById('customOrgAddress');
     const customOrgTelephone = document.getElementById('customOrgTelephone');
-    // ** الإضافة الجديدة: مُعرّف مسار التنقل **
     const customBreadcrumbItem = document.getElementById('customBreadcrumbItem');
 
 
@@ -51,7 +50,6 @@
     // ===================================================================
     
     function getSelector(inputElement, defaultSelector) {
-        // تم التأكد من أن هذه الوظيفة تعمل كما هي دون تعديل
         return inputElement && inputElement.value.trim() ? inputElement.value.trim() : defaultSelector;
     }
 
@@ -87,7 +85,7 @@
             analyzeHowToEntities(doc),
             analyzeRecipeEntities(doc),
             analyzeFaqEntities(doc),
-            analyzeBreadcrumbEntities(doc) // ** الإضافة الجديدة: استدعاء محلل مسار التنقل **
+            analyzeBreadcrumbEntities(doc)
         );
         const pageTitle = doc.querySelector('title')?.textContent.trim();
         if (pageTitle && !entities.some(e => e.schemaProp === 'name')) {
@@ -140,12 +138,11 @@
         return entities;
     }
     
-    // ** الإضافة الجديدة: وظيفة تحليل مسار التنقل الكاملة **
     function analyzeBreadcrumbEntities(doc) {
         const itemSelector = getSelector(customBreadcrumbItem, 'nav[aria-label="breadcrumb"] ol li, .breadcrumb li, [class*="breadcrumbs"] li');
         const items = Array.from(doc.querySelectorAll(itemSelector));
 
-        if (items.length > 1) { // يجب أن يكون هناك أكثر من عنصر واحد ليكون مسارًا صالحًا
+        if (items.length > 1) { 
             const breadcrumbItems = items.map(item => {
                 const link = item.querySelector('a');
                 const name = item.textContent.trim();
@@ -341,7 +338,7 @@
                  entities.push({ name: 'هاتف المنظمة', value: phone, schemaProp: 'telephone', type: 'Organization' });
              }
         }
-        return [];
+        return entities;
     }
 
     function inferCurrency(text) {
@@ -356,12 +353,11 @@
 
     function suggestSchema(entities) {
         const suggestions = [{ type: 'WebPage', confidence: 0.5, reason: "الخيار الافتراضي لأي صفحة ويب." }];
-        // ** الإضافة الجديدة: إضافة BreadcrumbList إلى التسلسل الهرمي للاقتراحات **
         const hierarchy = ['Product', 'Review', 'Recipe', 'HowTo', 'Event', 'Article', 'Organization', 'FAQPage', 'BreadcrumbList'];
         const foundTypes = [...new Set(entities.map(e => e.type).filter(Boolean))];
         
         hierarchy.forEach(type => {
-            let typeToFind = type.replace('Page', '').replace('List', ''); // لتتوافق مع النوع الداخلي
+            let typeToFind = type.replace('Page', '').replace('List', ''); 
             if (foundTypes.includes(typeToFind)) {
                 let reason = '', confidence = 0.85;
                 if (type === 'Product') { reason = "تم العثور على سعر للمنتج."; confidence = 0.98; }
@@ -372,7 +368,6 @@
                 if (type === 'Article') { reason = "تم العثور على تاريخ نشر أو مؤلف."; confidence = 0.85; }
                 if (type === 'Organization') { reason = "تم العثور على بيانات منظمة (شعار، عنوان)."; confidence = 0.80; }
                 if (type === 'FAQPage') { reason = "تم العثور على بنية أسئلة وأجوبة."; confidence = 0.90; }
-                // ** الإضافة الجديدة: سبب وثقة اقتراح BreadcrumbList **
                 if (type === 'BreadcrumbList') { reason = "تم العثور على مسار تنقل (Breadcrumb)."; confidence = 0.96; }
                 suggestions.push({ type, confidence, reason });
             }
@@ -401,7 +396,6 @@
         const mainDesc = entities.find(e => e.schemaProp === 'description');
         if (mainDesc) schema.description = mainDesc.value;
 
-        // ** الإضافة الجديدة: إضافة معالج BreadcrumbList إلى الخريطة **
         const populationMap = { 
             'Article': populateArticleProperties, 
             'Product': populateProductProperties,
@@ -431,7 +425,6 @@
         entities.forEach(entity => {
             if (!entity.type) return;
             
-            // ** الإضافة الجديدة: مطابقة النوع الداخلي (Breadcrumb) مع النوع الرسمي (BreadcrumbList) **
             let schemaType = entity.type;
             if (schemaType === 'FAQ') schemaType = 'FAQPage';
             if (schemaType === 'Breadcrumb') schemaType = 'BreadcrumbList';
@@ -450,7 +443,6 @@
 
         if(nestedSchemas.length > 0) schema.hasPart = nestedSchemas;
         
-        // ** إضافة جديدة: إزالة mainEntityOfPage من BreadcrumbList لأنه غير مطلوب **
         if(primaryType === 'BreadcrumbList'){
             delete schema.mainEntityOfPage;
         }
@@ -466,7 +458,6 @@
         const mainDesc = entities.find(e => e.schemaProp === 'description');
         if (mainDesc) fragment.description = mainDesc.value;
         
-        // ** الإضافة الجديدة: إضافة معالج BreadcrumbList إلى الخريطة هنا أيضًا **
         const populationMap = { 
             'Product': populateProductProperties, 
             'Recipe': populateRecipeProperties,
@@ -484,7 +475,6 @@
         return Object.keys(fragment).length > (type === 'BreadcrumbList' ? 1 : 2) ? fragment : null;
     }
     
-    // ** الإضافة الجديدة: وظيفة بناء سكيما BreadcrumbList الكاملة **
     function populateBreadcrumbProperties(schema, entities) {
         const breadcrumbEntity = entities.find(e => e.type === 'Breadcrumb');
         if(breadcrumbEntity && breadcrumbEntity.rawValue) {
@@ -494,7 +484,6 @@
                     "position": index + 1,
                     "name": item.name
                 };
-                // إضافة رابط "item" فقط إذا كان موجودًا (العنصر الأخير قد لا يكون رابطًا)
                 if (item.url) {
                     listItem.item = item.url;
                 }
@@ -504,16 +493,104 @@
     }
 
 
-    function populateArticleProperties(schema, entities) {
-        entities.filter(e => e.type === 'Article').forEach(e => {
-            if (e.schemaProp === 'author') {
-                schema.author = { "@type": "Person", "name": e.value };
-            } else {
-                schema[e.schemaProp] = e.rawValue || e.value;
-            }
-        });
-        if (!schema.headline && schema.name) schema.headline = schema.name;
+    /**
+ * Creates a complete publisher/organization object, prioritizing data from the EMP.
+ * This is the single source of truth for all core organization data.
+ * @param {Array} entities - The array of all discovered entities.
+ * @returns {Object|null} A complete organization object or null if no valid name is found.
+ */
+function getPublisherData(entities) {
+    const empIsAvailable = typeof getEntity !== 'undefined';
+    const orgData = {
+        "@type": "Organization"
+    };
+
+    // 1. Handle Core Properties (Name, Logo, Telephone) with EMP as priority
+    const empName = empIsAvailable ? getEntity('organizationName') : null;
+    const empLogo = empIsAvailable ? getEntity('logo') : null;
+    const empTelephone = empIsAvailable ? getEntity('telephone') : null;
+
+    // Set Name (Priority: EMP -> Page -> Abort)
+    if (empName) {
+        orgData.name = empName;
+    } else {
+        const orgNameEntity = entities.find(e => e.type === 'Organization' && e.schemaProp === 'name');
+        if (orgNameEntity) {
+            orgData.name = orgNameEntity.value;
+        } else {
+            return null; // An Organization without a name is invalid.
+        }
     }
+    
+    // Set Logo (Priority: EMP -> Page)
+    if (empLogo) {
+        orgData.logo = { "@type": "ImageObject", "url": empLogo };
+    } else {
+        const logoEntity = entities.find(e => e.type === 'Organization' && e.schemaProp === 'logo');
+        if (logoEntity) {
+            orgData.logo = { "@type": "ImageObject", "url": logoEntity.value };
+        }
+    }
+    
+    // Set Contact Point (Telephone) (Priority: EMP -> Page)
+    if (empTelephone) {
+        orgData.contactPoint = { "@type": "ContactPoint", "telephone": empTelephone, "contactType": "customer service" };
+    } else {
+        const telephoneEntity = entities.find(e => e.type === 'Organization' && e.schemaProp === 'telephone');
+        if (telephoneEntity) {
+            orgData.contactPoint = { "@type": "ContactPoint", "telephone": telephoneEntity.value, "contactType": "customer service" };
+        }
+    }
+
+    // 2. Handle Custom Properties (additionalProperty) from EMP
+    if (empIsAvailable) {
+        const savedEmpData = JSON.parse(localStorage.getItem('schemaArchitect_emp') || '{}');
+        const additionalProperties = [];
+        const predefinedKeys = ['organizationName', 'logo', 'telephone', 'mainAuthor'];
+
+        for (const key in savedEmpData) {
+            if (!predefinedKeys.includes(key)) {
+                additionalProperties.push({
+                    "@type": "PropertyValue",
+                    "name": key,
+                    "value": savedEmpData[key]
+                });
+            }
+        }
+
+        if (additionalProperties.length > 0) {
+            orgData.additionalProperty = additionalProperties;
+        }
+    }
+
+    return orgData;
+}
+   
+    function populateArticleProperties(schema, entities) {
+    const empAuthor = typeof getEntity !== 'undefined' ? getEntity('mainAuthor') : null;
+    
+    // Handle Author with EMP as priority
+    if (empAuthor) {
+        schema.author = { "@type": "Person", "name": empAuthor };
+        // If author is from EMP, still get date from page
+        const dateEntity = entities.find(e => e.type === 'Article' && e.schemaProp === 'datePublished');
+        if (dateEntity) schema.datePublished = dateEntity.rawValue || dateEntity.value;
+    } else {
+        // Fallback to on-page data
+        const authorEntity = entities.find(e => e.type === 'Article' && e.schemaProp === 'author');
+        if (authorEntity) schema.author = { "@type": "Person", "name": authorEntity.value };
+        const dateEntity = entities.find(e => e.type === 'Article' && e.schemaProp === 'datePublished');
+        if (dateEntity) schema.datePublished = dateEntity.rawValue || dateEntity.value;
+    }
+
+    if (!schema.headline && schema.name) schema.headline = schema.name;
+
+    // **CRITICAL INTEGRATION POINT**
+    const publisherData = getPublisherData(entities);
+    if (publisherData) {
+        schema.publisher = publisherData;
+    }
+}
     
     function populateFaqProperties(schema, entities, isPrimary) {
         const faqEntity = entities.find(e => e.type === 'FAQ');
@@ -554,47 +631,59 @@
     }
 
     function populateReviewProperties(schema, entities, isPrimary) {
-        const reviewEntities = entities.filter(e => e.type === 'Review');
+    const reviewEntities = entities.filter(e => e.type === 'Review');
+    const dateEntity = entities.find(e => e.type === 'Article' && e.schemaProp === 'datePublished');
+
+    const empAuthor = typeof getEntity !== 'undefined' ? getEntity('mainAuthor') : null;
+    if (empAuthor) {
+        schema.author = { "@type": "Person", "name": empAuthor };
+    } else {
         const authorEntity = entities.find(e => e.type === 'Article' && e.schemaProp === 'author');
-        const dateEntity = entities.find(e => e.type === 'Article' && e.schemaProp === 'datePublished');
-
-        if(authorEntity) schema.author = { "@type": "Person", "name": authorEntity.value };
-        if(dateEntity) schema.datePublished = dateEntity.rawValue || dateEntity.value;
-        
-        const ratingEntity = reviewEntities.find(e => e.schemaProp === 'reviewRating');
-        if(ratingEntity) {
-            schema.reviewRating = {
-                "@type": "Rating",
-                "ratingValue": ratingEntity.value,
-                "bestRating": "5" 
-            };
-        }
-        
-        const itemReviewed = {"@type": "Thing"};
-        const itemNameEntity = reviewEntities.find(e => e.schemaProp === 'itemName');
-        const generalNameEntity = entities.find(e => e.schemaProp === 'name');
-        
-        if (itemNameEntity) {
-            itemReviewed.name = itemNameEntity.value;
-        } else if (isPrimary && generalNameEntity && !schema.name.toLowerCase().includes('review')) {
-            itemReviewed.name = generalNameEntity.value;
-        } else {
-            const productContextualName = entities.find(e => e.type === 'Product' && e.schemaProp === 'contextualName');
-            if (productContextualName) itemReviewed.name = productContextualName.value;
-        }
-
-        const productEntities = entities.filter(e => e.type === 'Product');
-        if (productEntities.length > 0) {
-            itemReviewed["@type"] = "Product";
-            const imageEntity = entities.find(e => e.schemaProp === 'image');
-            if(imageEntity) itemReviewed.image = imageEntity.value;
-            populateProductProperties(itemReviewed, productEntities, false); 
-        }
-        
-        if(itemReviewed.name) {
-            schema.itemReviewed = itemReviewed;
-        }
+        if (authorEntity) schema.author = { "@type": "Person", "name": authorEntity.value };
     }
+    
+    if(dateEntity) schema.datePublished = dateEntity.rawValue || dateEntity.value;
+    
+    // **CRITICAL INTEGRATION POINT**
+    const publisherData = getPublisherData(entities);
+    if (publisherData) {
+        schema.publisher = publisherData;
+    }
+
+    const ratingEntity = reviewEntities.find(e => e.schemaProp === 'reviewRating');
+    if(ratingEntity) {
+        schema.reviewRating = {
+            "@type": "Rating",
+            "ratingValue": ratingEntity.value,
+            "bestRating": "5" 
+        };
+    }
+    
+    const itemReviewed = {"@type": "Thing"};
+    const itemNameEntity = reviewEntities.find(e => e.schemaProp === 'itemName');
+    
+    const productContextualName = entities.find(e => e.type === 'Product' && e.schemaProp === 'contextualName');
+    if (itemNameEntity) {
+        itemReviewed.name = itemNameEntity.value;
+    } else if (productContextualName) {
+        itemReviewed.name = productContextualName.value;
+    } else {
+         const generalNameEntity = entities.find(e => e.schemaProp === 'name');
+         if(generalNameEntity) itemReviewed.name = generalNameEntity.value;
+    }
+
+    const productEntities = entities.filter(e => e.type === 'Product');
+    if (productEntities.length > 0) {
+        itemReviewed["@type"] = "Product";
+        const imageEntity = entities.find(e => e.schemaProp === 'image');
+        if(imageEntity) itemReviewed.image = imageEntity.value;
+        populateProductProperties(itemReviewed, productEntities, false); 
+    }
+    
+    if(itemReviewed.name) {
+        schema.itemReviewed = itemReviewed;
+    }
+}
 
     function populateRecipeProperties(schema, entities, isPrimary) {
         const recipeEntities = entities.filter(e => e.type === 'Recipe');
@@ -659,24 +748,35 @@
     }
 
     function populateOrganizationProperties(schema, entities, isPrimary) {
-        const orgEntities = entities.filter(e => e.type === 'Organization');
-        
-        if (isPrimary) {
-            const pageTitle = entities.find(e => e.schemaProp === 'name');
-            if (pageTitle) schema.name = pageTitle.value;
-            const pageUrl = urlInput.value.trim();
-            if(pageUrl) schema.url = pageUrl;
-        }
-
-        orgEntities.forEach(e => {
-            if (e.schemaProp === 'logo') schema.logo = e.value;
-            if (e.schemaProp === 'address') schema.address = { "@type": "PostalAddress", "streetAddress": e.value };
-            if (e.schemaProp === 'telephone') schema.contactPoint = { "@type": "ContactPoint", "telephone": e.value, "contactType": "customer service" };
-        });
-        
-         const mainDesc = entities.find(e => e.schemaProp === 'description');
-         if (mainDesc && !schema.description) schema.description = mainDesc.value;
+    const orgData = getPublisherData(entities);
+    if (orgData) {
+        // Merge all centrally-managed data (name, logo, telephone, custom props)
+        Object.assign(schema, orgData);
     }
+
+    // Add properties ONLY relevant when Organization is the PRIMARY type
+    if (isPrimary) {
+        // Ensure name is set, even if EMP is empty, using page title as last resort
+        if (!schema.name) {
+             const pageTitle = entities.find(e => e.schemaProp === 'name');
+             if (pageTitle) schema.name = pageTitle.value;
+        }
+        const pageUrl = urlInput.value.trim();
+        if(pageUrl) schema.url = pageUrl;
+    }
+    
+    // Add contextual properties that are NOT part of the core brand identity (EMP)
+    // and therefore not handled by getPublisherData.
+    const addressEntity = entities.find(e => e.type === 'Organization' && e.schemaProp === 'address');
+    if(addressEntity) {
+        schema.address = { "@type": "PostalAddress", "streetAddress": addressEntity.value };
+    }
+    
+    const mainDesc = entities.find(e => e.schemaProp === 'description');
+    if (mainDesc && !schema.description) {
+        schema.description = mainDesc.value;
+    }
+}
 
 
     // ===================================================================
@@ -698,7 +798,6 @@
                 if (entity.type === 'HowTo') badgeColor = 'bg-primary';
                 if (entity.type === 'Event') badgeColor = 'bg-info-subtle text-info-emphasis border border-info-subtle';
                 if (entity.type === 'Organization') badgeColor = 'bg-dark';
-                // ** الإضافة الجديدة: لون شارة مخصص لـ Breadcrumb **
                 if (entity.type === 'Breadcrumb') badgeColor = 'bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle';
                 
                 html += `
@@ -744,7 +843,6 @@
         let previewHtml = '';
         const type = schema['@type'];
         switch (type) {
-            // ** الإضافة الجديدة: حالة المعاينة الكاملة لـ BreadcrumbList **
             case 'BreadcrumbList':
                 if (schema.itemListElement && schema.itemListElement.length > 0) {
                     previewHtml = `
@@ -864,7 +962,7 @@
                  previewHtml = `
                    <div class="card">
                         <div class="card-body d-flex align-items-center">
-                            ${schema.logo ? `<img src="${schema.logo}" alt="شعار ${schema.name || 'المنظمة'}" width="60" height="60" class="rounded-circle ms-3" style="width: 60px; height: 60px; object-fit: contain; border: 1px solid var(--bs-border-color);">` : `<div class="rounded-circle ms-3 bg-secondary-subtle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; flex-shrink: 0;"><i class="bi bi-building fs-4 text-muted"></i></div>`}
+                            ${schema.logo ? `<img src="${schema.logo.url || schema.logo}" alt="شعار ${schema.name || 'المنظمة'}" width="60" height="60" class="rounded-circle ms-3" style="width: 60px; height: 60px; object-fit: contain; border: 1px solid var(--bs-border-color);">` : `<div class="rounded-circle ms-3 bg-secondary-subtle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; flex-shrink: 0;"><i class="bi bi-building fs-4 text-muted"></i></div>`}
                             <div class="flex-grow-1">
                                 <h4 class="card-title mb-0">${schema.name || ''}</h4>
                                 ${schema.address ? `<p class="card-text small text-muted mb-0">${schema.address.streetAddress}</p>` : ''}
@@ -888,7 +986,7 @@
         let url = urlInput.value.trim();
         const html = htmlContentInput.value.trim();
         if (!url && !html) { 
-            alert("يرجى إدخال رابط أو لصق كود HTML للبدء."); 
+            showToast("يرجى إدخال رابط أو لصق كود HTML للبدء.", 'warning'); 
             return; 
         }
         if (url && !/^https?:\/\//i.test(url)) { 
@@ -953,7 +1051,7 @@
             });
 
         } catch (error) {
-            analysisResults.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+            showToast(error.message, 'danger');
             updateActionButtonsState(false); 
         }
     }
@@ -985,7 +1083,7 @@
                 })
                 .catch(err => { 
                     console.error('Failed to copy text: ', err); 
-                    alert('فشل النسخ إلى الحافظة.'); 
+                    showToast('فشل النسخ إلى الحافظة.', 'danger'); 
                 });
         }
     });
@@ -1013,7 +1111,7 @@
                 })
                 .catch(err => {
                     console.error('Could not copy code: ', err);
-                    alert('فشل نسخ الكود إلى الحافظة. يرجى نسخه يدويًا.');
+                    showToast('فشل نسخ الكود إلى الحافظة. يرجى نسخه يدويًا.', 'danger');
                 });
         }
     });
@@ -1041,13 +1139,16 @@
                     })
                     .catch(err => {
                         console.error('فشل في نسخ البرومبت: ', err);
-                        alert('عذرًا، فشلت عملية النسخ.');
+                        showToast('عذرًا، فشلت عملية النسخ.', 'danger');
                     });
             }
         } else {
             console.error('خطأ: وحدة `DynamicPromptGenerator` غير معرفة.');
-            alert('حدث خطأ في تحميل مكونات الصفحة.');
+            showToast('حدث خطأ في تحميل مكونات الصفحة.', 'danger');
         }
     });
+
+    if (typeof initializeProjectHub !== 'undefined') initializeProjectHub();
+    if (typeof initializeEmp !== 'undefined') initializeEmp();
 
 })();
