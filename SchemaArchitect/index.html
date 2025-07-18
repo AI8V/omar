@@ -143,7 +143,9 @@
 
 <body>
     <nav class="navbar navbar-expand-lg sticky-top bg-body shadow-sm">
-        <div class="container"><a class="navbar-brand" href="#"><i class="bi bi-bounding-box-circles ms-2" aria-hidden="true"></i>Schema Architect</a><span class="fw-bold mx-auto navbar-text"><i class="bi bi-gem ms-2" aria-hidden="true"></i>Ai8V | Mind &amp; Machine</span><div class="dropdown"><button id="toolsMenu" class="btn btn-outline-primary btn-sm dropdown-toggle mt-2" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="تصفح جميع أدوات Ai8V"><i class="bi bi-tools ms-2" aria-hidden="true"></i> جميع الأدوات </button>
+        <div class="container"><a class="navbar-brand" href="#"><i class="bi bi-bounding-box-circles ms-2" aria-hidden="true"></i>Schema Architect</a><span class="fw-bold mx-auto navbar-text"><i class="bi bi-gem ms-2" aria-hidden="true"></i>Ai8V | Mind &amp; Machine</span>
+            <button id="empBtn" class="btn btn-outline-secondary btn-sm mt-2 ms-3" type="button" title="إدارة كيانات العلامة التجارية"><i class="bi bi-buildings-fill ms-2"></i> إدارة الكيانات</button>
+            <div class="dropdown"><button id="toolsMenu" class="btn btn-outline-primary btn-sm dropdown-toggle mt-2" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="تصفح جميع أدوات Ai8V"><i class="bi bi-tools ms-2" aria-hidden="true"></i> جميع الأدوات </button>
                 <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="toolsMenu">
                     <li><a class="d-flex align-items-center dropdown-item" href="/"><i class="bi bi-house-door-fill opacity-75 ms-2" aria-hidden="true"></i>الأداة الكاملة (الرئيسية)</a></li>
                     <li>
@@ -168,6 +170,21 @@
             <div class="text-center text-muted my-2 small"><span>أو</span></div>
             <div class="mb-3"><label class="form-label fw-bold" for="htmlContentInput">الصق كود HTML</label><textarea id="htmlContentInput" class="form-control" dir="ltr" placeholder="&lt;html&gt;...&lt;/html&gt;" rows="4"></textarea></div>
             <div class="d-grid mt-4"><button id="analyzeBtn" class="btn btn-primary btn-lg"><i class="bi bi-cpu-fill ms-2" aria-hidden="true"></i> فك شفرة المحتوى </button></div>
+            
+            <div class="project-hub-container mt-4">
+                <label for="projectSelector" class="form-label fw-bold"><i class="bi bi-folder2-open ms-2"></i>المشاريع والقوالب</label>
+                <div class="input-group">
+                    <select class="form-select" id="projectSelector">
+                        <option selected value="">-- اختر مشروع محفوظ --</option>
+                    </select>
+                    <button class="btn btn-outline-danger" type="button" id="deleteProjectBtn" title="حذف المشروع المحدد"><i class="bi bi-trash-fill"></i></button>
+                </div>
+                <div class="input-group mt-2">
+                    <input type="text" id="newProjectName" class="form-control" placeholder="اسم المشروع أو القالب الجديد...">
+                    <button class="btn btn-success" type="button" id="saveProjectBtn"><i class="bi bi-save-fill ms-2"></i> حفظ</button>
+                </div>
+            </div>
+
             <hr class="my-4" />
             <h3 class="h5">خيارات متقدمة</h3>
             <div class="form-check form-switch mb-3"><input id="autoDetectSwitch" class="form-check-input" type="checkbox" checked role="switch" /><label class="form-check-label" for="autoDetectSwitch">اكتشاف تلقائي للسكيما</label></div>
@@ -221,9 +238,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- ======================================================= -->
-                <!-- ==== الإضافة الجديدة التي طلبتها موجودة هنا ==== -->
-                <!-- ======================================================= -->
                 <div class="accordion-item">
                     <h2 id="headingBreadcrumb" class="accordion-header" role="tab"><button class="accordion-button collapsed collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBreadcrumb" aria-expanded="false" aria-controls="collapseBreadcrumb"><i class="bi bi-signpost-split-fill ms-2"></i>مُعرّفات  (Breadcrumb)  </button></h2>
                     <div id="collapseBreadcrumb" class="accordion-collapse collapse" role="tabpanel" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingBreadcrumb">
@@ -232,9 +246,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- ======================================================= -->
-                <!-- ==== نهاية الإضافة الجديدة ==== -->
-                <!-- ======================================================= -->
                 <div class="accordion-item">
                     <h2 id="headingEvent" class="accordion-header" role="tab"><button class="accordion-button collapsed collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEvent" aria-expanded="false" aria-controls="collapseEvent"><i class="bi bi-calendar-event-fill ms-2"></i>مُعرّفات الحدث (Event) </button></h2>
                     <div id="collapseEvent" class="accordion-collapse collapse item-6" role="tabpanel" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingEvent">
@@ -286,44 +297,75 @@
         </div>
     </div>
 </main>
-    <footer class="text-center text-lg-start bg-body-tertiary mt-auto border-top mt-5 pt-5">
-        <h2 class="visually-hidden">تذييل الموقع ومعلومات إضافية</h2>
-        <div class="container p-4">
-            <div class="row">
-                <div class="col-md-12 col-lg-4 text-end mb-4 mb-md-0">
-                    <h3 class="text-uppercase mb-3 h5"> ادعم المشروع</h3>
-                    <p class="text-muted small" style="line-height:1.8;"> تم بناء هذه الأدوات لتكون متاحة للجميع. أنا أؤمن بمشاركة المعرفة. إذا كنت بحاجة إلى مساعدة متخصصة لموقعك أو لديك استفسار يتطلب خبرة، يمكنك حجز استشارة مدفوعة. </p><a class="btn btn-success mt-2" role="button" id="whatsappBtn" href="https://wa.me/201556450850?text=مرحبًا،%20أرغب%20في%20حجز%20استشارة%20مدفوعة%20بخصوص%20تحسين%20محركات%20البحث%20بعد%20اطلاعي%20على%20أدوات%20Ai8V." target="_blank"><i class="bi bi-whatsapp ms-2" aria-hidden="true"></i> اطلب استشارة مدفوعة <span class="visually-hidden">(يفتح في نافذة جديدة)</span></a>
-                </div>
-                <div class="col-md-6 col-lg-2 text-end mb-4 mb-md-0">
-                    <h3 class="text-uppercase text-center mb-3 h5">مجموعة الأدوات</h3>
-                    <ul class="list-unstyled mb-0">
-                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/"><i class="bi bi-tools ms-2" aria-hidden="true"></i>الأداة الكاملة</a></li>
-                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/LogFileAnalyzer/"><i class="bi bi-server ms-2" aria-hidden="true"></i>محلل السجلات</a></li>
-                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/SiteVisualizerLab/"><i class="bi bi-diagram-3 ms-2" aria-hidden="true"></i>المحلل البصري</a></li>
-                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/SchemaArchitect/"><i class="bi bi-bounding-box-circles ms-2" aria-hidden="true"></i>مهندس السكيما</a></li>
-                    </ul>
-                </div>
-               <div class="col-md-6 col-lg-3 text-end mb-4 mb-md-0">
-                    <h3 class="text-uppercase text-center d-flex justify-content-center mb-3 h5">مقالات ومصادر</h3>
-                    <ul class="list-unstyled mb-0">
-                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/what-is-crawl-budget"><i class="bi bi-book-half ms-2" aria-hidden="true"></i>شرح ميزانية الزحف</a></li>
-                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/technical-seo-guide"><i class="bi bi-book-half ms-2" aria-hidden="true"></i>دليل الـ SEO التقني</a></li>
-                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/schema-for-beginners"><i class="bi bi-book-half ms-2" aria-hidden="true"></i>فهم البيانات المنظمة</a></li>
-                        <li class="d-flex mb-2 mt-2 me-4"><a class="fw-bold text-decoration-none text-body-secondary" href="/blog">كل المقالات...</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-12 col-lg-3 text-end text-lg-end mb-4 mb-md-0">
-                    <h3 class="text-uppercase text-center mb-3 h5">بُني بواسطة [عمرو عبدالسلام]</h3>
-                    <p class="text-muted small me-2"> خبير في تحسين محركات البحث وتطوير الأدوات التي تساعد الآخرين على النجاح. </p>
-                    <div class="d-flex justify-content-center gap-3 mt-3 ms-4"><a class="fs-4 text-body-secondary" href="https://x.com/AmrAbssalam" target="_blank" aria-label="تابعني على تويتر / X (يفتح في نافذة جديدة)"><i class="bi bi-twitter-x" aria-hidden="true"></i></a><a class="fs-4 text-body-secondary" href="https://www.linkedin.com/in/amrabdelsalam87/" target="_blank" aria-label="تواصل معي على لينكد إن (يفتح في نافذة جديدة)"><i class="bi bi-linkedin" aria-hidden="true"></i></a><a class="fs-4 text-body-secondary" href="https://github.com/AI8V" target="_blank" aria-label="اطلع على مشاريعي على جيت هاب (يفتح في نافذة جديدة)"><i class="bi bi-github" aria-hidden="true"></i></a><a class="fs-4 text-body-secondary" href="https://www.youtube.com/@4DigitalMarketer" target="_blank" aria-label="شاهد قناتي على يوتيوب (يفتح في نافذة جديدة)"><i class="bi bi-youtube" aria-hidden="true"></i></a></div>
-                </div>
+<!-- EMP Modal -->
+<div class="modal fade" id="empModal" tabindex="-1" aria-labelledby="empModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="empModalLabel"><i class="bi bi-buildings-fill ms-2"></i>منصة إدارة الكيانات (EMP)</h5>
+        <button type="button" class="btn-close me-auto ms-0" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="small text-muted">أدخل هنا البيانات الأساسية والموثوقة لعلامتك التجارية. سيتم استخدامها تلقائيًا لإثراء السكيما التي يتم إنشاؤها.</p>
+        <div id="emp-form-container">
+          <!-- Form fields will be dynamically generated here -->
+        </div>
+        <button id="addEmpFieldBtn" class="btn btn-outline-primary btn-sm mt-3"><i class="bi bi-plus-circle-fill ms-2"></i>إضافة حقل مخصص</button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+        <button type="button" class="btn btn-primary" id="saveEmpBtn">حفظ الكيانات</button>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="text-center text-lg-start bg-body-tertiary mt-auto border-top mt-5 pt-5">
+    <h2 class="visually-hidden">تذييل الموقع ومعلومات إضافية</h2>
+    <div class="container p-4">
+        <div class="row">
+            <div class="col-md-12 col-lg-4 text-end mb-4 mb-md-0">
+                <h3 class="text-uppercase mb-3 h5"> ادعم المشروع</h3>
+                <p class="text-muted small" style="line-height:1.8;"> تم بناء هذه الأدوات لتكون متاحة للجميع. أنا أؤمن بمشاركة المعرفة. إذا كنت بحاجة إلى مساعدة متخصصة لموقعك أو لديك استفسار يتطلب خبرة، يمكنك حجز استشارة مدفوعة. </p><a class="btn btn-success mt-2" role="button" id="whatsappBtn" href="https://wa.me/201556450850?text=مرحبًا،%20أرغب%20في%20حجز%20استشارة%20مدفوعة%20بخصوص%20تحسين%20محركات%20البحث%20بعد%20اطلاعي%20على%20أدوات%20Ai8V." target="_blank"><i class="bi bi-whatsapp ms-2" aria-hidden="true"></i> اطلب استشارة مدفوعة <span class="visually-hidden">(يفتح في نافذة جديدة)</span></a>
+            </div>
+            <div class="col-md-6 col-lg-2 text-end mb-4 mb-md-0">
+                <h3 class="text-uppercase text-center mb-3 h5">مجموعة الأدوات</h3>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/"><i class="bi bi-tools ms-2" aria-hidden="true"></i>الأداة الكاملة</a></li>
+                    <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/LogFileAnalyzer/"><i class="bi bi-server ms-2" aria-hidden="true"></i>محلل السجلات</a></li>
+                    <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/SiteVisualizerLab/"><i class="bi bi-diagram-3 ms-2" aria-hidden="true"></i>المحلل البصري</a></li>
+                    <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/SchemaArchitect/"><i class="bi bi-bounding-box-circles ms-2" aria-hidden="true"></i>مهندس السكيما</a></li>
+                </ul>
+            </div>
+           <div class="col-md-6 col-lg-3 text-end mb-4 mb-md-0">
+                <h3 class="text-uppercase text-center d-flex justify-content-center mb-3 h5">مقالات ومصادر</h3>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/what-is-crawl-budget"><i class="bi bi-book-half ms-2" aria-hidden="true"></i>شرح ميزانية الزحف</a></li>
+                    <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/technical-seo-guide"><i class="bi bi-book-half ms-2" aria-hidden="true"></i>دليل الـ SEO التقني</a></li>
+                    <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/schema-for-beginners"><i class="bi bi-book-half ms-2" aria-hidden="true"></i>فهم البيانات المنظمة</a></li>
+                    <li class="d-flex mb-2 mt-2 me-4"><a class="fw-bold text-decoration-none text-body-secondary" href="/blog">كل المقالات...</a></li>
+                </ul>
+            </div>
+            <div class="col-md-12 col-lg-3 text-end text-lg-end mb-4 mb-md-0">
+                <h3 class="text-uppercase text-center mb-3 h5">بُني بواسطة [عمرو عبدالسلام]</h3>
+                <p class="text-muted small me-2"> خبير في تحسين محركات البحث وتطوير الأدوات التي تساعد الآخرين على النجاح. </p>
+                <div class="d-flex justify-content-center gap-3 mt-3 ms-4"><a class="fs-4 text-body-secondary" href="https://x.com/AmrAbssalam" target="_blank" aria-label="تابعني على تويتر / X (يفتح في نافذة جديدة)"><i class="bi bi-twitter-x" aria-hidden="true"></i></a><a class="fs-4 text-body-secondary" href="https://www.linkedin.com/in/amrabdelsalam87/" target="_blank" aria-label="تواصل معي على لينكد إن (يفتح في نافذة جديدة)"><i class="bi bi-linkedin" aria-hidden="true"></i></a><a class="fs-4 text-body-secondary" href="https://github.com/AI8V" target="_blank" aria-label="اطلع على مشاريعي على جيت هاب (يفتح في نافذة جديدة)"><i class="bi bi-github" aria-hidden="true"></i></a><a class="fs-4 text-body-secondary" href="https://www.youtube.com/@4DigitalMarketer" target="_blank" aria-label="شاهد قناتي على يوتيوب (يفتح في نافذة جديدة)"><i class="bi bi-youtube" aria-hidden="true"></i></a></div>
             </div>
         </div>
-        <div class="text-center p-3" style="background-color:rgba(0, 0, 0, 0.05);"><span> © </span><script>document.write(new Date().getFullYear())</script><span> الحقوق محفوظة: </span><a class="text-body-secondary" href="https://ai8v.com/">Ai8V | Mind &amp; Machine</a></div>
-    </footer>
+    </div>
+    <div class="text-center p-3" style="background-color:rgba(0, 0, 0, 0.05);"><span> © </span><script>document.write(new Date().getFullYear())</script><span> الحقوق محفوظة: </span><a class="text-body-secondary" href="https://ai8v.com/">Ai8V | Mind &amp; Machine</a></div>
+</footer>
+    
+<!-- Toast Notification Container -->
+<div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1100">
+  <!-- Toasts will be appended here dynamically -->
+</div>
+
     <script src="../assets/bootstrap/js/bootstrap.min.js" defer></script>
     <script src="../assets/js/bs-init.js" defer></script>
+    <script src="../assets/js/SchemaArchitect/toast-utility.js" defer></script>
     <script src="../assets/js/SchemaArchitect/dynamicPromptGenerator.js" defer></script>
+    <script src="../assets/js/SchemaArchitect/entities.js" defer></script>
+    <script src="../assets/js/SchemaArchitect/projects.js" defer></script>
     <script src="../assets/js/SchemaArchitect/schema-architect.js" defer></script>
 </body>
 
