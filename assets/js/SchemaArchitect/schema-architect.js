@@ -10,6 +10,8 @@
     const generatedCode = document.getElementById('generatedCode');
     const urlInput = document.getElementById('urlInput');
     const htmlContentInput = document.getElementById('htmlContentInput');
+    const baseUrlContainer = document.getElementById('baseUrlContainer');
+    const baseUrlInput = document.getElementById('baseUrlInput');
 
     const copyBtn = document.getElementById('copyBtn');
     const downloadBtn = document.getElementById('downloadBtn');
@@ -44,6 +46,12 @@
     const customOrgTelephone = document.getElementById('customOrgTelephone');
     const customBreadcrumbItem = document.getElementById('customBreadcrumbItem');
 
+    // Show/hide the optional base URL input when user pastes HTML
+    if (htmlContentInput && baseUrlContainer) {
+        htmlContentInput.addEventListener('input', () => {
+            baseUrlContainer.style.display = htmlContentInput.value.trim() ? 'block' : 'none';
+        });
+    }
 
     // ===================================================================
     //  2. Core Analysis & Helper Functions
@@ -73,9 +81,21 @@
         return duration;
     }
 
-    function analyzeContent(html) {
+    function analyzeContent(html, baseUrl) {
         const doc = new DOMParser().parseFromString(html, 'text/html');
+
+        // Create a <base> element to ensure all relative URLs are resolved correctly
+        if (baseUrl) {
+            let base = doc.querySelector('base');
+            if (!base) {
+                base = doc.createElement('base');
+                doc.head.appendChild(base);
+            }
+            base.href = baseUrl;
+        }
+
         let entities = [];
+        // Sub-functions will now correctly resolve relative URLs via doc.baseURI
         entities = entities.concat(
             analyzePrimaryEntities(doc),
             analyzeProductEntities(doc),
@@ -245,50 +265,85 @@
 
     function analyzeRecipeEntities(doc) {
         const entities = [];
-        const prepTimeSelector = getSelector(customRecipePrepTime, '[class*="prep-time"], .preparation-duration');
-        const cookTimeSelector = getSelector(customRecipeCookTime, '[class*="cook-time"], .cooking-duration');
-        const ingredientsSelector = getSelector(customRecipeIngredients, '.ingredients li, .recipe-ingredients li, .ingredient-list li');
-        
-        const ingredients = Array.from(doc.querySelectorAll(ingredientsSelector));
+        const recipeSelector = 'section[itemtype*="schema.org/Recipe"], .recipe-card';
+        const recipeContainer = doc.querySelector(recipeSelector);
+        if (!recipeContainer) return [];
+    
+        // All selectors are now relative to the recipeContainer
+        const prepTimeSelector = getSelector(customRecipePrepTime, '[class*="prep-time"], [itemprop="prepTime"]');
+        const cookTimeSelector = getSelector(customRecipeCookTime, '[class*="cook-time"], [itemprop="cookTime"]');
+        const ingredientsSelector = getSelector(customRecipeIngredients, '.ingredients li, [itemprop="recipeIngredient"]');
+        const instructionsSelector = '.recipe-instructions li, [itemprop="recipeInstructions"]'; // New selector for recipe steps
+    
+        // Find contextual image
+        const contextualImageEl = recipeContainer.querySelector('img');
+        if (contextualImageEl) {
+            entities.push({ name: 'صورة الوصفة السياقية', value: new URL(contextualImageEl.src, doc.baseURI).href, schemaProp: 'image', type: 'Recipe' });
+        }
+    
+        // Find ingredients
+        const ingredients = Array.from(recipeContainer.querySelectorAll(ingredientsSelector));
         if (ingredients.length > 0) {
             const ingredientList = ingredients.map(li => li.textContent.trim()).filter(Boolean);
-            const contextualName = findClosestHeading(ingredients[0]);
+            const contextualName = findClosestHeading(ingredients[0]) || recipeContainer.querySelector('h1, h2, h3')?.textContent.trim();
             entities.push({ name: contextualName || 'وصفة', value: `${ingredientList.length} مكون`, schemaProp: 'recipeIngredient', type: 'Recipe', rawValue: ingredientList, contextualName });
-            
-            const prepTimeEl = doc.querySelector(prepTimeSelector);
-            if (prepTimeEl) {
-                const prepTimeText = prepTimeEl.textContent.trim();
-                const prepTimeISO = convertToISODuration(prepTimeText);
-                entities.push({ name: 'وقت التحضير', value: prepTimeText, rawValue: prepTimeISO, schemaProp: 'prepTime', type: 'Recipe' });
-            }
-            
-            const cookTimeEl = doc.querySelector(cookTimeSelector);
-            if (cookTimeEl) {
-                const cookTimeText = cookTimeEl.textContent.trim();
-                const cookTimeISO = convertToISODuration(cookTimeText);
-                entities.push({ name: 'وقت الطهي', value: cookTimeText, rawValue: cookTimeISO, schemaProp: 'cookTime', type: 'Recipe' });
+        }
+        
+        // **NEW LOGIC: Find instructions ONLY within the recipe container**
+        const instructions = Array.from(recipeContainer.querySelectorAll(instructionsSelector));
+        if (instructions.length > 0) {
+            const instructionData = instructions.map(step => ({ "@type": "HowToStep", "text": step.textContent.trim() })).filter(s => s.text);
+            if (instructionData.length > 0) {
+                entities.push({ name: 'تعليمات الوصفة', value: `${instructionData.length} خطوة`, schemaProp: 'recipeInstructions', type: 'Recipe', rawValue: instructionData });
             }
         }
+    
+        // Find prep and cook times
+        const prepTimeEl = recipeContainer.querySelector(prepTimeSelector);
+        if (prepTimeEl) {
+            const prepTimeText = prepTimeEl.getAttribute('content') || prepTimeEl.textContent.trim();
+            const prepTimeISO = convertToISODuration(prepTimeText);
+            entities.push({ name: 'وقت التحضير', value: prepTimeText, rawValue: prepTimeISO, schemaProp: 'prepTime', type: 'Recipe' });
+        }
+        
+        const cookTimeEl = recipeContainer.querySelector(cookTimeSelector);
+        if (cookTimeEl) {
+            const cookTimeText = cookTimeEl.getAttribute('content') || cookTimeEl.textContent.trim();
+            const cookTimeISO = convertToISODuration(cookTimeText);
+            entities.push({ name: 'وقت الطهي', value: cookTimeText, rawValue: cookTimeISO, schemaProp: 'cookTime', type: 'Recipe' });
+        }
+        
         return entities;
     }
 
     function analyzeHowToEntities(doc) {
-        const stepSelector = getSelector(customHowToStep, '.step, .howto-step, .task-item');
-        const textSelector = getSelector(customHowToText, '.step-text, .howto-text, .task-description');
+        const howtoSelector = 'section[itemtype*="schema.org/HowTo"], .howto-guide'; // A robust selector for the HowTo container
+        const howtoContainer = doc.querySelector(howtoSelector);
+        if (!howtoContainer) return [];
+    
+        const entities = [];
+        const stepSelector = getSelector(customHowToStep, '.step, .howto-step, [itemprop="step"]');
+        const textSelector = getSelector(customHowToText, '.step-text, .howto-text, [itemprop="text"]');
         
-        const steps = Array.from(doc.querySelectorAll(stepSelector));
+        // **NEW: Find the contextual image WITHIN the HowTo container**
+        const contextualImageEl = howtoContainer.querySelector('img');
+        if (contextualImageEl) {
+            entities.push({ name: 'صورة الإرشادات السياقية', value: new URL(contextualImageEl.src, doc.baseURI).href, schemaProp: 'image', type: 'HowTo' });
+        }
+    
+        const steps = Array.from(howtoContainer.querySelectorAll(stepSelector));
         if (steps.length > 0) {
             const stepData = steps.map(step => ({ 
                 "@type": "HowToStep", 
                 "text": step.querySelector(textSelector)?.textContent.trim() 
             })).filter(s => s.text);
-
+    
             if (stepData.length > 0) {
-                const contextualName = findClosestHeading(steps[0]);
-                return [{ name: contextualName || 'الإرشادات', value: `${stepData.length} خطوة`, schemaProp: 'step', type: 'HowTo', rawValue: stepData, contextualName }];
+                const contextualName = findClosestHeading(steps[0]) || howtoContainer.querySelector('h1, h2, h3')?.textContent.trim();
+                entities.push({ name: contextualName || 'الإرشادات', value: `${stepData.length} خطوة`, schemaProp: 'step', type: 'HowTo', rawValue: stepData, contextualName });
             }
         }
-        return [];
+        return entities;
     }
 
     function analyzeEventEntities(doc) {
@@ -688,29 +743,44 @@ function getPublisherData(entities) {
     function populateRecipeProperties(schema, entities, isPrimary) {
         const recipeEntities = entities.filter(e => e.type === 'Recipe');
         
+        const contextualImage = recipeEntities.find(e => e.schemaProp === 'image');
+        if (contextualImage) {
+            schema.image = contextualImage.value;
+        } else if (isPrimary) {
+            const mainImage = entities.find(e => e.schemaProp === 'image' && !e.type);
+            if(mainImage) schema.image = mainImage.value;
+        }
+    
         const contextualNameEntity = recipeEntities.find(e => e.contextualName);
         if (contextualNameEntity) {
             schema.name = contextualNameEntity.contextualName;
         }
         
         recipeEntities.forEach(e => {
-            if (e.schemaProp === 'prepTime' || e.schemaProp === 'cookTime') {
-                if(e.rawValue) schema[e.schemaProp] = e.rawValue;
-            } else if (e.schemaProp !== 'contextualName') {
+            if (['prepTime', 'cookTime', 'recipeIngredient', 'recipeInstructions'].includes(e.schemaProp)) {
+                if(e.rawValue) {
+                    schema[e.schemaProp] = e.rawValue;
+                }
+            } else if (e.schemaProp !== 'contextualName' && e.schemaProp !== 'image') {
                 schema[e.schemaProp] = e.rawValue || e.value;
             }
         });
-        
-        if (isPrimary) {
-            const howToEntity = entities.find(e => e.type === 'HowTo');
-            if(howToEntity && howToEntity.rawValue) {
-                schema.recipeInstructions = howToEntity.rawValue;
-            }
-        }
     }
 
     function populateHowToProperties(schema, entities, isPrimary) {
-        const howToEntity = entities.find(e => e.type === 'HowTo');
+        const howToEntities = entities.filter(e => e.type === 'HowTo');
+    
+        // **NEW LOGIC: Prioritize contextual image**
+        const contextualImage = howToEntities.find(e => e.schemaProp === 'image');
+        if (contextualImage) {
+            schema.image = contextualImage.value;
+        } else if (isPrimary) {
+            // Fallback to global image only if it's the main entity
+            const mainImage = entities.find(e => e.schemaProp === 'image' && !e.type);
+            if(mainImage) schema.image = mainImage.value;
+        }
+    
+        const howToEntity = howToEntities.find(e => e.type === 'HowTo' && e.schemaProp === 'step');
         if (howToEntity) {
              if (howToEntity.contextualName) {
                 schema.name = howToEntity.contextualName;
@@ -1006,12 +1076,15 @@ function getPublisherData(entities) {
             if (!contentToAnalyze && url) {
                 contentToAnalyze = await fetchContent(url);
             }
-            const entities = analyzeContent(contentToAnalyze);
+            
+            // Use the main URL input, or the new base URL input if that one is empty
+            const baseUrl = urlInput.value.trim() || baseUrlInput.value.trim();
+            const entities = analyzeContent(contentToAnalyze, baseUrl);
             const suggestions = suggestSchema(entities);
             renderAnalysis(entities, suggestions);
 
             const updateSchemaOutput = (type) => {
-                const finalSchema = generateFinalSchema(entities, type, url);
+                const finalSchema = generateFinalSchema(entities, type, baseUrl); // Pass baseUrl to generator
                 generatedCode.value = JSON.stringify(finalSchema, null, 2);
                 renderSgePreview(finalSchema);
             };
