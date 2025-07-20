@@ -143,7 +143,7 @@
 
 <body>
     <nav class="navbar navbar-expand-lg sticky-top bg-body shadow-sm">
-        <div class="container"><a class="navbar-brand" href="#"><i class="bi bi-bounding-box-circles ms-2" aria-hidden="true"></i>Schema Architect</a><span class="fw-bold mx-auto navbar-text"><i class="bi bi-gem ms-2" aria-hidden="true"></i>Ai8V | Mind &amp; Machine</span>
+        <div class="container"><a class="navbar-brand" href="#"><i class="bi bi-bounding-box-circles ms-2" aria-hidden="true"></i>Schema Architect</a><span class="fw-bold mx-auto navbar-text"><i class="bi bi-gem ms-2" aria-hidden="true"></i>Ai8V | Mind & Machine</span>
             <button id="empBtn" class="btn btn-outline-secondary btn-sm mt-2 ms-3" type="button" title="إدارة كيانات العلامة التجارية"><i class="bi bi-buildings-fill ms-2"></i> إدارة الكيانات</button>
             <div class="dropdown"><button id="toolsMenu" class="btn btn-outline-primary btn-sm dropdown-toggle mt-2" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="تصفح جميع أدوات Ai8V"><i class="bi bi-tools ms-2" aria-hidden="true"></i> جميع الأدوات </button>
                 <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="toolsMenu">
@@ -168,7 +168,11 @@
             <h2 class="h4 mb-4"><i class="bi bi-sliders ms-2" aria-hidden="true"></i> لوحة التحكم</h2>
             <div class="mb-3"><label class="form-label fw-bold" for="urlInput">رابط الصفحة</label><input id="urlInput" class="form-control" type="url" dir="ltr" placeholder="https://example.com/..." /></div>
             <div class="text-center text-muted my-2 small"><span>أو</span></div>
-            <div class="mb-3"><label class="form-label fw-bold" for="htmlContentInput">الصق كود HTML</label><textarea id="htmlContentInput" class="form-control" dir="ltr" placeholder="&lt;html&gt;...&lt;/html&gt;" rows="4"></textarea></div>
+            <div id="baseUrlContainer" class="mb-3" style="display: none;">
+                <label class="form-label fw-bold" for="baseUrlInput">رابط URL الأصلي (لحل روابط الصور)</label>
+                <input id="baseUrlInput" class="form-control" type="url" dir="ltr" placeholder="https://example.com/page.html" />
+            </div>
+            <div class="mb-3"><label class="form-label fw-bold" for="htmlContentInput">الصق كود HTML</label><textarea id="htmlContentInput" class="form-control" dir="ltr" placeholder="<html>...</html>" rows="4"></textarea></div>
             <div class="d-grid mt-4"><button id="analyzeBtn" class="btn btn-primary btn-lg"><i class="bi bi-cpu-fill ms-2" aria-hidden="true"></i> فك شفرة المحتوى </button></div>
             
             <div class="project-hub-container mt-4">
@@ -262,7 +266,7 @@
                         <div class="accordion-body">
                             <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customOrgLogo" style="width: 110px;">شعار (URL)</label><input id="customOrgLogo" class="form-control form-control" type="text" dir="ltr" placeholder="img.logo[src]" /></div>
                             <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customOrgAddress" style="width: 110px;">العنوان</label><input id="customOrgAddress" class="form-control form-control" type="text" dir="ltr" placeholder=".address" /></div>
-                            <div class="input-group input-group-sm"><label class="input-group-text input-group-text" for="customOrgTelephone" style="width: 110px;">هاتف</label><input id="customOrgTelephone" class="form-control form-control" type="text" dir="ltr" placeholder="a[href^=&#39;tel:&#39;]" /></div>
+                            <div class="input-group input-group-sm"><label class="input-group-text input-group-text" for="customOrgTelephone" style="width: 110px;">هاتف</label><input id="customOrgTelephone" class="form-control form-control" type="text" dir="ltr" placeholder="a[href^='tel:']" /></div>
                         </div>
                     </div>
                 </div>
@@ -352,7 +356,7 @@
             </div>
         </div>
     </div>
-    <div class="text-center p-3" style="background-color:rgba(0, 0, 0, 0.05);"><span> © </span><script>document.write(new Date().getFullYear())</script><span> الحقوق محفوظة: </span><a class="text-body-secondary" href="https://ai8v.com/">Ai8V | Mind &amp; Machine</a></div>
+    <div class="text-center p-3" style="background-color:rgba(0, 0, 0, 0.05);"><span> © </span><script>document.write(new Date().getFullYear())</script><span> الحقوق محفوظة: </span><a class="text-body-secondary" href="https://ai8v.com/">Ai8V | Mind & Machine</a></div>
 </footer>
     
 <!-- Toast Notification Container -->
