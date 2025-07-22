@@ -143,229 +143,212 @@
 
 <body>
     <nav class="navbar navbar-expand-lg sticky-top bg-body shadow-sm">
-        <div class="container"><a class="navbar-brand" href="#"><i class="bi bi-bounding-box-circles ms-2" aria-hidden="true"></i>Schema Architect</a><span class="fw-bold mx-auto navbar-text"><i class="bi bi-gem ms-2" aria-hidden="true"></i>Ai8V | Mind & Machine</span>
-            <button id="empBtn" class="btn btn-outline-secondary btn-sm mt-2 ms-3" type="button" title="إدارة كيانات العلامة التجارية"><i class="bi bi-buildings-fill ms-2"></i> إدارة الكيانات</button>
-            <div class="dropdown"><button id="toolsMenu" class="btn btn-outline-primary btn-sm dropdown-toggle mt-2" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="تصفح جميع أدوات Ai8V"><i class="bi bi-tools ms-2" aria-hidden="true"></i> جميع الأدوات </button>
+        <div class="container"><a class="navbar-brand" href="/SchemaArchitect/"><span class="bi bi-bounding-box-circles ms-2" aria-hidden="true"></span>Schema Architect</a><span class="fw-bold mx-auto navbar-text"><span class="bi bi-gem ms-2" aria-hidden="true"></span>Ai8V | Mind &amp; Machine</span><button class="btn btn-outline-secondary btn-sm mt-2 ms-3" id="empBtn" type="button" title="إدارة كيانات العلامة التجارية"><span class="bi bi-buildings-fill ms-2" aria-hidden="true"></span> إدارة الكيانات</button>
+            <div class="dropdown"><button class="btn btn-outline-primary btn-sm dropdown-toggle mt-2" id="toolsMenu" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="تصفح جميع أدوات Ai8V"><span class="bi bi-tools ms-2" aria-hidden="true"></span> جميع الأدوات </button>
                 <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="toolsMenu">
-                    <li><a class="d-flex align-items-center dropdown-item" href="/"><i class="bi bi-house-door-fill opacity-75 ms-2" aria-hidden="true"></i>الأداة الكاملة (الرئيسية)</a></li>
-                    <li>
-                        <hr class="dropdown-divider" />
-                    </li>
-                    <li><a class="d-flex align-items-center dropdown-item" href="/SiteVisualizerLab/"><i class="bi bi-diagram-3-fill opacity-75 ms-2" aria-hidden="true"></i>المحلل البصري</a></li>
-                    <li><a class="d-flex align-items-center dropdown-item" href="/LogFileAnalyzer/"><i class="bi bi-server opacity-75 ms-2" aria-hidden="true"></i>محلل السجلات</a></li>
-                    <li><a class="d-flex align-items-center dropdown-item" href="/SchemaArchitect/"><i class="bi bi-bounding-box-circles opacity-75 ms-2" aria-hidden="true"></i>مهندس السكيما</a></li>
+                    <li><a class="d-flex align-items-center dropdown-item" href="/"><span class="bi bi-house-door-fill opacity-75 ms-2" aria-hidden="true"></span>الأداة الكاملة (الرئيسية)</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="d-flex align-items-center dropdown-item" href="/SiteVisualizerLab/"><span class="bi bi-diagram-3-fill opacity-75 ms-2" aria-hidden="true"></span>المحلل البصري</a></li>
+                    <li><a class="d-flex align-items-center dropdown-item" href="/LogFileAnalyzer/"><span class="bi bi-server opacity-75 ms-2" aria-hidden="true"></span>محلل السجلات</a></li>
+                    <li><a class="d-flex align-items-center dropdown-item" href="/SchemaArchitect/"><span class="bi bi-bounding-box-circles opacity-75 ms-2" aria-hidden="true"></span>مهندس السكيما</a></li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="theme-switcher dropdown position-fixed top-0 start-0 m-3 mt-5 ps-0 pt-2 pb-0 mb-0" style="z-index:1031;"><button class="btn btn-link dropdown-toggle ps-0 pe-0 pb-0 pt-0" aria-expanded="false" data-bs-toggle="dropdown" aria-label="التبديل بين الوضع الفاتح والغامق" style="color:var(--bs-body-color);" title="التبديل بين الوضع الفاتح و الغامق" type="button"><i aria-hidden="true" class="bi bi-sun-fill mb-1"></i></button>
-        <div class="dropdown-menu"><button aria-pressed="false" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" type="button"><i aria-hidden="true" class="bi bi-sun-fill opacity-50 ms-2"></i>Light</button><button class="active dropdown-item d-flex align-items-center" aria-pressed="true" data-bs-theme-value="dark" type="button"><i aria-hidden="true" class="bi bi-moon-stars-fill opacity-50 ms-2"></i>Dark</button><button aria-pressed="false" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" type="button"><i aria-hidden="true" class="bi bi-circle-half opacity-50 ms-2"></i>Auto</button></div>
+    <div class="theme-switcher dropdown position-fixed top-0 start-0 m-3 mt-5 ps-0 pt-2 pb-0 mb-0" style="z-index:1031;"><button class="btn btn-link dropdown-toggle ps-0 pe-0 pb-0 pt-0" aria-expanded="false" data-bs-toggle="dropdown" aria-label="التبديل بين الوضع الفاتح والغامق" style="color:var(--bs-body-color);" title="التبديل بين الوضع الفاتح و الغامق" type="button"><span class="bi bi-sun-fill mb-1" aria-hidden="true"></span></button>
+        <div class="dropdown-menu"><button aria-pressed="false" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" type="button"><span class="bi bi-sun-fill opacity-50 ms-2" aria-hidden="true"></span>Light</button><button class="active dropdown-item d-flex align-items-center" aria-pressed="true" data-bs-theme-value="dark" type="button"><span class="bi bi-moon-stars-fill opacity-50 ms-2" aria-hidden="true"></span>Dark</button><button aria-pressed="false" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" type="button"><span class="bi bi-circle-half opacity-50 ms-2" aria-hidden="true"></span>Auto</button></div>
     </div>
     <main class="container-fluid g-0">
-    <h1 class="visually-hidden">أداة مُصمم السكيما (Schema Architect Tool)</h1>
-    <div class="row g-0" style="min-height: calc(100vh - 56px);">
-        <div class="col-lg-3 p-4 bg-body-tertiary border-end">
-            <h2 class="h4 mb-4"><i class="bi bi-sliders ms-2" aria-hidden="true"></i> لوحة التحكم</h2>
-            <div class="mb-3"><label class="form-label fw-bold" for="urlInput">رابط الصفحة</label><input id="urlInput" class="form-control" type="url" dir="ltr" placeholder="https://example.com/..." /></div>
-            <div class="text-center text-muted my-2 small"><span>أو</span></div>
-            <div id="baseUrlContainer" class="mb-3" style="display: none;">
-                <label class="form-label fw-bold" for="baseUrlInput">رابط URL الأصلي (لحل روابط الصور)</label>
-                <input id="baseUrlInput" class="form-control" type="url" dir="ltr" placeholder="https://example.com/page.html" />
-            </div>
-            <div class="mb-3"><label class="form-label fw-bold" for="htmlContentInput">الصق كود HTML</label><textarea id="htmlContentInput" class="form-control" dir="ltr" placeholder="<html>...</html>" rows="4"></textarea></div>
-            <div class="d-grid mt-4"><button id="analyzeBtn" class="btn btn-primary btn-lg"><i class="bi bi-cpu-fill ms-2" aria-hidden="true"></i> فك شفرة المحتوى </button></div>
-            
-            <div class="project-hub-container mt-4">
-                <label for="projectSelector" class="form-label fw-bold"><i class="bi bi-folder2-open ms-2"></i>المشاريع والقوالب</label>
-                <div class="input-group">
-                    <select class="form-select" id="projectSelector">
-                        <option selected value="">-- اختر مشروع محفوظ --</option>
-                    </select>
-                    <button class="btn btn-outline-danger" type="button" id="deleteProjectBtn" title="حذف المشروع المحدد"><i class="bi bi-trash-fill"></i></button>
+        <h1 class="visually-hidden">أداة مُصمم السكيما (Schema Architect Tool)</h1>
+        <div class="row g-0" style="min-height:calc(100vh - 56px);">
+            <div class="col-lg-3 p-4 bg-body-tertiary border-end">
+                <h2 class="h4 mb-4"><span class="bi bi-sliders ms-2" aria-hidden="true"></span> لوحة التحكم</h2>
+                <div class="mb-3"><label class="form-label fw-bold" for="urlInput">رابط الصفحة</label><input type="url" class="form-control" dir="ltr" id="urlInput" placeholder="https://example.com/..."></div>
+                <div class="text-center text-muted my-2 small"><span>أو</span></div>
+                <div id="baseUrlContainer" class="mb-3" style="display:none;"><label class="form-label fw-bold" for="baseUrlInput">رابط URL الأصلي (لحل روابط الصور)</label><input type="url" class="form-control" dir="ltr" id="baseUrlInput" placeholder="https://example.com/page.html"></div>
+                <div class="mb-3"><label class="form-label fw-bold" for="htmlContentInput">الصق كود HTML</label><textarea class="form-control" dir="ltr" id="htmlContentInput" placeholder="<html>...</html>" rows="4"></textarea></div>
+                <div class="d-grid mt-4"><button class="btn btn-primary btn-lg" id="analyzeBtn"><span class="bi bi-cpu-fill ms-2" aria-hidden="true"></span> فك شفرة المحتوى </button></div>
+                <div class="project-hub-container mt-4"><label class="form-label fw-bold" for="projectSelector"><span class="bi bi-folder2-open ms-2"></span>المشاريع والقوالب</label>
+                    <div class="input-group"><select class="form-select form-select" id="projectSelector">
+                            <option value="" selected="">-- اختر مشروع محفوظ --</option>
+                        </select><button class="btn btn-outline-danger" type="button" id="deleteProjectBtn" title="حذف المشروع المحدد"><span class="bi bi-trash-fill"></span><span class="visually-hidden">حذف المشروع</span></button></div>
+                    <div class="input-group mt-2"><input class="form-control form-control" type="text" id="newProjectName" placeholder="اسم المشروع أو القالب الجديد..."><button class="btn btn-success" type="button" id="saveProjectBtn"><span class="bi bi-save-fill ms-2" aria-hidden="true"></span> حفظ كقالب</button></div>
                 </div>
-                <div class="input-group mt-2">
-                    <input type="text" id="newProjectName" class="form-control" placeholder="اسم المشروع أو القالب الجديد...">
-                    <button class="btn btn-success" type="button" id="saveProjectBtn"><i class="bi bi-save-fill ms-2"></i> حفظ</button>
-                </div>
-            </div>
-
-            <hr class="my-4" />
-            <h3 class="h5">خيارات متقدمة</h3>
-            <div class="form-check form-switch mb-3"><input id="autoDetectSwitch" class="form-check-input" type="checkbox" checked role="switch" /><label class="form-check-label" for="autoDetectSwitch">اكتشاف تلقائي للسكيما</label></div>
-            <div id="customIdentifiersAccordion" class="accordion" role="tablist">
-                <div class="accordion-item">
-                    <h2 id="headingFaq" class="accordion-header" role="tab"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaq" aria-expanded="true" aria-controls="collapseFaq"><i class="bi bi-patch-question-fill ms-2"></i>مُعرّفات الأسئلة (FAQ) </button></h2>
-                    <div id="collapseFaq" class="accordion-collapse collapse show item-1 show" role="tabpanel" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingFaq">
-                        <div class="accordion-body">
-                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customFaqItem" style="width: 110px;">حاوي الـ FAQ</label><input id="customFaqItem" class="form-control form-control" type="text" dir="ltr" placeholder=".accordion-item" /></div>
-                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customFaqQuestion" style="width: 110px;">محدد السؤال</label><input id="customFaqQuestion" class="form-control form-control" type="text" dir="ltr" placeholder=".accordion-button" /></div>
-                            <div class="input-group input-group-sm"><label class="input-group-text input-group-text" for="customFaqAnswer" style="width: 110px;">محدد الجواب</label><input id="customFaqAnswer" class="form-control form-control" type="text" dir="ltr" placeholder=".accordion-body" /></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 id="headingProduct" class="accordion-header" role="tab"><button class="accordion-button collapsed collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProduct" aria-expanded="false" aria-controls="collapseProduct"><i class="bi bi-box-seam-fill ms-2"></i>مُعرّفات المنتج </button></h2>
-                    <div id="collapseProduct" class="accordion-collapse collapse item-2" role="tabpanel" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingProduct">
-                        <div class="accordion-body">
-                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customProductPrice" style="width: 110px;">السعر</label><input id="customProductPrice" class="form-control form-control" type="text" dir="ltr" placeholder=".price" /></div>
-                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customProductCurrency" style="width: 110px;">العملة</label><input id="customProductCurrency" class="form-control form-control" type="text" dir="ltr" placeholder="USD, SAR, EGP" /></div>
-                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customProductSku" style="width: 110px;">SKU</label><input id="customProductSku" class="form-control form-control" type="text" dir="ltr" placeholder=".sku" /></div>
-                            <div class="input-group input-group-sm"><label class="input-group-text input-group-text" for="customProductBrand" style="width: 110px;">العلامة التجارية</label><input id="customProductBrand" class="form-control form-control" type="text" dir="ltr" placeholder=".brand" /></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 id="headingRecipe" class="accordion-header" role="tab"><button class="accordion-button collapsed collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRecipe" aria-expanded="false" aria-controls="collapseRecipe"><i class="bi bi-egg-fried ms-2"></i>مُعرّفات الوصفة </button></h2>
-                    <div id="collapseRecipe" class="accordion-collapse collapse item-3" role="tabpanel" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingRecipe">
-                        <div class="accordion-body">
-                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customRecipePrepTime" style="width: 110px;">وقت التحضير</label><input id="customRecipePrepTime" class="form-control form-control" type="text" dir="ltr" placeholder=".prep-time" /></div>
-                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customRecipeCookTime" style="width: 110px;">وقت الطهي</label><input id="customRecipeCookTime" class="form-control form-control" type="text" dir="ltr" placeholder=".cook-time" /></div>
-                            <div class="input-group input-group-sm"><label class="input-group-text input-group-text" for="customRecipeIngredients" style="width: 110px;">المكونات (LI)</label><input id="customRecipeIngredients" class="form-control form-control" type="text" dir="ltr" placeholder=".ingredients li" /></div>
-                        </div>
-                    </div>
-                </div>
-                 <div class="accordion-item">
-                    <h2 id="headingReview" class="accordion-header" role="tab"><button class="accordion-button collapsed collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReview" aria-expanded="false" aria-controls="collapseReview"><i class="bi bi-star-fill ms-2"></i>مُعرّفات المراجعة</button></h2>
-                    <div id="collapseReview" class="accordion-collapse collapse item-4" role="tabpanel" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingReview">
-                        <div class="accordion-body">
-                            <div class="input-group input-group-sm mb-2"><label class="input-group-text" for="customReviewRating" style="width: 110px;">التقييم (قيمة)</label><input id="customReviewRating" class="form-control" type="text" dir="ltr" placeholder=".rating-value, 4.5" /></div>
-                            <div class="input-group input-group-sm"><label class="input-group-text" for="customReviewItemName" style="width: 110px;">العنصر المُراجَع</label><input id="customReviewItemName" class="form-control" type="text" dir="ltr" placeholder=".product-title-review" /></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 id="headingHowTo" class="accordion-header" role="tab"><button class="accordion-button collapsed collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHowTo" aria-expanded="false" aria-controls="collapseHowTo"><i class="bi bi-list-ol ms-2"></i>مُعرّفات الإرشادات </button></h2>
-                    <div id="collapseHowTo" class="accordion-collapse collapse item-5" role="tabpanel" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingHowTo">
-                        <div class="accordion-body">
-                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customHowToStep" style="width: 110px;">حاوي الخطوة</label><input id="customHowToStep" class="form-control form-control" type="text" dir="ltr" placeholder=".step-item" /></div>
-                            <div class="input-group input-group-sm"><label class="input-group-text input-group-text" for="customHowToText" style="width: 110px;">نص الخطوة</label><input id="customHowToText" class="form-control form-control" type="text" dir="ltr" placeholder=".step-text" /></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 id="headingBreadcrumb" class="accordion-header" role="tab"><button class="accordion-button collapsed collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBreadcrumb" aria-expanded="false" aria-controls="collapseBreadcrumb"><i class="bi bi-signpost-split-fill ms-2"></i>مُعرّفات  (Breadcrumb)  </button></h2>
-                    <div id="collapseBreadcrumb" class="accordion-collapse collapse" role="tabpanel" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingBreadcrumb">
-                        <div class="accordion-body">
-                            <div class="input-group input-group-sm mb-2"><label class="input-group-text" for="customBreadcrumbItem" style="width: 110px;">حاوي العنصر (LI)</label><input id="customBreadcrumbItem" class="form-control" type="text" dir="ltr" placeholder=".breadcrumb li, .breadcrumbs li" /></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 id="headingEvent" class="accordion-header" role="tab"><button class="accordion-button collapsed collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEvent" aria-expanded="false" aria-controls="collapseEvent"><i class="bi bi-calendar-event-fill ms-2"></i>مُعرّفات الحدث (Event) </button></h2>
-                    <div id="collapseEvent" class="accordion-collapse collapse item-6" role="tabpanel" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingEvent">
-                        <div class="accordion-body">
-                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customEventStartDate" style="width: 110px;">تاريخ البدء</label><input id="customEventStartDate" class="form-control form-control" type="text" dir="ltr" placeholder=".event-start-date" /></div>
-                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customEventLocation" style="width: 110px;">المكان</label><input id="customEventLocation" class="form-control form-control" type="text" dir="ltr" placeholder=".location, .venue" /></div>
-                            <div class="input-group input-group-sm"><label class="input-group-text input-group-text" for="customEventOrganizer" style="width: 110px;">المنظم</label><input id="customEventOrganizer" class="form-control form-control" type="text" dir="ltr" placeholder=".organizer" /></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 id="headingOrg" class="accordion-header" role="tab"><button class="accordion-button collapsed collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOrg" aria-expanded="false" aria-controls="collapseOrg"><i class="bi bi-building-fill ms-2"></i>مُعرّفات المنظمة </button></h2>
-                    <div id="collapseOrg" class="accordion-collapse collapse item-7" role="tabpanel" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingOrg">
-                        <div class="accordion-body">
-                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customOrgLogo" style="width: 110px;">شعار (URL)</label><input id="customOrgLogo" class="form-control form-control" type="text" dir="ltr" placeholder="img.logo[src]" /></div>
-                            <div class="input-group input-group-sm mb-2"><label class="input-group-text input-group-text" for="customOrgAddress" style="width: 110px;">العنوان</label><input id="customOrgAddress" class="form-control form-control" type="text" dir="ltr" placeholder=".address" /></div>
-                            <div class="input-group input-group-sm"><label class="input-group-text input-group-text" for="customOrgTelephone" style="width: 110px;">هاتف</label><input id="customOrgTelephone" class="form-control form-control" type="text" dir="ltr" placeholder="a[href^='tel:']" /></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-5 p-4 analysis-column">
-            <h2 class="h4 mb-4"><i class="bi bi-diagram-3-fill ms-2" aria-hidden="true"></i> تشريح المحتوى والكيانات</h2>
-            <div id="analysisResults" style="max-height: 80vh;overflow-y: auto;">
-                <div class="text-center text-muted d-flex flex-column justify-content-center align-items-center p-5 h-100"><i class="bi bi-binoculars-fill" style="font-size: 4rem;" aria-hidden="true"></i>
-                    <p class="fs-5 mt-3">في انتظار المحتوى لعرض الكيانات المقترحة وبنية السكيما...</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 p-4 bg-body-tertiary border-start">
-            <h2 class="h4 mb-4"><i class="bi bi-file-earmark-code-fill ms-2" aria-hidden="true"></i> المُخرج النهائي (JSON-LD)</h2>
-            <div class="card shadow-sm">
-                <div class="card-header d-flex justify-content-between align-items-center code-header"><span class="fw-bold">schema.jsonld</span>
-                    <div class="btn-group" role="group"><button id="copyBtn" class="btn btn-success btn-sm disabled disabled disabled" disabled><i class="bi bi-clipboard-check ms-1" aria-hidden="true"></i> نسخ </button><button id="downloadBtn" class="btn btn-secondary btn-sm disabled disabled disabled" disabled><i class="bi bi-download ms-1" aria-hidden="true"></i> تحميل </button><button id="validateBtn" class="btn btn-info btn-sm disabled disabled disabled" disabled><i class="bi bi-google ms-1" aria-hidden="true"></i> تحقق </button></div>
-                </div>
-                <div class="card-body p-0"><textarea id="generatedCode" class="border-0 form-control" dir="ltr" placeholder="سيظهر الكود هنا..." readonly rows="15"></textarea></div>
-             </div>
-                <div class="d-grid mt-3">
-                <button class="btn btn-warning btn-lg" id="copyEnhancedPromptBtn" type="button" disabled>
-                    <i class="bi bi-robot ms-2"></i> نسخ برومبت التحسين الكامل
-                </button>
-                </div>
-                <div id="sge-preview" class="mt-4" style="display: none;">
-                            <h3 class="h6"><i class="text-warning bi bi-stars ms-2"></i>معاينة محتملة في Google SGE</h3>
-                <div class="alert alert-info small" role="alert"><i class="bi bi-robot ms-2" aria-hidden="true"></i><span>هذه معاينة تخيلية لكيفية استخدام جوجل لهذه البيانات المنظمة لتوليد إجابات مباشرة.</span></div>
-                <div id="sge-preview-content"></div>
+                <hr class="my-4">
+                <h3 class="h5">خيارات متقدمة</h3>
+                <div class="form-check form-switch mb-3"><input type="checkbox" checked="" class="form-check-input" id="autoDetectSwitch" role="switch"><label class="form-check-label" for="autoDetectSwitch">اكتشاف تلقائي للسكيما</label></div><div id="customIdentifiersAccordion" class="accordion">
+    <div class="accordion-item">
+        <h2 id="headingFaq" class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaq" aria-expanded="true" aria-controls="collapseFaq"><span class="bi bi-patch-question-fill ms-2" aria-hidden="true"></span>مُعرّفات الأسئلة (FAQ) </button>
+        </h2>
+        <div id="collapseFaq" class="accordion-collapse collapse show" role="region" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingFaq">
+            <div class="accordion-body">
+                <div class="input-group input-group-sm mb-2"><label class="input-group-text" for="customFaqItem" style="width: 110px;">حاوي الـ FAQ</label><input id="customFaqItem" class="form-control" type="text" dir="ltr" placeholder=".accordion-item"></div>
+                <div class="input-group input-group-sm mb-2"><label class="input-group-text" for="customFaqQuestion" style="width: 110px;">محدد السؤال</label><input id="customFaqQuestion" class="form-control" type="text" dir="ltr" placeholder=".accordion-button"></div>
+                <div class="input-group input-group-sm"><label class="input-group-text" for="customFaqAnswer" style="width: 110px;">محدد الجواب</label><input id="customFaqAnswer" class="form-control" type="text" dir="ltr" placeholder=".accordion-body"></div>
             </div>
         </div>
     </div>
-</main>
-<!-- EMP Modal -->
-<div class="modal fade" id="empModal" tabindex="-1" aria-labelledby="empModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="empModalLabel"><i class="bi bi-buildings-fill ms-2"></i>منصة إدارة الكيانات (EMP)</h5>
-        <button type="button" class="btn-close me-auto ms-0" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p class="small text-muted">أدخل هنا البيانات الأساسية والموثوقة لعلامتك التجارية. سيتم استخدامها تلقائيًا لإثراء السكيما التي يتم إنشاؤها.</p>
-        <div id="emp-form-container">
-          <!-- Form fields will be dynamically generated here -->
+    <div class="accordion-item">
+        <h2 id="headingProduct" class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProduct" aria-expanded="false" aria-controls="collapseProduct"><span class="bi bi-box-seam-fill ms-2" aria-hidden="true"></span>مُعرّفات المنتج </button>
+        </h2>
+        <div id="collapseProduct" class="accordion-collapse collapse" role="region" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingProduct">
+            <div class="accordion-body">
+                <div class="input-group input-group-sm mb-2"><label class="input-group-text" for="customProductPrice" style="width: 110px;">السعر</label><input id="customProductPrice" class="form-control" type="text" dir="ltr" placeholder=".price"></div>
+                <div class="input-group input-group-sm mb-2"><label class="input-group-text" for="customProductCurrency" style="width: 110px;">العملة</label><input id="customProductCurrency" class="form-control" type="text" dir="ltr" placeholder="USD, SAR, EGP"></div>
+                <div class="input-group input-group-sm mb-2"><label class="input-group-text" for="customProductSku" style="width: 110px;">SKU</label><input id="customProductSku" class="form-control" type="text" dir="ltr" placeholder=".sku"></div>
+                <div class="input-group input-group-sm"><label class="input-group-text" for="customProductBrand" style="width: 110px;">العلامة التجارية</label><input id="customProductBrand" class="form-control" type="text" dir="ltr" placeholder=".brand"></div>
+            </div>
         </div>
-        <button id="addEmpFieldBtn" class="btn btn-outline-primary btn-sm mt-3"><i class="bi bi-plus-circle-fill ms-2"></i>إضافة حقل مخصص</button>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
-        <button type="button" class="btn btn-primary" id="saveEmpBtn">حفظ الكيانات</button>
-      </div>
     </div>
-  </div>
+    <div class="accordion-item">
+        <h2 id="headingRecipe" class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRecipe" aria-expanded="false" aria-controls="collapseRecipe"><span class="bi bi-egg-fried ms-2" aria-hidden="true"></span>مُعرّفات الوصفة </button>
+        </h2>
+        <div id="collapseRecipe" class="accordion-collapse collapse" role="region" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingRecipe">
+            <div class="accordion-body">
+                <div class="input-group input-group-sm mb-2"><label class="input-group-text" for="customRecipePrepTime" style="width: 110px;">وقت التحضير</label><input id="customRecipePrepTime" class="form-control" type="text" dir="ltr" placeholder=".prep-time"></div>
+                <div class="input-group input-group-sm mb-2"><label class="input-group-text" for="customRecipeCookTime" style="width: 110px;">وقت الطهي</label><input id="customRecipeCookTime" class="form-control" type="text" dir="ltr" placeholder=".cook-time"></div>
+                <div class="input-group input-group-sm"><label class="input-group-text" for="customRecipeIngredients" style="width: 110px;">المكونات (LI)</label><input id="customRecipeIngredients" class="form-control" type="text" dir="ltr" placeholder=".ingredients li"></div>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 id="headingReview" class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReview" aria-expanded="false" aria-controls="collapseReview"><span class="bi bi-star-fill ms-2" aria-hidden="true"></span>مُعرّفات المراجعة</button>
+        </h2>
+        <div id="collapseReview" class="accordion-collapse collapse" role="region" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingReview">
+            <div class="accordion-body">
+                <div class="input-group input-group-sm mb-2"><label class="input-group-text" for="customReviewRating" style="width: 110px;">التقييم (قيمة)</label><input id="customReviewRating" class="form-control" type="text" dir="ltr" placeholder=".rating-value, 4.5"></div>
+                <div class="input-group input-group-sm"><label class="input-group-text" for="customReviewItemName" style="width: 110px;">العنصر المُراجَع</label><input id="customReviewItemName" class="form-control" type="text" dir="ltr" placeholder=".product-title-review"></div>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 id="headingHowTo" class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHowTo" aria-expanded="false" aria-controls="collapseHowTo"><span class="bi bi-list-ol ms-2" aria-hidden="true"></span>مُعرّفات الإرشادات </button>
+        </h2>
+        <div id="collapseHowTo" class="accordion-collapse collapse" role="region" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingHowTo">
+            <div class="accordion-body">
+                <div class="input-group input-group-sm mb-2"><label class="input-group-text" for="customHowToStep" style="width: 110px;">حاوي الخطوة</label><input id="customHowToStep" class="form-control" type="text" dir="ltr" placeholder=".step-item"></div>
+                <div class="input-group input-group-sm"><label class="input-group-text" for="customHowToText" style="width: 110px;">نص الخطوة</label><input id="customHowToText" class="form-control" type="text" dir="ltr" placeholder=".step-text"></div>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 id="headingBreadcrumb" class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBreadcrumb" aria-expanded="false" aria-controls="collapseBreadcrumb"><span class="bi bi-signpost-split-fill ms-2" aria-hidden="true"></span>مُعرّفات (Breadcrumb) </button>
+        </h2>
+        <div id="collapseBreadcrumb" class="accordion-collapse collapse" role="region" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingBreadcrumb">
+            <div class="accordion-body">
+                <div class="input-group input-group-sm mb-2"><label class="input-group-text" for="customBreadcrumbItem" style="width: 110px;">حاوي العنصر (LI)</label><input id="customBreadcrumbItem" class="form-control" type="text" dir="ltr" placeholder=".breadcrumb li, .breadcrumbs li"></div>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 id="headingEvent" class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEvent" aria-expanded="false" aria-controls="collapseEvent"><span class="bi bi-calendar-event-fill ms-2" aria-hidden="true"></span>مُعرّفات الحدث (Event) </button>
+        </h2>
+        <div id="collapseEvent" class="accordion-collapse collapse" role="region" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingEvent">
+            <div class="accordion-body">
+                <div class="input-group input-group-sm mb-2"><label class="input-group-text" for="customEventStartDate" style="width: 110px;">تاريخ البدء</label><input id="customEventStartDate" class="form-control" type="text" dir="ltr" placeholder=".event-start-date"></div>
+                <div class="input-group input-group-sm mb-2"><label class="input-group-text" for="customEventLocation" style="width: 110px;">المكان</label><input id="customEventLocation" class="form-control" type="text" dir="ltr" placeholder=".location, .venue"></div>
+                <div class="input-group input-group-sm"><label class="input-group-text" for="customEventOrganizer" style="width: 110px;">المنظم</label><input id="customEventOrganizer" class="form-control" type="text" dir="ltr" placeholder=".organizer"></div>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 id="headingOrg" class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOrg" aria-expanded="false" aria-controls="collapseOrg"><span class="bi bi-building-fill ms-2" aria-hidden="true"></span>مُعرّفات المنظمة </button>
+        </h2>
+        <div id="collapseOrg" class="accordion-collapse collapse" role="region" data-bs-parent="#customIdentifiersAccordion" aria-labelledby="headingOrg">
+            <div class="accordion-body">
+                <div class="input-group input-group-sm mb-2"><label class="input-group-text" for="customOrgLogo" style="width: 110px;">شعار (URL)</label><input id="customOrgLogo" class="form-control" type="text" dir="ltr" placeholder="img.logo[src]"></div>
+                <div class="input-group input-group-sm mb-2"><label class="input-group-text" for="customOrgAddress" style="width: 110px;">العنوان</label><input id="customOrgAddress" class="form-control" type="text" dir="ltr" placeholder=".address"></div>
+                <div class="input-group input-group-sm"><label class="input-group-text" for="customOrgTelephone" style="width: 110px;">هاتف</label><input id="customOrgTelephone" class="form-control" type="text" dir="ltr" placeholder="a[href^='tel:']"></div>
+            </div>
+        </div>
+    </div>
 </div>
-<footer class="text-center text-lg-start bg-body-tertiary mt-auto border-top mt-5 pt-5">
-    <h2 class="visually-hidden">تذييل الموقع ومعلومات إضافية</h2>
-    <div class="container p-4">
-        <div class="row">
-            <div class="col-md-12 col-lg-4 text-end mb-4 mb-md-0">
-                <h3 class="text-uppercase mb-3 h5"> ادعم المشروع</h3>
-                <p class="text-muted small" style="line-height:1.8;"> تم بناء هذه الأدوات لتكون متاحة للجميع. أنا أؤمن بمشاركة المعرفة. إذا كنت بحاجة إلى مساعدة متخصصة لموقعك أو لديك استفسار يتطلب خبرة، يمكنك حجز استشارة مدفوعة. </p><a class="btn btn-success mt-2" role="button" id="whatsappBtn" href="https://wa.me/201556450850?text=مرحبًا،%20أرغب%20في%20حجز%20استشارة%20مدفوعة%20بخصوص%20تحسين%20محركات%20البحث%20بعد%20اطلاعي%20على%20أدوات%20Ai8V." target="_blank"><i class="bi bi-whatsapp ms-2" aria-hidden="true"></i> اطلب استشارة مدفوعة <span class="visually-hidden">(يفتح في نافذة جديدة)</span></a>
             </div>
-            <div class="col-md-6 col-lg-2 text-end mb-4 mb-md-0">
-                <h3 class="text-uppercase text-center mb-3 h5">مجموعة الأدوات</h3>
-                <ul class="list-unstyled mb-0">
-                    <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/"><i class="bi bi-tools ms-2" aria-hidden="true"></i>الأداة الكاملة</a></li>
-                    <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/LogFileAnalyzer/"><i class="bi bi-server ms-2" aria-hidden="true"></i>محلل السجلات</a></li>
-                    <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/SiteVisualizerLab/"><i class="bi bi-diagram-3 ms-2" aria-hidden="true"></i>المحلل البصري</a></li>
-                    <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/SchemaArchitect/"><i class="bi bi-bounding-box-circles ms-2" aria-hidden="true"></i>مهندس السكيما</a></li>
-                </ul>
+            <div class="col-lg-5 p-4 analysis-column">
+                <h2 class="h4 mb-4"><span class="bi bi-diagram-3-fill ms-2" aria-hidden="true"></span> تشريح المحتوى والكيانات</h2>
+                <div id="analysisResults" style="max-height:80vh;overflow-y:auto;" aria-live="polite">
+                    <div class="text-center text-muted d-flex flex-column justify-content-center align-items-center p-5 h-100"><span class="bi bi-binoculars-fill" style="font-size:4rem;" aria-hidden="true"></span>
+                        <p class="fs-5 mt-3">في انتظار المحتوى لعرض الكيانات المقترحة وبنية السكيما...</p>
+                    </div>
+                </div>
             </div>
-           <div class="col-md-6 col-lg-3 text-end mb-4 mb-md-0">
-                <h3 class="text-uppercase text-center d-flex justify-content-center mb-3 h5">مقالات ومصادر</h3>
-                <ul class="list-unstyled mb-0">
-                    <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/what-is-crawl-budget"><i class="bi bi-book-half ms-2" aria-hidden="true"></i>شرح ميزانية الزحف</a></li>
-                    <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/technical-seo-guide"><i class="bi bi-book-half ms-2" aria-hidden="true"></i>دليل الـ SEO التقني</a></li>
-                    <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/schema-for-beginners"><i class="bi bi-book-half ms-2" aria-hidden="true"></i>فهم البيانات المنظمة</a></li>
-                    <li class="d-flex mb-2 mt-2 me-4"><a class="fw-bold text-decoration-none text-body-secondary" href="/blog">كل المقالات...</a></li>
-                </ul>
+            <div class="col-lg-4 p-4 bg-body-tertiary border-start">
+                <h2 class="h4 mb-4"><span class="bi bi-file-earmark-code-fill ms-2" aria-hidden="true"></span> المُخرج النهائي (JSON-LD)</h2>
+                <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center code-header"><span class="fw-bold">schema.jsonld</span>
+                        <div class="btn-group" role="group"><button class="btn btn-success btn-sm disabled disabled" id="copyBtn" disabled=""><span class="bi bi-clipboard-check ms-1" aria-hidden="true"></span> نسخ </button><button class="btn btn-secondary btn-sm disabled disabled" id="downloadBtn" disabled=""><span class="bi bi-download ms-1" aria-hidden="true"></span> تحميل </button><button class="btn btn-info btn-sm disabled disabled" id="validateBtn" disabled=""><span class="bi bi-google ms-1" aria-hidden="true"></span> تحقق </button></div>
+                    </div>
+                    <div class="card-body p-0"><textarea class="border-0 form-control" dir="ltr" id="generatedCode" placeholder="سيظهر الكود هنا..." readonly="" rows="15"></textarea></div>
+                </div>
+                <div class="d-grid mt-3"><button class="btn btn-warning btn-lg" id="copyEnhancedPromptBtn" type="button"><span class="bi bi-robot ms-2" aria-hidden="true"></span> نسخ برومبت التحسين الكامل </button></div>
+                <div id="sge-preview" class="mt-4" style="display:none;">
+                    <h3 class="h6"><span class="text-warning bi bi-stars ms-2" aria-hidden="true"></span>معاينة محتملة في Google SGE</h3>
+                    <div class="alert alert-info small" role="alert"><span class="bi bi-robot ms-2" aria-hidden="true"></span><span>هذه معاينة تخيلية لكيفية استخدام جوجل لهذه البيانات المنظمة لتوليد إجابات مباشرة.</span></div>
+                    <div id="sge-preview-content"></div>
+                </div>
             </div>
-            <div class="col-md-12 col-lg-3 text-end text-lg-end mb-4 mb-md-0">
-                <h3 class="text-uppercase text-center mb-3 h5">بُني بواسطة [عمرو عبدالسلام]</h3>
-                <p class="text-muted small me-2"> خبير في تحسين محركات البحث وتطوير الأدوات التي تساعد الآخرين على النجاح. </p>
-                <div class="d-flex justify-content-center gap-3 mt-3 ms-4"><a class="fs-4 text-body-secondary" href="https://x.com/AmrAbssalam" target="_blank" aria-label="تابعني على تويتر / X (يفتح في نافذة جديدة)"><i class="bi bi-twitter-x" aria-hidden="true"></i></a><a class="fs-4 text-body-secondary" href="https://www.linkedin.com/in/amrabdelsalam87/" target="_blank" aria-label="تواصل معي على لينكد إن (يفتح في نافذة جديدة)"><i class="bi bi-linkedin" aria-hidden="true"></i></a><a class="fs-4 text-body-secondary" href="https://github.com/AI8V" target="_blank" aria-label="اطلع على مشاريعي على جيت هاب (يفتح في نافذة جديدة)"><i class="bi bi-github" aria-hidden="true"></i></a><a class="fs-4 text-body-secondary" href="https://www.youtube.com/@4DigitalMarketer" target="_blank" aria-label="شاهد قناتي على يوتيوب (يفتح في نافذة جديدة)"><i class="bi bi-youtube" aria-hidden="true"></i></a></div>
+        </div>
+    </main>
+    <div class="modal fade" role="dialog" tabindex="-1" id="empModal" aria-labelledby="empModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="empModalLabel" class="modal-title h5"><span class="bi bi-buildings-fill ms-2" aria-hidden="true"></span>منصة إدارة الكيانات (EMP)</h3><button class="btn-close me-auto ms-0" aria-label="Close" data-bs-dismiss="modal" type="button"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small">أدخل هنا البيانات الأساسية والموثوقة لعلامتك التجارية. سيتم استخدامها تلقائيًا لإثراء السكيما التي يتم إنشاؤها.</p>
+                    <div id="emp-form-container"></div><button class="btn btn-outline-primary btn-sm mt-3" id="addEmpFieldBtn"><span class="bi bi-plus-circle-fill ms-2" aria-hidden="true"></span>إضافة حقل مخصص</button>
+                </div>
+                <div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal" type="button">إغلاق</button><button class="btn btn-primary" id="saveEmpBtn" type="button">حفظ الكيانات</button></div>
             </div>
         </div>
     </div>
-    <div class="text-center p-3" style="background-color:rgba(0, 0, 0, 0.05);"><span> © </span><script>document.write(new Date().getFullYear())</script><span> الحقوق محفوظة: </span><a class="text-body-secondary" href="https://ai8v.com/">Ai8V | Mind & Machine</a></div>
-</footer>
-    
-<!-- Toast Notification Container -->
-<div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1100">
-  <!-- Toasts will be appended here dynamically -->
-</div>
+    <footer class="text-center text-lg-start bg-body-tertiary mt-auto border-top mt-5 pt-5">
+        <h2 class="visually-hidden">تذييل الموقع ومعلومات إضافية</h2>
+        <div class="container p-4">
+            <div class="row">
+                <div class="col-md-12 col-lg-4 text-end mb-4 mb-md-0">
+                    <h3 class="text-uppercase mb-3 h5"> ادعم المشروع</h3>
+                    <p class="text-muted small" style="line-height:1.8;"> تم بناء هذه الأدوات لتكون متاحة للجميع. أنا أؤمن بمشاركة المعرفة. إذا كنت بحاجة إلى مساعدة متخصصة لموقعك أو لديك استفسار يتطلب خبرة، يمكنك حجز استشارة مدفوعة. </p><a class="btn btn-success mt-2" role="button" id="whatsappBtn" href="https://wa.me/201556450850?text=مرحبًا،%20أرغب%20في%20حجز%20استشارة%20مدفوعة%20بخصوص%20تحسين%20محركات%20البحث%20بعد%20اطلاعي%20على%20أدوات%20Ai8V." target="_blank"><span class="bi bi-whatsapp ms-2" aria-hidden="true"></span> اطلب استشارة مدفوعة <span class="visually-hidden">(يفتح في نافذة جديدة)</span></a>
+                </div>
+                <div class="col-md-6 col-lg-2 text-end mb-4 mb-md-0">
+                    <h3 class="text-uppercase text-center mb-3 h5">مجموعة الأدوات</h3>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/"><span class="bi bi-tools ms-2" aria-hidden="true"></span>الأداة الكاملة</a></li>
+                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/LogFileAnalyzer/"><span class="bi bi-server ms-2" aria-hidden="true"></span>محلل السجلات</a></li>
+                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/SiteVisualizerLab/"><span class="bi bi-diagram-3 ms-2" aria-hidden="true"></span>المحلل البصري</a></li>
+                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/SchemaArchitect/"><span class="bi bi-bounding-box-circles ms-2" aria-hidden="true"></span>مهندس السكيما</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6 col-lg-3 text-end mb-4 mb-md-0">
+                    <h3 class="text-uppercase text-center d-flex justify-content-center mb-3 h5">مقالات ومصادر</h3>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/what-is-crawl-budget"><span class="bi bi-book-half ms-2" aria-hidden="true"></span>شرح ميزانية الزحف</a></li>
+                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/technical-seo-guide"><span class="bi bi-book-half ms-2" aria-hidden="true"></span>دليل الـ SEO التقني</a></li>
+                        <li class="mb-2"><a class="text-decoration-none text-body-secondary" href="/blog/schema-for-beginners"><span class="bi bi-book-half ms-2" aria-hidden="true"></span>فهم البيانات المنظمة</a></li>
+                        <li class="d-flex mb-2 mt-2 me-4"><a class="fw-bold text-decoration-none text-body-secondary" href="/blog/">كل المقالات...</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-12 col-lg-3 text-end text-lg-end mb-4 mb-md-0">
+                    <h3 class="text-uppercase text-center mb-3 h5">بُني بواسطة [عمرو عبدالسلام]</h3>
+                    <p class="text-muted small me-2"> خبير في تحسين محركات البحث وتطوير الأدوات التي تساعد الآخرين على النجاح. </p>
+                    <div class="d-flex justify-content-center gap-3 mt-3 ms-4"><a class="fs-4 social-icon-link text-body-secondary" href="https://x.com/AmrAbssalam" target="_blank" aria-label="تابعني على تويتر / X (يفتح في نافذة جديدة)"><span class="bi bi-twitter-x" aria-hidden="true"></span></a><a class="fs-4 social-icon-link text-body-secondary" href="https://www.linkedin.com/in/amrabdelsalam87/" target="_blank" aria-label="تواصل معي على لينكد إن (يفتح في نافذة جديدة)"><span class="bi bi-linkedin" aria-hidden="true"></span></a><a class="fs-4 social-icon-link text-body-secondary" href="https://github.com/AI8V" target="_blank" aria-label="اطلع على مشاريعي على جيت هاب (يفتح في نافذة جديدة)"><span class="bi bi-github" aria-hidden="true"></span></a><a class="fs-4 social-icon-link text-body-secondary" href="https://www.youtube.com/@4DigitalMarketer" target="_blank" aria-label="شاهد قناتي على يوتيوب (يفتح في نافذة جديدة)"><span class="bi bi-youtube" aria-hidden="true"></span></a></div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center p-3" style="background-color:rgba(0, 0, 0, 0.05);"><span> © </span><script>document.write(new Date().getFullYear())</script><span> الحقوق محفوظة: </span><a class="text-body-secondary" href="/">Ai8V | Mind &amp; Machine</a></div>
+    </footer>
+    <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style="z-index:1100;"></div>
 
     <script src="../assets/bootstrap/js/bootstrap.min.js" defer></script>
-    <script src="../assets/js/bs-init.js" defer></script>
     <script src="../assets/js/SchemaArchitect/toast-utility.js" defer></script>
     <script src="../assets/js/SchemaArchitect/dynamicPromptGenerator.js" defer></script>
     <script src="../assets/js/SchemaArchitect/entities.js" defer></script>
