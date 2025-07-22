@@ -3,6 +3,7 @@
 /**
  * @file entities.js
  * @description Module for the Entity Management Platform (EMP), handling core brand entities.
+ * @version 2.0.0 - Enhanced UX Edition
  */
 
 var getEntity; // Declare globally to be accessible by schema-architect.js
@@ -46,10 +47,11 @@ const initializeEmp = (function() {
         const savedData = getSavedData();
 
         const allFields = { ...predefinedEmpFields };
+        // Ensure custom fields from storage are included for rendering
         for (const key in savedData) {
             if (!allFields[key]) {
-                const readableLabel = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-                allFields[key] = readableLabel;
+                // For custom fields, the key itself is used as the label for consistency
+                allFields[key] = key;
             }
         }
 
@@ -61,37 +63,81 @@ const initializeEmp = (function() {
             const fieldHtml = `
                 <div class="input-group mb-2" data-field-key="${key}">
                     <label class="input-group-text" style="width: 200px;">${label}</label>
-                    <input type="text" class="form-control" value="${value}" placeholder="${label}...">
+                    <input type="text" class="form-control" value="${value}" placeholder="${isPredefined ? label+'...' : 'قيمة الحقل...'}">
                     ${!isPredefined ? `<button class="btn btn-outline-danger btn-sm emp-delete-field-btn" type="button" title="حذف هذا الحقل المخصص"><i class="bi bi-trash"></i></button>` : ''}
                 </div>
             `;
             empFormContainer.insertAdjacentHTML('beforeend', fieldHtml);
         }
 
-        // Add event listeners for the new delete buttons
+        // Add event listeners for the delete buttons on existing custom fields
         empFormContainer.querySelectorAll('.emp-delete-field-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const fieldKey = e.currentTarget.closest('.input-group').dataset.fieldKey;
+                const group = e.currentTarget.closest('.input-group');
+                // If it's a new, unsaved field, just remove it from the DOM.
+                if (group.dataset.isNew) {
+                    group.remove();
+                    return;
+                }
+                // If it's a saved field, remove it from storage and re-render.
+                const fieldKey = group.dataset.fieldKey;
                 const currentData = getSavedData();
                 delete currentData[fieldKey];
                 localStorage.setItem(EMP_STORAGE_KEY, JSON.stringify(currentData));
                 renderEmpForm(); // Re-render to reflect the deletion
+                showToast(`تم حذف الحقل "${fieldKey}".`, 'info');
             });
         });
     }
 
     /**
      * Saves all data from the EMP form to localStorage.
+     * Handles both existing fields and newly added custom fields with validation.
      */
     function saveEmpData() {
         const newData = {};
+        let isValid = true;
+        const seenKeys = new Set(Object.keys(predefinedEmpFields));
+
         empFormContainer.querySelectorAll('.input-group').forEach(group => {
-            const key = group.dataset.fieldKey;
-            const input = group.querySelector('input');
-            if (key && input && input.value.trim()) {
-                newData[key] = input.value.trim();
+            if (group.dataset.isNew) {
+                // --- Logic for NEWLY ADDED custom fields ---
+                const keyInput = group.querySelectorAll('input')[0];
+                const valueInput = group.querySelectorAll('input')[1];
+                const key = keyInput.value.trim();
+                const value = valueInput.value.trim();
+
+                // Reset validation visuals
+                keyInput.classList.remove('is-invalid');
+                valueInput.classList.remove('is-invalid');
+
+                if (!key && !value) return; // Ignore empty new rows
+
+                if (!key || !value || !/^[a-zA-Z0-9_]+$/.test(key) || seenKeys.has(key)) {
+                    showToast(`المفتاح "${key || 'الفارغ'}" غير صالح أو مستخدم بالفعل.`, 'danger');
+                    if (!key || !/^[a-zA-Z0-9_]+$/.test(key) || seenKeys.has(key)) keyInput.classList.add('is-invalid');
+                    if (!value) valueInput.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    newData[key] = value;
+                    seenKeys.add(key);
+                }
+
+            } else {
+                // --- Logic for PRE-EXISTING fields ---
+                const key = group.dataset.fieldKey;
+                const input = group.querySelector('input');
+                if (key && input && input.value.trim()) {
+                    newData[key] = input.value.trim();
+                    seenKeys.add(key);
+                }
             }
         });
+
+        if (!isValid) {
+            showToast('يرجى تصحيح الأخطاء قبل الحفظ.', 'warning');
+            return; // Stop the save process if there are validation errors
+        }
 
         localStorage.setItem(EMP_STORAGE_KEY, JSON.stringify(newData));
         showToast('تم حفظ بيانات الكيان بنجاح.', 'success');
@@ -101,27 +147,32 @@ const initializeEmp = (function() {
     }
 
     /**
-     * Prompts the user to add a new custom field to the form.
+     * Dynamically adds a new, empty field row to the form UI for the user to fill out.
+     * Replaces the old `prompt()` method entirely.
      */
     function addCustomEmpField() {
-        const key = prompt("أدخل مفتاحًا فريدًا للحقل (باللغة الإنجليزية، بدون مسافات، مثل 'ceoName'):");
-        if (!key || !/^[a-zA-Z0-9_]+$/.test(key)) {
-            showToast('اسم المفتاح غير صالح. يجب أن يكون كلمة إنجليزية واحدة (يمكن استخدام _ ).', 'danger');
-            return;
-        }
+        // Create a unique temporary key to identify the new row before it's saved
+        const tempKey = `new_field_${Date.now()}`;
         
-        const savedData = getSavedData();
-        if (savedData[key] || predefinedEmpFields[key]) {
-            showToast('هذا المفتاح مستخدم بالفعل.', 'danger');
-            return;
-        }
+        const fieldHtml = `
+            <div class="input-group mb-2" data-is-new="true" data-temp-key="${tempKey}">
+                <input type="text" class="form-control" style="flex-basis: 150px; flex-grow: 0.5;" placeholder="المفتاح (e.g., ceoName)">
+                <input type="text" class="form-control" style="flex-basis: 250px; flex-grow: 1;" placeholder="القيمة...">
+                <button class="btn btn-outline-danger btn-sm emp-delete-field-btn" type="button" title="إزالة هذا الحقل"><i class="bi bi-trash"></i></button>
+            </div>
+        `;
+        empFormContainer.insertAdjacentHTML('beforeend', fieldHtml);
 
-        const value = prompt(`أدخل قيمة الحقل الجديد "${key}":`);
-        if (value === null) return; // User cancelled
+        // Find the newly added element in the DOM
+        const newFieldElement = empFormContainer.querySelector(`[data-temp-key="${tempKey}"]`);
+        
+        // Immediately add a listener to its delete button
+        newFieldElement.querySelector('.emp-delete-field-btn').addEventListener('click', (e) => {
+            e.currentTarget.closest('.input-group').remove();
+        });
 
-        savedData[key] = value.trim();
-        localStorage.setItem(EMP_STORAGE_KEY, JSON.stringify(savedData));
-        renderEmpForm(); // Re-render to show the new field
+        // Focus on the first input of the new row for a better user experience
+        newFieldElement.querySelector('input').focus();
     }
 
     /**
