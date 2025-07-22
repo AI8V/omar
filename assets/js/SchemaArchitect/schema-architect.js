@@ -5,51 +5,54 @@
     //  1. DOM Element Caching
     // ===================================================================
 
-    const analyzeBtn = document.getElementById('analyzeBtn');
-    const analysisResults = document.getElementById('analysisResults');
-    const generatedCode = document.getElementById('generatedCode');
-    const urlInput = document.getElementById('urlInput');
-    const htmlContentInput = document.getElementById('htmlContentInput');
-    const baseUrlContainer = document.getElementById('baseUrlContainer');
-    const baseUrlInput = document.getElementById('baseUrlInput');
+    const DOM = {
+        analyzeBtn: document.getElementById('analyzeBtn'),
+        analysisResults: document.getElementById('analysisResults'),
+        generatedCode: document.getElementById('generatedCode'),
+        urlInput: document.getElementById('urlInput'),
+        htmlContentInput: document.getElementById('htmlContentInput'),
+        baseUrlContainer: document.getElementById('baseUrlContainer'),
+        baseUrlInput: document.getElementById('baseUrlInput'),
 
-    const copyBtn = document.getElementById('copyBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const validateBtn = document.getElementById('validateBtn');
-    
-    const sgePreviewContainer = document.getElementById('sge-preview');
-    const sgePreviewContent = document.getElementById('sge-preview-content');
+        copyBtn: document.getElementById('copyBtn'),
+        downloadBtn: document.getElementById('downloadBtn'),
+        validateBtn: document.getElementById('validateBtn'),
 
-    const copyEnhancedPromptBtn = document.getElementById('copyEnhancedPromptBtn');
+        sgePreviewContainer: document.getElementById('sge-preview'),
+        sgePreviewContent: document.getElementById('sge-preview-content'),
+
+        copyEnhancedPromptBtn: document.getElementById('copyEnhancedPromptBtn'),
+
+        // --- منطقة المُعرّفات المخصصة ---
+        faqItem: document.getElementById('customFaqItem'),
+        faqQuestion: document.getElementById('customFaqQuestion'),
+        faqAnswer: document.getElementById('customFaqAnswer'),
+        productPrice: document.getElementById('customProductPrice'),
+        productCurrency: document.getElementById('customProductCurrency'),
+        productSku: document.getElementById('customProductSku'),
+        productBrand: document.getElementById('customProductBrand'),
+        recipePrepTime: document.getElementById('customRecipePrepTime'),
+        recipeCookTime: document.getElementById('customRecipeCookTime'),
+        recipeIngredients: document.getElementById('customRecipeIngredients'),
+        reviewRating: document.getElementById('customReviewRating'),
+        reviewItemName: document.getElementById('customReviewItemName'),
+        howToStep: document.getElementById('customHowToStep'),
+        howToText: document.getElementById('customHowToText'),
+        eventStartDate: document.getElementById('customEventStartDate'),
+        eventLocation: document.getElementById('customEventLocation'),
+        eventOrganizer: document.getElementById('customEventOrganizer'),
+        orgLogo: document.getElementById('customOrgLogo'),
+        orgAddress: document.getElementById('customOrgAddress'),
+        orgTelephone: document.getElementById('customOrgTelephone'),
+        breadcrumbItem: document.getElementById('customBreadcrumbItem'),
+    };
+
     let selectedPrimaryType = null;
     
-    // --- منطقة المُعرّفات المخصصة ---
-    const customFaqItem = document.getElementById('customFaqItem');
-    const customFaqQuestion = document.getElementById('customFaqQuestion');
-    const customFaqAnswer = document.getElementById('customFaqAnswer');
-    const customProductPrice = document.getElementById('customProductPrice');
-    const customProductCurrency = document.getElementById('customProductCurrency');
-    const customProductSku = document.getElementById('customProductSku');
-    const customProductBrand = document.getElementById('customProductBrand');
-    const customRecipePrepTime = document.getElementById('customRecipePrepTime');
-    const customRecipeCookTime = document.getElementById('customRecipeCookTime');
-    const customRecipeIngredients = document.getElementById('customRecipeIngredients');
-    const customReviewRating = document.getElementById('customReviewRating');
-    const customReviewItemName = document.getElementById('customReviewItemName');
-    const customHowToStep = document.getElementById('customHowToStep');
-    const customHowToText = document.getElementById('customHowToText');
-    const customEventStartDate = document.getElementById('customEventStartDate');
-    const customEventLocation = document.getElementById('customEventLocation');
-    const customEventOrganizer = document.getElementById('customEventOrganizer');
-    const customOrgLogo = document.getElementById('customOrgLogo');
-    const customOrgAddress = document.getElementById('customOrgAddress');
-    const customOrgTelephone = document.getElementById('customOrgTelephone');
-    const customBreadcrumbItem = document.getElementById('customBreadcrumbItem');
-
     // Show/hide the optional base URL input when user pastes HTML
-    if (htmlContentInput && baseUrlContainer) {
-        htmlContentInput.addEventListener('input', () => {
-            baseUrlContainer.style.display = htmlContentInput.value.trim() ? 'block' : 'none';
+    if (DOM.htmlContentInput && DOM.baseUrlContainer) {
+        DOM.htmlContentInput.addEventListener('input', () => {
+            DOM.baseUrlContainer.style.display = DOM.htmlContentInput.value.trim() ? 'block' : 'none';
         });
     }
 
@@ -159,7 +162,7 @@
     }
     
     function analyzeBreadcrumbEntities(doc) {
-        const itemSelector = getSelector(customBreadcrumbItem, 'nav[aria-label="breadcrumb"] ol li, .breadcrumb li, [class*="breadcrumbs"] li');
+        const itemSelector = getSelector(DOM.breadcrumbItem, 'nav[aria-label="breadcrumb"] ol li, .breadcrumb li, [class*="breadcrumbs"] li');
         const items = Array.from(doc.querySelectorAll(itemSelector));
 
         if (items.length > 1) { 
@@ -184,9 +187,9 @@
     }
 
     function analyzeFaqEntities(doc) {
-        const itemSelector = getSelector(customFaqItem, '.faq-item, .accordion-item, .qa-item');
-        const questionSelector = getSelector(customFaqQuestion, '.question, .faq-q, .accordion-button, .query-title');
-        const answerSelector = getSelector(customFaqAnswer, '.answer, .faq-a, .accordion-body, .response-text');
+        const itemSelector = getSelector(DOM.faqItem, '.faq-item, .accordion-item, .qa-item');
+        const questionSelector = getSelector(DOM.faqQuestion, '.question, .faq-q, .accordion-button, .query-title');
+        const answerSelector = getSelector(DOM.faqAnswer, '.answer, .faq-a, .accordion-body, .response-text');
         
         const items = Array.from(doc.querySelectorAll(itemSelector));
         if (items.length > 0) {
@@ -205,9 +208,9 @@
 
     function analyzeProductEntities(doc) {
         const entities = [];
-        const priceSelector = getSelector(customProductPrice, '[class*="price"], [id*="price"], .cost');
-        const skuSelector = getSelector(customProductSku, '[class*="sku"], [id*="sku"], .item-code');
-        const brandSelector = getSelector(customProductBrand, '[class*="brand"], [id*="brand"], .vendor-name');
+        const priceSelector = getSelector(DOM.productPrice, '[class*="price"], [id*="price"], .cost');
+        const skuSelector = getSelector(DOM.productSku, '[class*="sku"], [id*="sku"], .item-code');
+        const brandSelector = getSelector(DOM.productBrand, '[class*="brand"], [id*="brand"], .vendor-name');
 
         const priceEl = doc.querySelector(priceSelector);
         if (priceEl) {
@@ -225,7 +228,7 @@
             }
         }
         
-        const currencyInput = customProductCurrency.value.trim().toUpperCase();
+        const currencyInput = DOM.productCurrency.value.trim().toUpperCase();
         if (currencyInput) { 
             const existingCurrencyIndex = entities.findIndex(e => e.schemaProp === 'priceCurrency');
             if (existingCurrencyIndex > -1) entities.splice(existingCurrencyIndex, 1);
@@ -243,8 +246,8 @@
     
     function analyzeReviewEntities(doc) {
         const entities = [];
-        const ratingSelector = getSelector(customReviewRating, '[class*="rating"], [itemprop="ratingValue"]');
-        const itemNameSelector = getSelector(customReviewItemName, '.reviewed-item-name');
+        const ratingSelector = getSelector(DOM.reviewRating, '[class*="rating"], [itemprop="ratingValue"]');
+        const itemNameSelector = getSelector(DOM.reviewItemName, '.reviewed-item-name');
 
         const ratingEl = doc.querySelector(ratingSelector);
         if (ratingEl) {
@@ -270,9 +273,9 @@
         if (!recipeContainer) return [];
     
         // All selectors are now relative to the recipeContainer
-        const prepTimeSelector = getSelector(customRecipePrepTime, '[class*="prep-time"], [itemprop="prepTime"]');
-        const cookTimeSelector = getSelector(customRecipeCookTime, '[class*="cook-time"], [itemprop="cookTime"]');
-        const ingredientsSelector = getSelector(customRecipeIngredients, '.ingredients li, [itemprop="recipeIngredient"]');
+        const prepTimeSelector = getSelector(DOM.recipePrepTime, '[class*="prep-time"], [itemprop="prepTime"]');
+        const cookTimeSelector = getSelector(DOM.recipeCookTime, '[class*="cook-time"], [itemprop="cookTime"]');
+        const ingredientsSelector = getSelector(DOM.recipeIngredients, '.ingredients li, [itemprop="recipeIngredient"]');
         const instructionsSelector = '.recipe-instructions li, [itemprop="recipeInstructions"]'; // New selector for recipe steps
     
         // Find contextual image
@@ -322,8 +325,8 @@
         if (!howtoContainer) return [];
     
         const entities = [];
-        const stepSelector = getSelector(customHowToStep, '.step, .howto-step, [itemprop="step"]');
-        const textSelector = getSelector(customHowToText, '.step-text, .howto-text, [itemprop="text"]');
+        const stepSelector = getSelector(DOM.howToStep, '.step, .howto-step, [itemprop="step"]');
+        const textSelector = getSelector(DOM.howToText, '.step-text, .howto-text, [itemprop="text"]');
         
         // **NEW: Find the contextual image WITHIN the HowTo container**
         const contextualImageEl = howtoContainer.querySelector('img');
@@ -348,9 +351,9 @@
 
     function analyzeEventEntities(doc) {
         const entities = [];
-        const startDateSelector = getSelector(customEventStartDate, '[class*="start-date"], [itemprop*="startDate"]');
-        const locationSelector = getSelector(customEventLocation, '[class*="location"], [itemprop*="location"]');
-        const organizerSelector = getSelector(customEventOrganizer, '[class*="organizer"], [itemprop*="organizer"]');
+        const startDateSelector = getSelector(DOM.eventStartDate, '[class*="start-date"], [itemprop*="startDate"]');
+        const locationSelector = getSelector(DOM.eventLocation, '[class*="location"], [itemprop*="location"]');
+        const organizerSelector = getSelector(DOM.eventOrganizer, '[class*="organizer"], [itemprop*="organizer"]');
 
         const startDateEl = doc.querySelector(startDateSelector);
         if (startDateEl) {
@@ -371,12 +374,12 @@
 
     function analyzeOrganizationEntities(doc) {
         const entities = [];
-        const logoSelector = getSelector(customOrgLogo, 'img[src*="logo"], img[alt*="logo"]');
-        const addressSelector = getSelector(customOrgAddress, '.address, .contact-address, footer address');
-        const telephoneSelector = getSelector(customOrgTelephone, 'a[href^="tel:"]');
+        const logoSelector = getSelector(DOM.orgLogo, 'img[src*="logo"], img[alt*="logo"]');
+        const addressSelector = getSelector(DOM.orgAddress, '.address, .contact-address, footer address');
+        const telephoneSelector = getSelector(DOM.orgTelephone, 'a[href^="tel:"]');
 
         const logoEl = doc.querySelector(logoSelector);
-        const addressElFromCustom = customOrgAddress.value.trim() ? doc.querySelector(customOrgAddress.value.trim()) : null;
+        const addressElFromCustom = DOM.orgAddress.value.trim() ? doc.querySelector(DOM.orgAddress.value.trim()) : null;
 
         if (logoEl || addressElFromCustom) {
              if (logoEl) entities.push({ name: 'شعار المنظمة', value: new URL(logoEl.src, doc.baseURI).href, schemaProp: 'logo', type: 'Organization' });
@@ -407,28 +410,44 @@
     }
 
     function suggestSchema(entities) {
-        const suggestions = [{ type: 'WebPage', confidence: 0.5, reason: "الخيار الافتراضي لأي صفحة ويب." }];
-        const hierarchy = ['Product', 'Review', 'Recipe', 'HowTo', 'Event', 'Article', 'Organization', 'FAQPage', 'BreadcrumbList'];
-        const foundTypes = [...new Set(entities.map(e => e.type).filter(Boolean))];
-        
-        hierarchy.forEach(type => {
-            let typeToFind = type.replace('Page', '').replace('List', ''); 
-            if (foundTypes.includes(typeToFind)) {
-                let reason = '', confidence = 0.85;
-                if (type === 'Product') { reason = "تم العثور على سعر للمنتج."; confidence = 0.98; }
-                if (type === 'Review') { reason = "تم العثور على بيانات تقييم."; confidence = 0.97; }
-                if (type === 'Recipe') { reason = "تم العثور على قائمة مكونات."; confidence = 0.95; }
-                if (type === 'HowTo') { reason = "تم العثور على بنية خطوات إرشادية."; confidence = 0.92; }
-                if (type === 'Event') { reason = "تم العثور على تاريخ أو مكان للحدث."; confidence = 0.90; }
-                if (type === 'Article') { reason = "تم العثور على تاريخ نشر أو مؤلف."; confidence = 0.85; }
-                if (type === 'Organization') { reason = "تم العثور على بيانات منظمة (شعار، عنوان)."; confidence = 0.80; }
-                if (type === 'FAQPage') { reason = "تم العثور على بنية أسئلة وأجوبة."; confidence = 0.90; }
-                if (type === 'BreadcrumbList') { reason = "تم العثور على مسار تنقل (Breadcrumb)."; confidence = 0.96; }
-                suggestions.push({ type, confidence, reason });
-            }
-        });
-        return suggestions.sort((a, b) => b.confidence - a.confidence);
-    }
+    const suggestions = [];
+    const foundTypes = new Map(); // Use a Map to store the best evidence for each type
+
+    // Define the schema types and their detection logic
+    const hierarchy = [
+        { type: 'Product', reason: "تم العثور على سعر للمنتج.", confidence: 0.98, evidenceKey: 'Product' },
+        { type: 'Review', reason: "تم العثور على بيانات تقييم.", confidence: 0.97, evidenceKey: 'Review' },
+        { type: 'Recipe', reason: "تم العثور على قائمة مكونات.", confidence: 0.95, evidenceKey: 'Recipe' },
+        { type: 'BreadcrumbList', reason: "تم العثور على مسار تنقل (Breadcrumb).", confidence: 0.96, evidenceKey: 'Breadcrumb' },
+        { type: 'HowTo', reason: "تم العثور على بنية خطوات إرشادية.", confidence: 0.92, evidenceKey: 'HowTo' },
+        { type: 'FAQPage', reason: "تم العثور على بنية أسئلة وأجوبة.", confidence: 0.90, evidenceKey: 'FAQ' },
+        { type: 'Event', reason: "تم العثور على تاريخ أو مكان للحدث.", confidence: 0.90, evidenceKey: 'Event' },
+        { type: 'Article', reason: "تم العثور على تاريخ نشر أو مؤلف.", confidence: 0.85, evidenceKey: 'Article' },
+        { type: 'Organization', reason: "تم العثور على بيانات منظمة (شعار، عنوان).", confidence: 0.80, evidenceKey: 'Organization' }
+    ];
+
+    // Find all unique entity types present in the analysis
+    const presentEntityTypes = new Set(entities.map(e => e.type).filter(Boolean));
+
+    // For each schema type in our hierarchy, check if its evidence exists
+    hierarchy.forEach(schema => {
+        if (presentEntityTypes.has(schema.evidenceKey)) {
+            suggestions.push({
+                type: schema.type,
+                confidence: schema.confidence,
+                reason: schema.reason
+            });
+        }
+    });
+
+    // **THE TRANSPARENCY GUARANTEE**
+    // Always add WebPage as a safe, default option, but ensure it's at the end
+    // if other, more specific suggestions were found.
+    suggestions.push({ type: 'WebPage', confidence: 0.5, reason: "الخيار الافتراضي لأي صفحة ويب." });
+
+    // Sort the final list by confidence score in descending order
+    return suggestions.sort((a, b) => b.confidence - a.confidence);
+}
     
 
     // ===================================================================
@@ -675,7 +694,7 @@ function getPublisherData(entities) {
         productEntities.forEach(e => {
             if (e.schemaProp === 'price') offer.price = e.value;
             if (e.schemaProp === 'priceCurrency') offer.priceCurrency = e.value;
-            if (e.schemaProp === 'sku') schema.sku = e.value;
+            if (e.schemaProp === 'sku') schema.sku = e.value.split(':').pop().trim();
             if (e.schemaProp === 'brand') schema.brand = { "@type": "Brand", "name": e.value };
         });
         
@@ -831,7 +850,7 @@ function getPublisherData(entities) {
              const pageTitle = entities.find(e => e.schemaProp === 'name');
              if (pageTitle) schema.name = pageTitle.value;
         }
-        const pageUrl = urlInput.value.trim();
+        const pageUrl = DOM.urlInput.value.trim();
         if(pageUrl) schema.url = pageUrl;
     }
     
@@ -897,16 +916,16 @@ function getPublisherData(entities) {
                     </div>
                 </div>`;
         });
-        analysisResults.innerHTML = html;
+        DOM.analysisResults.innerHTML = html;
     }
 
     function updateActionButtonsState(isEnabled, copyText = 'نسخ') {
-        const buttons = [copyBtn, downloadBtn, validateBtn];
+        const buttons = [DOM.copyBtn, DOM.downloadBtn, DOM.validateBtn];
         buttons.forEach(btn => {
             btn.disabled = !isEnabled;
             btn.classList.toggle('disabled', !isEnabled);
         });
-        copyBtn.innerHTML = (copyText === 'نسخ') ? `<i class="bi bi-clipboard-check ms-1"></i> نسخ` : copyText;
+        DOM.copyBtn.innerHTML = (copyText === 'نسخ') ? `<i class="bi bi-clipboard-check ms-1"></i> نسخ` : copyText;
     }
 
     function renderSgePreview(schema) {
@@ -1043,8 +1062,8 @@ function getPublisherData(entities) {
             default:
                 previewHtml = '<p class="text-muted small">لا توجد معاينة متاحة لهذا النوع من السكيما.</p>';
         }
-        sgePreviewContent.innerHTML = previewHtml;
-        sgePreviewContainer.style.display = previewHtml.trim() ? 'block' : 'none';
+        DOM.sgePreviewContent.innerHTML = previewHtml;
+        DOM.sgePreviewContainer.style.display = previewHtml.trim() ? 'block' : 'none';
     }
 
 
@@ -1053,22 +1072,22 @@ function getPublisherData(entities) {
     // ===================================================================
     
     async function handleAnalysis() {
-        let url = urlInput.value.trim();
-        const html = htmlContentInput.value.trim();
+        let url = DOM.urlInput.value.trim();
+        const html = DOM.htmlContentInput.value.trim();
         if (!url && !html) { 
             showToast("يرجى إدخال رابط أو لصق كود HTML للبدء.", 'warning'); 
             return; 
         }
         if (url && !/^https?:\/\//i.test(url)) { 
             url = 'https://' + url; 
-            urlInput.value = url; 
+            DOM.urlInput.value = url; 
         }
         
-        analysisResults.innerHTML = `<div class="text-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">جاري التحليل...</span></div><p class="mt-2">جاري فك شفرة المحتوى...</p></div>`;
-        generatedCode.value = '';
-        sgePreviewContainer.style.display = 'none';
+        DOM.analysisResults.innerHTML = `<div class="text-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">جاري التحليل...</span></div><p class="mt-2">جاري فك شفرة المحتوى...</p></div>`;
+        DOM.generatedCode.value = '';
+        DOM.sgePreviewContainer.style.display = 'none';
         updateActionButtonsState(false);
-        copyEnhancedPromptBtn.disabled = true;
+        DOM.copyEnhancedPromptBtn.disabled = true;
         selectedPrimaryType = null;
 
         try {
@@ -1078,21 +1097,21 @@ function getPublisherData(entities) {
             }
             
             // Use the main URL input, or the new base URL input if that one is empty
-            const baseUrl = urlInput.value.trim() || baseUrlInput.value.trim();
+            const baseUrl = DOM.urlInput.value.trim() || DOM.baseUrlInput.value.trim();
             const entities = analyzeContent(contentToAnalyze, baseUrl);
             const suggestions = suggestSchema(entities);
             renderAnalysis(entities, suggestions);
 
             const updateSchemaOutput = (type) => {
                 const finalSchema = generateFinalSchema(entities, type, baseUrl); // Pass baseUrl to generator
-                generatedCode.value = JSON.stringify(finalSchema, null, 2);
+                DOM.generatedCode.value = JSON.stringify(finalSchema, null, 2);
                 renderSgePreview(finalSchema);
             };
 
             if (suggestions.length > 0) {
                 const bestType = suggestions[0].type;
                 selectedPrimaryType = bestType;
-                copyEnhancedPromptBtn.disabled = false;
+                DOM.copyEnhancedPromptBtn.disabled = false;
                 updateSchemaOutput(bestType);
                 updateActionButtonsState(true);
                 const bestSuggestionEl = document.querySelector(`.schema-suggestion[data-schema-type="${bestType}"]`);
@@ -1110,7 +1129,7 @@ function getPublisherData(entities) {
                     
                     const schemaType = el.dataset.schemaType;
                     selectedPrimaryType = schemaType;
-                    copyEnhancedPromptBtn.disabled = false;
+                    DOM.copyEnhancedPromptBtn.disabled = false;
                     updateSchemaOutput(schemaType);
                 };
                 
@@ -1145,11 +1164,11 @@ function getPublisherData(entities) {
         throw new Error(`فشل في جلب المحتوى. تأكد من اتصالك بالإنترنت أو أن البروكسي يعمل.`);
     }
 
-    analyzeBtn.addEventListener('click', handleAnalysis);
+    DOM.analyzeBtn.addEventListener('click', handleAnalysis);
     
-    copyBtn.addEventListener('click', () => {
-        if (!copyBtn.disabled && generatedCode.value) {
-            navigator.clipboard.writeText(generatedCode.value)
+    DOM.copyBtn.addEventListener('click', () => {
+        if (!DOM.copyBtn.disabled && DOM.generatedCode.value) {
+            navigator.clipboard.writeText(DOM.generatedCode.value)
                 .then(() => {
                     updateActionButtonsState(true, `<i class="bi bi-check-lg me-1"></i> تم النسخ!`);
                     setTimeout(() => updateActionButtonsState(true), 2000);
@@ -1161,9 +1180,9 @@ function getPublisherData(entities) {
         }
     });
 
-    downloadBtn.addEventListener('click', () => {
-        if (!downloadBtn.disabled && generatedCode.value) {
-            const blob = new Blob([generatedCode.value], { type: 'application/ld+json' });
+    DOM.downloadBtn.addEventListener('click', () => {
+        if (!DOM.downloadBtn.disabled && DOM.generatedCode.value) {
+            const blob = new Blob([DOM.generatedCode.value], { type: 'application/ld+json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -1175,10 +1194,10 @@ function getPublisherData(entities) {
         }
     });
 
-    validateBtn.addEventListener('click', (e) => {
+    DOM.validateBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        if (!validateBtn.disabled && generatedCode.value) {
-            navigator.clipboard.writeText(generatedCode.value)
+        if (!DOM.validateBtn.disabled && DOM.generatedCode.value) {
+            navigator.clipboard.writeText(DOM.generatedCode.value)
                 .then(() => {
                     window.open('https://search.google.com/test/rich-results', '_blank');
                 })
@@ -1189,8 +1208,8 @@ function getPublisherData(entities) {
         }
     });
 
-    copyEnhancedPromptBtn.addEventListener('click', () => {
-        if (copyEnhancedPromptBtn.disabled || !selectedPrimaryType) {
+    DOM.copyEnhancedPromptBtn.addEventListener('click', () => {
+        if (DOM.copyEnhancedPromptBtn.disabled || !selectedPrimaryType) {
             return;
         }
 
@@ -1200,14 +1219,14 @@ function getPublisherData(entities) {
             if (promptToCopy) {
                 navigator.clipboard.writeText(promptToCopy)
                     .then(() => {
-                        copyEnhancedPromptBtn.innerHTML = '<i class="bi bi-check-lg ms-2"></i> تم النسخ بنجاح!';
-                        copyEnhancedPromptBtn.classList.remove('btn-warning');
-                        copyEnhancedPromptBtn.classList.add('btn-success');
+                        DOM.copyEnhancedPromptBtn.innerHTML = '<i class="bi bi-check-lg ms-2"></i> تم النسخ بنجاح!';
+                        DOM.copyEnhancedPromptBtn.classList.remove('btn-warning');
+                        DOM.copyEnhancedPromptBtn.classList.add('btn-success');
                         
                         setTimeout(() => {
-                            copyEnhancedPromptBtn.innerHTML = '<i class="bi bi-robot ms-2"></i> نسخ برومبت التحسين الكامل';
-                            copyEnhancedPromptBtn.classList.remove('btn-success');
-                            copyEnhancedPromptBtn.classList.add('btn-warning');
+                            DOM.copyEnhancedPromptBtn.innerHTML = '<i class="bi bi-robot ms-2"></i> نسخ برومبت التحسين الكامل';
+                            DOM.copyEnhancedPromptBtn.classList.remove('btn-success');
+                            DOM.copyEnhancedPromptBtn.classList.add('btn-warning');
                         }, 2500);
                     })
                     .catch(err => {
