@@ -1,332 +1,517 @@
-// Mind & Machine - Site Visualizer Lab Enhancements v4.0 (The Performance & Insight Update)
-console.log("✅ Visualizer Enhancements v4.0 is loading...");
+// assets/js/LogFileAnalyzer/ghost-crawler.js
 
-document.addEventListener("DOMContentLoaded", function() {
+(function() {
     'use strict';
 
-    // <<< START: NEW LOGIC FOR SESSION-BASED DATA LOADING >>>
-    function loadDataFromSession() {
-        try {
-            const sessionData = sessionStorage.getItem('ai8v_crawl_data');
-            if (sessionData) {
-                console.log("Found crawl data in session storage. Attempting to visualize...");
-                // Clear the data after reading to prevent re-use on page refresh
-                sessionStorage.removeItem('ai8v_crawl_data');
-                
-                // Use a small timeout to ensure the rest of the UI is ready
-                setTimeout(() => {
-                    if (window.enhancements && typeof window.enhancements.processWithWorker === 'function') {
-                        window.enhancements.processWithWorker(sessionData, 'json');
+    // --- Constants ---
+    const LOW_WORD_COUNT_THRESHOLD = 250;
+    const SEVERITY = {
+        CRITICAL: { level: 0, text: 'حرجة', class: 'bg-danger' },
+        HIGH: { level: 1, text: 'عالية', class: 'bg-warning text-dark' },
+        MEDIUM: { level: 2, text: 'متوسطة', class: 'bg-info text-dark' },
+        LOW: { level: 3, text: 'منخفضة', class: 'bg-secondary' },
+        INFO: { level: 4, text: 'للعلم', class: 'bg-light text-dark border' }
+    };
+
+    // --- DOM Elements ---
+    const startUrlInput = document.getElementById('startUrl');
+    const startCrawlBtn = document.getElementById('startCrawlBtn');
+    const crawlDelayInput = document.getElementById('crawlDelay');
+    const maxDepthInput = document.getElementById('maxDepth');
+    const progressSection = document.getElementById('progress-section');
+    const statusBar = document.getElementById('progress-bar');
+    const statusText = document.getElementById('status-text');
+    const crawlCounter = document.getElementById('crawl-counter');
+    const resultsSection = document.getElementById('results-section');
+    const resultsTableBody = document.getElementById('results-table-body');
+    const exportCsvBtn = document.getElementById('exportCsvBtn');
+    const errorToastEl = document.getElementById('errorToast');
+    const errorToast = bootstrap.Toast.getOrCreateInstance(errorToastEl);
+    const toastBodyMessage = document.getElementById('toast-body-message');
+    // --- NEW DOM Elements for Smart Linking ---
+    const visualizerActionsContainer = document.getElementById('visualizerActionsContainer');
+    const copyVisualizerDataBtn = document.getElementById('copyVisualizerDataBtn');
+    const appToastEl = document.getElementById('appToast');
+    const appToast = appToastEl ? new bootstrap.Toast(appToastEl, { delay: 4000 }) : null;
+    const appToastIcon = document.getElementById('toast-icon');
+    const appToastTitle = document.getElementById('toast-title');
+    const appToastBody = document.getElementById('toast-body-content');
+
+
+    // --- State Variables ---
+    let origin;
+    let crawledUrls;
+    let queue;
+    let pageData;
+    let allFoundLinks;
+    let linkStatusCache;
+    let finalReport;
+    let robotsRules = null;
+    let crawlDelayValue;
+    let maxDepthValue;
+
+    /**
+     * Shows a general purpose toast notification.
+     */
+    function showAppToast(message, type = 'info', title = 'تنبيه') {
+        if (!appToast) return;
+        appToastBody.textContent = message;
+        appToastTitle.textContent = title;
+        if (type === 'error') {
+            appToastIcon.className = 'bi bi-exclamation-triangle-fill text-danger me-2';
+        } else if (type === 'success') {
+            appToastIcon.className = 'bi bi-check-circle-fill text-success me-2';
+        } else {
+            appToastIcon.className = 'bi bi-info-circle-fill text-info me-2';
+        }
+        appToast.show();
+    }
+
+
+    /**
+     * Copies a string to the user's clipboard.
+     * @param {string} text The text to copy.
+     */
+    function copyToClipboard(text) {
+        if (!navigator.clipboard) {
+            showAppToast('متصفحك لا يدعم النسخ إلى الحافظة.', 'error');
+            return;
+        }
+        navigator.clipboard.writeText(text).then(() => {
+            showAppToast('تم نسخ بيانات الخريطة بنجاح! يمكنك الآن لصقها في المحلل البصري.', 'success', 'تم النسخ');
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+            showAppToast('فشل النسخ إلى الحافظة.', 'error');
+        });
+    }
+
+
+    /**
+     * Generates a unified data object compatible with the Site Visualizer Lab.
+     * This function transforms the crawl data into the specific JSON structure the visualizer expects.
+     * @returns {string|null} A JSON string of the site footprint, or null if no data.
+     */
+    function generateVisualizerData() {
+        if (!pageData || pageData.size === 0) return null;
+
+        const fullSearchIndex = [];
+        for (const page of pageData.values()) {
+            fullSearchIndex.push({
+                url: page.canonical,
+                title: page.title,
+                seo: {
+                    internalLinkEquity: page.incomingLinkCount,
+                    crawlDepth: page.depth,
+                    isNoIndex: page.isNoIndex,
+                    isOrphan: page.depth > 0 && page.incomingLinkCount === 0,
+                    contentAnalysis: {
+                        // Extract only internal, non-image, unique links
+                        outgoingInternalLinks: [...new Set(
+                            page.outgoingLinks
+                                .filter(link => link.type === 'لينك داخلى' && link.url.startsWith(origin))
+                                .map(link => link.url)
+                        )]
                     }
-                }, 100);
+                }
+            });
+        }
+        return JSON.stringify(fullSearchIndex, null, 2); // Using indentation for readability if user inspects it
+    }
+
+
+    /**
+     * Normalizes a URL by removing the hash and trailing slash.
+     */
+    function normalizeUrl(urlStr) {
+        try {
+            const urlObj = new URL(urlStr);
+            urlObj.hash = '';
+            if (urlObj.pathname.length > 1 && urlObj.pathname.endsWith('/')) {
+                urlObj.pathname = urlObj.pathname.slice(0, -1);
             }
+            return urlObj.href;
         } catch (e) {
-            console.error("Could not read from sessionStorage:", e);
+            return urlStr;
         }
     }
-    // <<< END: NEW LOGIC FOR SESSION-BASED DATA LOADING >>>
 
-    let visualizerWorker;
+    /**
+     * Displays a toast notification with an error message.
+     */
+    function showToast(message) {
+        toastBodyMessage.innerText = message;
+        errorToast.show();
+    }
 
-    const dom = {
-        fileInput: document.getElementById('fileInput'),
-        jsonInput: document.getElementById('jsonInput'),
-        renderBtn: document.getElementById('renderBtn'),
-        renderBtnText: document.querySelector('#renderBtn .btn-text'),
-        renderBtnSpinner: document.querySelector('#renderBtn .spinner-border'),
-        loadSampleDataBtn: document.getElementById('loadSampleDataBtn'),
-        legendContainer: document.getElementById('view-legend'),
-        viewModeButtons: document.querySelectorAll('[data-view-mode]'),
-        viewModesGroup: document.getElementById('view-modes-group'),
-        topicClusterControls: document.getElementById('topic-cluster-controls'),
-        clusterRulesContainer: document.getElementById('cluster-rules-container'),
-        addClusterRuleBtn: document.getElementById('addClusterRuleBtn'),
-        applyClusterRulesBtn: document.getElementById('applyClusterRulesBtn'),
-        clusterRuleTemplate: document.getElementById('cluster-rule-template'),
-        inspector: {
-            placeholder: document.getElementById('inspector-placeholder'),
-            details: document.getElementById('inspector-details'),
-            title: document.getElementById('inspector-title'),
-            url: document.getElementById('inspector-url'),
-            depth: document.getElementById('inspector-depth'),
-            inlinks: document.getElementById('inspector-inlinks'),
-            outlinks: document.getElementById('inspector-outlinks'),
-            status: document.getElementById('inspector-status'),
-        },
-        toast: {
-            el: document.getElementById('appToast'),
-            instance: null,
-            icon: document.getElementById('toast-icon'),
-            title: document.getElementById('toast-title'),
-            body: document.getElementById('toast-body'),
+    /**
+     * Resets all state variables and UI elements to start a new crawl.
+     */
+    function initializeCrawl() {
+        const rawStartUrl = startUrlInput.value.trim();
+        if (!rawStartUrl || !rawStartUrl.startsWith('https://')) {
+            showToast('يرجى إدخال رابط صحيح يبدأ بـ https://');
+            return false;
         }
-    };
 
-    window.enhancements = {
-        showToast(message, type = 'error', title = null) {
-            if (!dom.toast.el) return;
-            if (!dom.toast.instance) {
-                dom.toast.instance = new bootstrap.Toast(dom.toast.el, { delay: 6000 });
-            }
-            dom.toast.body.textContent = message;
-            if (type === 'error') {
-                dom.toast.title.textContent = title || 'خطأ';
-                dom.toast.icon.className = 'bi bi-exclamation-triangle-fill text-danger me-2';
-            } else if (type === 'success') {
-                dom.toast.title.textContent = title || 'نجاح';
-                dom.toast.icon.className = 'bi bi-check-circle-fill text-success me-2';
-            } else {
-                 dom.toast.title.textContent = title || 'معلومة';
-                 dom.toast.icon.className = 'bi bi-info-circle-fill text-info me-2';
-            }
-            dom.toast.instance.show();
-        },
+        const startUrl = normalizeUrl(rawStartUrl);
+        origin = new URL(startUrl).origin;
         
-        setLoadingState(isLoading) {
-            if (isLoading) {
-                dom.renderBtnText.textContent = 'جاري المعالجة...';
-                dom.renderBtnSpinner.classList.remove('d-none');
-                dom.renderBtn.disabled = true;
-                dom.loadSampleDataBtn.disabled = true;
-            } else {
-                dom.renderBtnText.innerHTML = '<i class="bi bi-play-fill ms-2" aria-hidden="true"></i> عرض وتحليل البنية';
-                dom.renderBtnSpinner.classList.add('d-none');
-                dom.renderBtn.disabled = false;
-                dom.loadSampleDataBtn.disabled = false;
-            }
-        },
+        crawlDelayValue = parseInt(crawlDelayInput.value, 10) || 100;
+        maxDepthValue = parseInt(maxDepthInput.value, 10) || 10;
 
-        processWithWorker(fileContent, fileType) {
-            if (!fileContent) {
-                this.showToast('لا توجد بيانات للمعالجة.', 'error');
-                return;
-            }
-            this.setLoadingState(true);
-            this.showToast('بدأت معالجة البيانات في الخلفية...', 'info', 'جاري العمل');
-            visualizerWorker.postMessage({ fileContent, fileType });
-        },
-        
-        updateLegend(mode, rules = []) {
-            let legendHtml = '';
-            const createSwatch = (color, text) => `<li><span class="legend-color-swatch" style="background-color: ${color};"></span> ${text}</li>`;
-            
-            switch (mode) {
-                case 'crawlDepth':
-                    legendHtml = `<ul>
-                        ${createSwatch(window.svl.getDepthColor(0), 'الرئيسية')}
-                        ${createSwatch(window.svl.getDepthColor(1), 'قريب')}
-                        ${createSwatch(window.svl.getDepthColor(5), 'متوسط')}
-                        ${createSwatch(window.svl.getDepthColor(10), 'بعيد')}
-                    </ul>`;
-                    break;
-                case 'topicCluster':
-                    if (rules.length > 0) {
-                        let rulesHtml = rules.map(rule => {
-                             try {
-                                 const pattern = new RegExp(rule.pattern).source;
-                                 return createSwatch(rule.color, pattern);
-                             } catch (e) {
-                                 return createSwatch('#888', 'قاعدة غير صالحة');
-                             }
-                        }).join('');
-                        legendHtml = `<ul>${rulesHtml}${createSwatch('#cccccc', 'أخرى')}</ul>`;
-                    } else {
-                         legendHtml = `<p class="mb-0 small text-muted">يتم تلوين كل قسم (حسب المسار) بلون فريد.</p>`;
-                    }
-                    break;
-                case 'linkEquity':
-                default:
-                    legendHtml = `<ul>
-                        ${createSwatch('#5bc0de', 'صفحة عادية')}
-                        ${createSwatch('#f0ad4e', 'صفحة يتيمة')}
-                        ${createSwatch('#d9534f', 'صفحة NoIndex')}
-                    </ul>`;
-                    break;
-            }
-            dom.legendContainer.innerHTML = legendHtml;
-        },
+        crawledUrls = new Set();
+        queue = [{ url: startUrl, depth: 0 }];
+        pageData = new Map();
+        allFoundLinks = new Set();
+        linkStatusCache = new Map();
+        finalReport = [];
+        robotsRules = null;
 
-        updateInspector(nodeId) {
-            if (!nodeId || !window.svl?.fullSearchIndex) {
-                dom.inspector.details.classList.add('d-none');
-                dom.inspector.placeholder.classList.remove('d-none');
-                return;
-            }
-            
-            const page = window.svl.fullSearchIndex.find(p => p.url === nodeId);
-            if (!page) return;
+        resultsTableBody.innerHTML = '';
+        progressSection.classList.remove('d-none');
+        resultsSection.classList.add('d-none');
+        exportCsvBtn.classList.add('d-none');
+        visualizerActionsContainer.classList.add('d-none'); // Hide new actions container
+        startCrawlBtn.disabled = true;
+        startCrawlBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جارِ الفحص...`;
 
-            const seo = page.seo || {};
-            const analysis = seo.contentAnalysis || {};
-            dom.inspector.title.textContent = page.title || page.url;
-            dom.inspector.title.title = page.title || page.url;
-            dom.inspector.url.href = page.url;
-            dom.inspector.depth.textContent = seo.crawlDepth ?? 'N/A';
-            dom.inspector.inlinks.textContent = seo.internalLinkEquity || 0;
-            dom.inspector.outlinks.textContent = analysis.outgoingInternalLinks?.length || 0;
-            
-            let statusText = 'عادية';
-            if (seo.isNoIndex) statusText = 'NoIndex';
-            else if (seo.isOrphan) statusText = 'يتيمة';
-            dom.inspector.status.textContent = statusText;
+        return true;
+    }
 
-            dom.inspector.placeholder.classList.add('d-none');
-            dom.inspector.details.classList.remove('d-none');
-        },
-        
-        onNodeSelection(nodeIds) {
-            const nodeId = nodeIds.length > 0 ? nodeIds[0] : null;
-            this.updateInspector(nodeId);
+    /**
+     * Parses the content of a robots.txt file.
+     */
+    function parseRobotsTxt(content) {
+        const rules = { allow: [], disallow: [] };
+        let agentBlock = false;
 
-            document.querySelectorAll('#visualizer-page-list li').forEach(li => {
-                const isActive = li.dataset.nodeId === nodeId;
-                li.classList.toggle('active', isActive);
-                if (isActive) li.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            });
-            
-            if (!window.svl.network || !window.svl.currentNodes) return;
-            
-            const allNodeIds = window.svl.currentNodes.getIds();
-            if (!nodeId) {
-                 if (window.svl.isClustered) return;
-                const nodesToUpdate = allNodeIds.map(id => {
-                    const originalSettings = window.svl.originalNodeSettings[id];
-                    if (!originalSettings) return null;
-                    return {
-                        id,
-                        color: originalSettings.color,
-                        font: window.svl.areLabelsVisible ? originalSettings.font : { size: 0 }
-                    };
-                }).filter(Boolean);
-
-                if (nodesToUpdate.length > 0) window.svl.currentNodes.update(nodesToUpdate);
-                if (window.svl.currentEdges) window.svl.currentEdges.update(window.svl.currentEdges.get().map(e => ({ id: e.id, hidden: false })));
-            } else {
-                const connectedNodes = new Set([nodeId, ...window.svl.network.getConnectedNodes(nodeId)]);
-                const dimColor = 'rgba(200, 200, 200, 0.1)';
-
-                const nodesToUpdate = allNodeIds.map(id => {
-                    const originalSettings = window.svl.originalNodeSettings[id];
-                    if (!originalSettings) return null;
-
-                    if (connectedNodes.has(id)) {
-                        return { id, color: originalSettings.color, font: window.svl.areLabelsVisible ? originalSettings.font : { size: 0 } };
-                    } else {
-                        return { id, color: { background: dimColor, border: 'rgba(200,200,200,0.2)' }, font: { color: dimColor, strokeWidth: 0 } };
-                    }
-                }).filter(Boolean);
-                
-                window.svl.currentNodes.update(nodesToUpdate);
-                
-                const connectedEdgeIds = new Set(window.svl.network.getConnectedEdges(nodeId));
-                window.svl.currentEdges.update(window.svl.currentEdges.get().map(edge => ({ id: edge.id, hidden: !connectedEdgeIds.has(edge.id) })));
-            }
-        },
-
-        onGraphRendered() {
-            if (!window.svl.network) return;
-            this.updateLegend('linkEquity');
-            this.updateInspector(null);
-            
-            window.svl.network.off('selectNode');
-            window.svl.network.off('deselectNode');
-            window.svl.network.off('click');
-
-            window.svl.network.on('selectNode', (params) => this.onNodeSelection(params.nodes));
-            window.svl.network.on('deselectNode', () => this.onNodeSelection([]));
-            window.svl.network.on('click', (params) => {
-                if (params.nodes.length === 0 && params.edges.length === 0) {
-                    window.svl.network.unselectAll();
-                    this.onNodeSelection([]);
+        content.split('\n').forEach(line => {
+            line = line.split('#')[0].trim();
+            if (!line) return;
+            const [directive, value] = line.split(':').map(s => s.trim());
+            if (directive.toLowerCase() === 'user-agent') {
+                agentBlock = (value === '*');
+            } else if (agentBlock && value) {
+                if (directive.toLowerCase() === 'disallow') {
+                    rules.disallow.push(value);
+                } else if (directive.toLowerCase() === 'allow') {
+                    rules.allow.push(value);
                 }
-            });
-        },
+            }
+        });
+        return rules;
+    }
 
-        initialize() {
-            window.showToast = (msg, type, title) => this.showToast(msg, type, title);
+    /**
+     * Checks if a URL is allowed to be crawled based on the parsed robots.txt rules.
+     */
+    function isAllowedByRobots(url) {
+        if (!robotsRules) return true;
+        const path = new URL(url).pathname;
+        const isDisallowed = robotsRules.disallow.some(rule => rule && path.startsWith(rule));
+        if (!isDisallowed) return true;
+        const isAllowed = robotsRules.allow.some(rule => rule && path.startsWith(rule));
+        return isAllowed;
+    }
 
+    /**
+     * Main crawl loop (Phase 1: Crawl & Collect).
+     */
+    async function processQueue() {
+        if (queue.length === 0) {
+            await finishCrawl();
+            return;
+        }
+
+        const { url: currentUrl, depth } = queue.shift();
+        
+        if (depth > maxDepthValue) {
+            processQueue();
+            return;
+        }
+        
+        if (crawledUrls.has(currentUrl)) {
+            processQueue();
+            return;
+        }
+
+        if (!isAllowedByRobots(currentUrl)) {
+            const mockPageInfo = { title: '[محظور بـ robots.txt]', status: 'Skipped', wordCount: 0, outgoingLinks: [], incomingLinkCount: 0, depth: depth };
+            addIssue(currentUrl, mockPageInfo, 'محظور بـ robots.txt', SEVERITY.INFO, { text: 'تم تخطي الزحف لهذه الصفحة احترامًا لقواعد robots.txt.' });
+            setTimeout(processQueue, 1);
+            return;
+        }
+
+        crawledUrls.add(currentUrl);
+        updateProgress(crawledUrls.size, crawledUrls.size + queue.length, `المرحلة الأولى: يتم الآن فحص ${currentUrl}`);
+
+        try {
+            const proxyUrl = `https://throbbing-dew-da3c.amr-omar304.workers.dev/?url=${encodeURIComponent(currentUrl)}`;
+            const response = await fetch(proxyUrl);
+            await analyzeResponse(response, currentUrl, depth);
+        } catch (error) {
+            console.error(`فشل جلب ${currentUrl}:`, error);
+            const errorInfo = { status: 'Error: Fetch Failed', depth: depth, title: '[فشل جلب الصفحة]', outgoingLinks: [], incomingLinkCount: 0, wordCount: 0 };
+            addIssue(currentUrl, errorInfo, 'خطأ فادح في الجلب', SEVERITY.CRITICAL, { text: `فشل الاتصال بالرابط ${currentUrl}. قد يكون الخادم معطلاً.` });
+        }
+
+        setTimeout(processQueue, crawlDelayValue);
+    }
+
+    async function analyzeResponse(response, currentUrl, depth) {
+        const pageInfo = {
+            status: response.status,
+            depth: depth,
+            title: '[لا يوجد عنوان]',
+            description: '',
+            h1s: [],
+            canonical: normalizeUrl(currentUrl),
+            isNoIndex: false,
+            isNoFollow: false,
+            wordCount: 0,
+            outgoingLinks: [],
+            incomingLinkCount: 0,
+        };
+
+        if (response.ok && (response.headers.get('Content-Type') || '').includes('text/html')) {
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            pageInfo.title = doc.querySelector('title')?.innerText.trim() || '[لا يوجد عنوان]';
+            pageInfo.description = doc.querySelector('meta[name="description"]')?.content.trim() || '';
+            pageInfo.h1s = Array.from(doc.querySelectorAll('h1')).map(h => h.innerText.trim()).filter(Boolean);
+            const canonicalLink = doc.querySelector('link[rel="canonical"]');
+            if (canonicalLink && canonicalLink.href) {
+                try { pageInfo.canonical = normalizeUrl(new URL(canonicalLink.href, currentUrl).href); } catch (e) {}
+            }
+            const robotsMeta = doc.querySelector('meta[name="robots"]');
+            const robotsContent = robotsMeta ? robotsMeta.content.toLowerCase() : '';
+            pageInfo.isNoIndex = robotsContent.includes('noindex');
+            pageInfo.isNoFollow = robotsContent.includes('nofollow');
+            pageInfo.wordCount = (doc.body?.textContent || "").trim().split(/\s+/).filter(Boolean).length;
+            collectLinks(doc, currentUrl, pageInfo, depth);
+        } else if (!response.ok) {
+            pageInfo.title = '[فشل الزحف]';
+        }
+
+        const canonicalUrl = pageInfo.canonical;
+        if (!pageData.has(canonicalUrl)) {
+            pageInfo.nonCanonicalSources = new Map();
+            pageData.set(canonicalUrl, pageInfo);
+        } else {
+            const masterData = pageData.get(canonicalUrl);
+            masterData.outgoingLinks.push(...pageInfo.outgoingLinks);
+            masterData.nonCanonicalSources.set(currentUrl, { status: pageInfo.status, isNoIndex: pageInfo.isNoIndex });
+        }
+    }
+
+    function collectLinks(doc, sourceUrl, pageInfo, depth) {
+        doc.querySelectorAll('a[href]').forEach(a => {
+            const href = a.getAttribute('href');
+            if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:')) return;
             try {
-                visualizerWorker = new Worker('../assets/js/SiteVisualizerLab/visualizer-worker.js');
-                visualizerWorker.onmessage = (e) => {
-                    this.setLoadingState(false);
-                    const { status, data, message } = e.data;
-                    if (status === 'success') {
-                        this.showToast('تمت معالجة البيانات بنجاح، جاري الآن رسم الخريطة.', 'success');
-                        window.svl.renderFromProcessedData(data);
-                        this.onGraphRendered();
-                    } else {
-                        this.showToast(message, 'error');
-                    }
-                };
-                visualizerWorker.onerror = (e) => {
-                    this.setLoadingState(false);
-                    console.error('Worker Error:', e);
-                    this.showToast(`حدث خطأ فني في العامل: ${e.message}`, 'error');
-                };
-            } catch (e) {
-                console.error("Failed to initialize Web Worker:", e);
-                this.showToast('متصفحك لا يدعم Web Workers. ستعمل الأداة في الوضع العادي.', 'error', 'تحذير');
-            }
+                const absoluteUrl = normalizeUrl(new URL(href, sourceUrl).href);
+                allFoundLinks.add(absoluteUrl);
+                pageInfo.outgoingLinks.push({ url: absoluteUrl, type: absoluteUrl.startsWith(origin) ? 'لينك داخلى' : 'لينك خارجى', anchor: a.innerText.trim() || '[نص فارغ]' });
+                if (absoluteUrl.startsWith(origin) && !crawledUrls.has(absoluteUrl) && !queue.some(q => q.url === absoluteUrl) && (depth + 1) <= maxDepthValue) {
+                    queue.push({ url: absoluteUrl, depth: depth + 1 });
+                }
+            } catch (e) {}
+        });
+        doc.querySelectorAll('img[src]').forEach(img => {
+            const src = img.getAttribute('src');
+            if (!src) return;
+            try {
+                const absoluteUrl = normalizeUrl(new URL(src, sourceUrl).href);
+                allFoundLinks.add(absoluteUrl);
+                pageInfo.outgoingLinks.push({ url: absoluteUrl, type: 'صورة', anchor: img.alt.trim() || '[alt فارغ]' });
+            } catch (e) {}
+        });
+    }
 
-            // Event Listeners
-            dom.renderBtn.addEventListener('click', () => { this.processWithWorker(dom.jsonInput.value, 'json'); });
-            dom.fileInput.addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const fileType = file.name.toLowerCase().endsWith('.csv') ? 'csv' : 'json';
-                    dom.jsonInput.value = '';
-                    this.processWithWorker(e.target.result, fileType);
-                };
-                reader.readAsText(file, 'UTF-8');
-            });
-            dom.loadSampleDataBtn.addEventListener('click', () => {
-                fetch('../assets/js/SiteVisualizerLab/sample-data.json')
-                    .then(res => res.ok ? res.text() : Promise.reject('فشل تحميل الملف التجريبي.'))
-                    .then(data => {
-                        dom.jsonInput.value = data;
-                        this.processWithWorker(data, 'json');
-                    }).catch(err => this.showToast(err, 'error'));
-            });
-            
-            dom.viewModesGroup.addEventListener('click', (e) => {
-                if (e.target.matches('[data-view-mode]')) {
-                    const mode = e.target.dataset.viewMode;
-                    this.updateLegend(mode);
-                    dom.topicClusterControls.classList.toggle('d-none', mode !== 'topicCluster');
+    async function finishCrawl() {
+        const linksArray = Array.from(allFoundLinks);
+        for (let i = 0; i < linksArray.length; i++) {
+            updateProgress(i + 1, linksArray.length, `المرحلة الثانية: فحص حالة الروابط (${i + 1}/${linksArray.length})`);
+            await checkLinkStatus(linksArray[i]);
+        }
+
+        updateProgress(0, 1, 'المرحلة الثالثة: جاري تجميع التقرير النهائي...');
+        buildFinalReport();
+        displayResults();
+
+        const visualizerData = generateVisualizerData();
+        if (visualizerData) {
+            visualizerActionsContainer.classList.remove('d-none');
+            copyVisualizerDataBtn.onclick = () => {
+                copyToClipboard(visualizerData);
+            };
+        }
+
+        startCrawlBtn.disabled = false;
+        startCrawlBtn.innerHTML = `<i class="bi bi-search ms-2"></i>ابدأ الفحص`;
+        statusBar.style.width = '100%';
+        statusText.innerText = `اكتمل الفحص! تم العثور على ${finalReport.length} مشكلة.`;
+    }
+
+    async function checkLinkStatus(url) {
+        if (linkStatusCache.has(url)) return;
+        try {
+            const proxyUrl = `https://throbbing-dew-da3c.amr-omar304.workers.dev/?url=${encodeURIComponent(url)}`;
+            const response = await fetch(proxyUrl, { method: 'HEAD', mode: 'cors' });
+            linkStatusCache.set(url, { error: !response.ok, status: response.status });
+        } catch (e) {
+            linkStatusCache.set(url, { error: true, status: 'Error: Host' });
+        }
+    }
+
+    function addIssue(sourceUrl, pageInfo, issueType, issueSeverity, issueDetails) {
+        finalReport.push({ sourcePage: sourceUrl, pageTitle: pageInfo.title, pageStatus: pageInfo.status, wordCount: pageInfo.wordCount, outgoingLinkCount: pageInfo.outgoingLinks.length, incomingLinkCount: pageInfo.incomingLinkCount, depth: pageInfo.depth, issueType: issueType, issueSeverity: issueSeverity, issueDetails: issueDetails, });
+    }
+
+    function buildFinalReport() {
+        const incomingLinksMap = new Map();
+        const titleMap = new Map();
+        const descriptionMap = new Map();
+
+        for (const data of pageData.values()) {
+            data.outgoingLinks.forEach(link => {
+                if (link.url.startsWith(origin)) {
+                    incomingLinksMap.set(link.url, (incomingLinksMap.get(link.url) || 0) + 1);
                 }
             });
-
-            dom.addClusterRuleBtn.addEventListener('click', () => {
-                const ruleNode = dom.clusterRuleTemplate.firstElementChild.cloneNode(true);
-                dom.clusterRulesContainer.appendChild(ruleNode);
-            });
-
-            dom.clusterRulesContainer.addEventListener('click', (e) => {
-                if (e.target.closest('.remove-cluster-rule-btn')) e.target.closest('.cluster-rule-item').remove();
-            });
-
-            dom.applyClusterRulesBtn.addEventListener('click', () => {
-                if (!window.svl.network) return;
-                const rules = Array.from(dom.clusterRulesContainer.querySelectorAll('.cluster-rule-item')).map(item => ({
-                    pattern: item.querySelector('.cluster-regex-input').value.trim(),
-                    color: item.querySelector('.cluster-color-input').value
-                })).filter(rule => rule.pattern);
-                try {
-                    rules.forEach(rule => new RegExp(rule.pattern));
-                    window.svl.updateNodeDisplay('topicCluster', { rules });
-                    this.updateLegend('topicCluster', rules);
-                } catch(e) { this.showToast(`تعبير نمطي غير صالح: ${e.message}`, 'error'); }
-            });
-            
-            this.updateLegend('linkEquity');
-            this.updateInspector(null);
-
-            // <<< استدعاء الدالة الجديدة عند تحميل الصفحة >>>
-            loadDataFromSession();
         }
-    };
+        
+        for (const data of pageData.values()) {
+            data.incomingLinkCount = incomingLinksMap.get(data.canonical) || 0;
+        }
 
-    window.enhancements.initialize();
-});
+        for (const [canonicalUrl, data] of pageData.entries()) {
+            if (data.status >= 400) addIssue(canonicalUrl, data, 'خطأ زحف', SEVERITY.CRITICAL, { text: `الصفحة الأساسية أعادت رمز الحالة ${data.status}` });
+            data.outgoingLinks.forEach(link => {
+                const statusInfo = linkStatusCache.get(link.url);
+                if (statusInfo && statusInfo.error) addIssue(canonicalUrl, data, 'رابط تالف', SEVERITY.CRITICAL, { errorLink: link.url, errorType: statusInfo.status, anchorText: link.anchor, linkType: link.type });
+            });
+            if (data.isNoIndex) addIssue(canonicalUrl, data, 'ممنوعة من الفهرسة (Noindex)', SEVERITY.HIGH, { text: 'تحتوي على وسم "noindex".' });
+            if (data.isNoFollow) addIssue(canonicalUrl, data, 'الروابط لا تتبع (Nofollow)', SEVERITY.INFO, { text: 'تحتوي على وسم "nofollow".' });
+            if (!data.title || data.title === '[لا يوجد عنوان]') addIssue(canonicalUrl, data, 'عنوان مفقود', SEVERITY.HIGH, { text: 'وسم <title> فارغ أو مفقود.' });
+            else {
+                const titleKey = data.title.toLowerCase().trim();
+                if (!titleMap.has(titleKey)) titleMap.set(titleKey, []);
+                titleMap.get(titleKey).push(canonicalUrl);
+            }
+            if (!data.description) addIssue(canonicalUrl, data, 'وصف ميتا مفقود', SEVERITY.MEDIUM, { text: 'وسم <meta name="description"> فارغ أو مفقود.' });
+            else {
+                const descKey = data.description.toLowerCase().trim();
+                if (!descriptionMap.has(descKey)) descriptionMap.set(descKey, []);
+                descriptionMap.get(descKey).push(canonicalUrl);
+            }
+            if (data.h1s.length === 0) addIssue(canonicalUrl, data, 'H1 مفقود', SEVERITY.HIGH, { text: 'الصفحة لا تحتوي على وسم <h1>.' });
+            else if (data.h1s.length > 1) addIssue(canonicalUrl, data, 'H1 متعدد', SEVERITY.LOW, { text: `تم العثور على ${data.h1s.length} وسوم H1.`, h1s: data.h1s });
+            if (data.wordCount < LOW_WORD_COUNT_THRESHOLD && data.status < 400) addIssue(canonicalUrl, data, 'محتوى ضعيف', SEVERITY.MEDIUM, { text: `عدد الكلمات (${data.wordCount}) أقل من (${LOW_WORD_COUNT_THRESHOLD}).` });
+            if (normalizeUrl(canonicalUrl) !== data.canonical) addIssue(canonicalUrl, data, 'Canonical خاطئ', SEVERITY.HIGH, { text: `الرابط الأساسي المحدد لا يطابق رابط الصفحة.`, canonical: data.canonical });
+            if (data.incomingLinkCount === 0 && data.depth > 0) addIssue(canonicalUrl, data, 'صفحة يتيمة', SEVERITY.HIGH, { text: 'لم يتم العثور على روابط داخلية لهذه الصفحة.' });
+            if (data.nonCanonicalSources) {
+                for (const [sourceUrl, sourceInfo] of data.nonCanonicalSources.entries()) {
+                    if (sourceInfo.status >= 400) addIssue(canonicalUrl, data, 'نسخة بديلة بها خطأ', SEVERITY.HIGH, { text: `الرابط ${sourceUrl} (الذي يشير إلى هذا الكانونيكال) أعاد الحالة ${sourceInfo.status}.` });
+                    if (sourceInfo.isNoIndex) addIssue(canonicalUrl, data, 'نسخة بديلة ممنوعة من الفهرسة', SEVERITY.MEDIUM, { text: `الرابط ${sourceUrl} يحتوي على وسم noindex ولكنه يشير إلى هذه الصفحة.` });
+                }
+            }
+        }
+        
+        for (const [title, urls] of titleMap.entries()) {
+            if (urls.length > 1) {
+                urls.forEach(url => addIssue(url, pageData.get(url), 'عنوان مكرر', SEVERITY.HIGH, { text: `مكرر في ${urls.length} صفحات.`, duplicates: urls }));
+            }
+        }
+        for (const [desc, urls] of descriptionMap.entries()) {
+            if (urls.length > 1) {
+                urls.forEach(url => addIssue(url, pageData.get(url), 'وصف ميتا مكرر', SEVERITY.MEDIUM, { text: `مكرر في ${urls.length} صفحات.`, duplicates: urls }));
+            }
+        }
+        finalReport.sort((a, b) => a.issueSeverity.level - b.issueSeverity.level);
+    }
+
+    function displayResults() {
+        resultsSection.classList.remove('d-none');
+        if (finalReport.length === 0) {
+            resultsTableBody.innerHTML = `<tr><td colspan="10" class="text-center text-success fw-bold p-4">رائع! لم يتم العثور على أي مشاكل تقنية.</td></tr>`;
+            exportCsvBtn.classList.add('d-none');
+            return;
+        }
+
+        const formatDetails = (issue) => {
+            switch (issue.issueType) {
+                case 'رابط تالف': return `<div class="d-flex flex-column"><span class="text-danger fw-bold">الخطأ: ${issue.issueDetails.errorType}</span><a href="${issue.issueDetails.errorLink}" target="_blank" class="text-truncate" style="max-width: 250px;" title="${issue.issueDetails.errorLink}">${issue.issueDetails.errorLink}</a><small class="text-muted">نص الرابط: <em>${issue.issueDetails.anchorText}</em></small></div>`;
+                case 'عنوان مكرر': case 'وصف ميتا مكرر': const otherPages = issue.issueDetails.duplicates.filter(d => d !== issue.sourcePage); return `${issue.issueDetails.text} <a tabindex="0" class="badge bg-primary-subtle text-primary-emphasis rounded-pill" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="الصفحات المكررة" data-bs-content="${otherPages.join('<br>')}">${otherPages.length}+</a>`;
+                case 'H1 متعدد': return `${issue.issueDetails.text}<br><small class="text-muted" dir="ltr">${issue.issueDetails.h1s.join(' | ')}</small>`;
+                case 'Canonical خاطئ': return `<div class="d-flex flex-column"><span>الرابط المحدد:</span><small class="text-muted text-truncate" style="max-width: 250px;" title="${issue.issueDetails.canonical}">${issue.issueDetails.canonical}</small></div>`;
+                case 'نسخة بديلة بها خطأ': case 'نسخة بديلة ممنوعة من الفهرسة': return `<div class="d-flex flex-column"><span class="fw-bold">${issue.issueDetails.text}</span></div>`;
+                default: return issue.issueDetails.text || 'N/A';
+            }
+        };
+
+        resultsTableBody.innerHTML = finalReport.map(res => `<tr><td><span class="badge ${res.issueSeverity.class}">${res.issueSeverity.text}</span></td><td class="fw-bold">${res.issueType}</td><td class="text-truncate" style="max-width: 150px;"><a href="${res.sourcePage}" target="_blank" title="${res.sourcePage}">${res.sourcePage}</a></td><td>${formatDetails(res)}</td><td class="text-truncate" style="max-width: 150px;" title="${res.pageTitle}">${res.pageTitle}</td><td><span class="badge bg-${String(res.pageStatus).startsWith('2') ? 'success' : String(res.pageStatus).startsWith('S') ? 'info' : 'warning'}">${res.pageStatus}</span></td><td>${res.wordCount}</td><td>${res.outgoingLinkCount}</td><td>${res.incomingLinkCount}</td><td>${res.depth}</td></tr>`).join('');
+        [...document.querySelectorAll('[data-bs-toggle="popover"]')].map(el => new bootstrap.Popover(el, { html: true }));
+        exportCsvBtn.classList.remove('d-none');
+    }
+
+    function updateProgress(current, total, text) {
+        statusText.innerText = text;
+        crawlCounter.innerText = `${current}/${total}`;
+        const percentage = total > 0 ? (current / total) * 100 : 0;
+        statusBar.style.width = `${percentage}%`;
+    }
+
+    function exportToCsv() {
+        if (!finalReport || finalReport.length === 0) {
+            showAppToast('لا توجد بيانات لتصديرها.', 'error');
+            return;
+        }
+        const headers = ["الأهمية", "نوع المشكلة", "الصفحة المصدر (الأساسية)", "التفاصيل", "عنوان الصفحة", "حالة الصفحة", "عدد الكلمات", "الروابط الصادرة", "الروابط الواردة", "عمق الصفحة"];
+        const escapeCsvField = (field) => { const str = String(field ?? ''); if (str.includes(',') || str.includes('"') || str.includes('\n')) { return `"${str.replace(/"/g, '""')}"`; } return str; };
+        const formatDetailsForCsv = (issue) => {
+            switch (issue.issueType) {
+                case 'رابط تالف': return `الرابط: ${issue.issueDetails.errorLink}, الحالة: ${issue.issueDetails.errorType}, نص الرابط: ${issue.issueDetails.anchorText}`;
+                case 'عنوان مكرر': case 'وصف ميتا مكرر': return `${issue.issueDetails.text} الصفحات الأخرى: ${issue.issueDetails.duplicates.slice(1).join('; ')}`;
+                case 'H1 متعدد': return `الوسوم: ${issue.issueDetails.h1s.join(' | ')}`;
+                case 'Canonical خاطئ': return `الرابط المحدد: ${issue.issueDetails.canonical}`;
+                default: return issue.issueDetails.text || '';
+            }
+        };
+        const csvRows = [headers.join(',')];
+        for (const row of finalReport) {
+            const values = [row.issueSeverity.text, row.issueType, row.sourcePage, formatDetailsForCsv(row), row.pageTitle, row.pageStatus, row.wordCount, row.outgoingLinkCount, row.incomingLinkCount, row.depth].map(escapeCsvField);
+            csvRows.push(values.join(','));
+        }
+        const csvString = csvRows.join('\n');
+        const blob = new Blob([`\uFEFF${csvString}`], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Ai8V_Tech_Audit_Report_${origin.replace(/https?:\/\//, '')}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // --- Event Listeners ---
+    startCrawlBtn.addEventListener('click', async () => {
+        if (!initializeCrawl()) return;
+        updateProgress(0, 1, 'المرحلة 0: جارِ جلب وفهم ملف robots.txt...');
+        try {
+            const robotsUrl = `${origin}/robots.txt`;
+            const proxyUrl = `https://throbbing-dew-da3c.amr-omar304.workers.dev/?url=${encodeURIComponent(robotsUrl)}`;
+            const response = await fetch(proxyUrl);
+            if (response.ok) {
+                robotsRules = parseRobotsTxt(await response.text());
+            } else { robotsRules = { allow: [], disallow: [] }; }
+        } catch (e) {
+            robotsRules = { allow: [], disallow: [] };
+        }
+        processQueue();
+    });
+    exportCsvBtn.addEventListener('click', exportToCsv);
+})();
