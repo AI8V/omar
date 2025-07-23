@@ -235,29 +235,23 @@
         <div class="d-none mt-5" id="results-section">
             <div class="card shadow-sm mt-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h3 class="h5 mb-0">تقرير المشاكل التقنية</h3>
-                    <!-- START: AI8V Integration -->
-                    <div class="ms-auto">
-                        <button class="btn btn-info btn-sm d-none" id="visualizeBtn" title="عرض خريطة بصرية لهذا الفحص"><i class="bi bi-diagram-3-fill ms-2" aria-hidden="true"></i>تحليل بصري</button>
-                        <button class="btn btn-success btn-sm d-none" id="exportCsvBtn"><i class="bi bi-file-earmark-spreadsheet ms-2" aria-hidden="true"></i>تصدير إلى CSV</button>
-                    </div>
-                    <!-- END: AI8V Integration -->
+                    <h3 class="h5 mb-0">تقرير المشاكل التقنية</h3><button class="btn btn-success btn-sm d-none" id="exportCsvBtn"><i class="bi bi-file-earmark-spreadsheet ms-2" aria-hidden="true"></i>تصدير إلى CSV</button>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-striped table-hover mb-0">
                             <thead>
                                 <tr>
-                                    <th scope="col">الأهمية</th>
-                                    <th scope="col">نوع المشكلة</th>
-                                    <th scope="col">الصفحة المصدر</th>
-                                    <th scope="col">التفاصيل</th>
-                                    <th scope="col">عنوان الصفحة</th>
-                                    <th scope="col">حالة الصفحة</th>
-                                    <th scope="col">عدد الكلمات</th>
-                                    <th scope="col">روابط صادرة</th>
-                                    <th scope="col">روابط واردة</th>
-                                    <th scope="col">العمق</th>
+                                    <th>الأهمية</th>
+                                    <th>نوع المشكلة</th>
+                                    <th>الصفحة المصدر</th>
+                                    <th>التفاصيل</th>
+                                    <th>عنوان الصفحة</th>
+                                    <th>حالة الصفحة</th>
+                                    <th>عدد الكلمات</th>
+                                    <th>روابط صادرة</th>
+                                    <th>روابط واردة</th>
+                                    <th>العمق</th>
                                 </tr>
                             </thead>
                             <tbody id="results-table-body"></tbody>
@@ -308,9 +302,9 @@
             <div class="toast-body" role="alert"><span id="toast-body-message"></span></div>
         </div>
     </div>
-    <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../assets/js/bs-init.js"></script>
-    <script src="../assets/js/LogFileAnalyzer/ghost-crawler.js"></script>
+    <script src="../assets/bootstrap/js/bootstrap.min.js" defer></script>
+    <script src="../assets/js/bs-init.js" defer></script>
+    <script src="../assets/js/LogFileAnalyzer/ghost-crawler.js" defer></script>
 </body>
 
 </html>
