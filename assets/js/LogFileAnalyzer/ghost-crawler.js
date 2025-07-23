@@ -80,11 +80,11 @@
         }
         navigator.clipboard.writeText(text).then(() => {
             if (copyVisualizerDataBtn) {
-            copyVisualizerDataBtn.classList.remove('btn-success');
-            copyVisualizerDataBtn.classList.add('btn-secondary');
-            copyVisualizerDataBtn.innerHTML = `<i class="bi bi-clipboard-data-fill ms-2"></i>نسخ بيانات الخريطة`;
-            copyVisualizerDataBtn.disabled = false;
-        }
+                copyVisualizerDataBtn.classList.remove('btn-secondary');
+                copyVisualizerDataBtn.classList.add('btn-success');
+                copyVisualizerDataBtn.innerHTML = `<i class="bi bi-check-circle-fill ms-2"></i> تم النسخ بنجاح!`;
+                copyVisualizerDataBtn.disabled = true;
+            }
         }).catch(err => {
             console.error('Failed to copy text: ', err);
             showAppToast('فشل النسخ إلى الحافظة.', 'error');
@@ -184,10 +184,18 @@
             visualizerActionsContainer.classList.add('d-none');
         }
         startCrawlBtn.disabled = true;
-        startCrawlBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جارِ الفحص...`;
-
-        return true;
-    }
+            startCrawlBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جارِ الفحص...`;
+            
+            // [إضافة جديدة] إعادة تعيين زر النسخ إلى حالته الأصلية
+            if (copyVisualizerDataBtn) {
+                copyVisualizerDataBtn.disabled = false;
+                copyVisualizerDataBtn.classList.remove('btn-success');
+                copyVisualizerDataBtn.classList.add('btn-secondary');
+                copyVisualizerDataBtn.innerHTML = `<i class="bi bi-clipboard-data-fill ms-2"></i>نسخ بيانات الخريطة`;
+            }
+            
+            return true;
+            }
 
     /**
      * Parses the content of a robots.txt file.
