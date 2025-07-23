@@ -1,5 +1,5 @@
 // assets/js/LogFileAnalyzer/ghost-crawler.js
-// Ai8V - Ghost Crawler v3.1 (The Hybrid & Resilient Edition)
+// Ai8V - Ghost Crawler v3.0 (The Resilient & Unified Edition)
 
 (function() {
     'use strict';
@@ -13,8 +13,8 @@
         LOW: { level: 3, text: 'منخفضة', class: 'bg-secondary' },
         INFO: { level: 4, text: 'للعلم', class: 'bg-light text-dark border' }
     };
-    // <<< تم الدمج: استخدام وكيل أكثر قوة وتوحيده في متغير واحد لسهولة الصيانة >>>
     const PROXY_URL = 'https://api.allorigins.win/raw?url=';
+
 
     // --- DOM Elements ---
     const startUrlInput = document.getElementById('startUrl');
@@ -31,7 +31,7 @@
     const errorToastEl = document.getElementById('errorToast');
     const errorToast = bootstrap.Toast.getOrCreateInstance(errorToastEl);
     const toastBodyMessage = document.getElementById('toast-body-message');
-    // <<< تم الدمج: تعريف عناصر الواجهة الجديدة للربط الذكي >>>
+    // --- Transplanted DOM Elements from New Version ---
     const visualizerActionsContainer = document.getElementById('visualizerActionsContainer');
     const copyVisualizerDataBtn = document.getElementById('copyVisualizerDataBtn');
     const appToastEl = document.getElementById('appToast');
@@ -53,11 +53,8 @@
     let crawlDelayValue;
     let maxDepthValue;
 
-    // --- Helper Functions ---
+    // --- Core Functions from Old Version ---
 
-    /**
-     * Normalizes a URL by removing the hash and trailing slash.
-     */
     function normalizeUrl(urlStr) {
         try {
             const urlObj = new URL(urlStr);
@@ -71,26 +68,20 @@
         }
     }
 
-    /**
-     * Displays a toast notification with an error message.
-     */
     function showToast(message) {
         toastBodyMessage.innerText = message;
         errorToast.show();
     }
     
-    // <<< تم الدمج: الدوال المساعدة الجديدة للربط الذكي >>>
+    // --- Transplanted Helper Functions from New Version ---
+    
     function showAppToast(message, type = 'info', title = 'تنبيه') {
-        if (!appToast) return;
+        if (!appToast || !appToastBody || !appToastTitle || !appToastIcon) return;
         appToastBody.textContent = message;
         appToastTitle.textContent = title;
-        if (type === 'error') {
-            appToastIcon.className = 'bi bi-exclamation-triangle-fill text-danger me-2';
-        } else if (type === 'success') {
-            appToastIcon.className = 'bi bi-check-circle-fill text-success me-2';
-        } else {
-            appToastIcon.className = 'bi bi-info-circle-fill text-info me-2';
-        }
+        if (type === 'error') appToastIcon.className = 'bi bi-exclamation-triangle-fill text-danger me-2';
+        else if (type === 'success') appToastIcon.className = 'bi bi-check-circle-fill text-success me-2';
+        else appToastIcon.className = 'bi bi-info-circle-fill text-info me-2';
         appToast.show();
     }
     
@@ -131,30 +122,22 @@
         }
         return JSON.stringify(fullSearchIndex, null, 2);
     }
-    // <<< نهاية الدوال المساعدة المدمجة >>>
+    
+    // --- Core Crawler Logic (Based on Stable Old Version) ---
 
-    /**
-     * Resets all state variables and UI elements to start a new crawl.
-     */
     function initializeCrawl() {
         const rawStartUrl = startUrlInput.value.trim();
         if (!rawStartUrl || !rawStartUrl.startsWith('https://')) {
             showToast('يرجى إدخال رابط صحيح يبدأ بـ https://');
             return false;
         }
-
         const startUrl = normalizeUrl(rawStartUrl);
         origin = new URL(startUrl).origin;
         
-        // **مهم:** هذا هو منطق النسخة القديمة المستقرة للتحكم في الزحف
         crawlDelayValue = parseInt(crawlDelayInput.value, 10);
-        if (isNaN(crawlDelayValue) || crawlDelayValue < 0) {
-            crawlDelayValue = 100;
-        }
+        if (isNaN(crawlDelayValue) || crawlDelayValue < 0) crawlDelayValue = 100;
         maxDepthValue = parseInt(maxDepthInput.value, 10);
-        if (isNaN(maxDepthValue) || maxDepthValue < 0) {
-            maxDepthValue = 10;
-        }
+        if (isNaN(maxDepthValue) || maxDepthValue < 0) maxDepthValue = 10;
 
         crawledUrls = new Set();
         queue = [{ url: startUrl, depth: 0 }];
@@ -163,21 +146,17 @@
         linkStatusCache = new Map();
         finalReport = [];
         robotsRules = null;
-
         resultsTableBody.innerHTML = '';
         progressSection.classList.remove('d-none');
         resultsSection.classList.add('d-none');
         exportCsvBtn.classList.add('d-none');
-        // <<< تم الدمج: إخفاء حاوية الأزرار الجديدة عند البدء >>>
-        if (visualizerActionsContainer) {
-            visualizerActionsContainer.classList.add('d-none');
-        }
+        // Integrated modification from protocol
+        if (visualizerActionsContainer) visualizerActionsContainer.classList.add('d-none');
         startCrawlBtn.disabled = true;
         startCrawlBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جارِ الفحص...`;
-
         return true;
     }
-
+    
     function parseRobotsTxt(content) {
         const rules = { allow: [], disallow: [] };
         let agentBlock = false;
@@ -185,16 +164,15 @@
             line = line.split('#')[0].trim();
             if (!line) return;
             const [directive, value] = line.split(':').map(s => s.trim());
-            if (directive.toLowerCase() === 'user-agent') {
-                agentBlock = (value === '*');
-            } else if (agentBlock && value) {
+            if (directive.toLowerCase() === 'user-agent') agentBlock = (value === '*');
+            else if (agentBlock && value) {
                 if (directive.toLowerCase() === 'disallow') rules.disallow.push(value);
                 else if (directive.toLowerCase() === 'allow') rules.allow.push(value);
             }
         });
         return rules;
     }
-
+    
     function isAllowedByRobots(url) {
         if (!robotsRules) return true;
         const path = new URL(url).pathname;
@@ -204,20 +182,9 @@
     }
 
     async function processQueue() {
-        if (queue.length === 0) {
-            await finishCrawl();
-            return;
-        }
+        if (queue.length === 0) { await finishCrawl(); return; }
         const { url: currentUrl, depth } = queue.shift();
-        
-        if (depth > maxDepthValue) {
-            processQueue();
-            return;
-        }
-        if (crawledUrls.has(currentUrl)) {
-            processQueue();
-            return;
-        }
+        if (depth > maxDepthValue || crawledUrls.has(currentUrl)) { processQueue(); return; }
         if (!isAllowedByRobots(currentUrl)) {
             const mockPageInfo = { title: '[محظور بـ robots.txt]', status: 'Skipped', wordCount: 0, outgoingLinks: [], incomingLinkCount: 0, depth: depth };
             addIssue(currentUrl, mockPageInfo, 'محظور بـ robots.txt', SEVERITY.INFO, { text: 'تم تخطي الزحف لهذه الصفحة احترامًا لقواعد robots.txt.' });
@@ -239,7 +206,7 @@
     }
 
     async function analyzeResponse(response, currentUrl, depth) {
-        const pageInfo = { status: response.status, depth: depth, title: '[لا يوجد عنوان]', description: '', h1s: [], canonical: normalizeUrl(currentUrl), isNoIndex: false, isNoFollow: false, wordCount: 0, outgoingLinks: [], incomingLinkCount: 0 };
+        const pageInfo = { status: response.status, depth, title: '[لا يوجد عنوان]', description: '', h1s: [], canonical: normalizeUrl(currentUrl), isNoIndex: false, isNoFollow: false, wordCount: 0, outgoingLinks: [], incomingLinkCount: 0 };
         if (response.ok && (response.headers.get('Content-Type') || '').includes('text/html')) {
             const html = await response.text();
             const parser = new DOMParser();
@@ -255,9 +222,7 @@
             pageInfo.isNoFollow = robotsContent.includes('nofollow');
             pageInfo.wordCount = (doc.body?.textContent || "").trim().split(/\s+/).filter(Boolean).length;
             collectLinks(doc, currentUrl, pageInfo, depth);
-        } else if (!response.ok) {
-            pageInfo.title = '[فشل الزحف]';
-        }
+        } else if (!response.ok) { pageInfo.title = '[فشل الزحف]'; }
         const canonicalUrl = pageInfo.canonical;
         if (!pageData.has(canonicalUrl)) {
             pageInfo.nonCanonicalSources = new Map();
@@ -277,10 +242,8 @@
                 const absoluteUrl = normalizeUrl(new URL(href, sourceUrl).href);
                 allFoundLinks.add(absoluteUrl);
                 pageInfo.outgoingLinks.push({ url: absoluteUrl, type: absoluteUrl.startsWith(origin) ? 'لينك داخلى' : 'لينك خارجى', anchor: a.innerText.trim() || '[نص فارغ]' });
-                if (absoluteUrl.startsWith(origin) && !crawledUrls.has(absoluteUrl) && !queue.some(q => q.url === absoluteUrl)) {
-                    if ((depth + 1) <= maxDepthValue) {
-                        queue.push({ url: absoluteUrl, depth: depth + 1 });
-                    }
+                if (absoluteUrl.startsWith(origin) && !crawledUrls.has(absoluteUrl) && !queue.some(q => q.url === absoluteUrl) && (depth + 1) <= maxDepthValue) {
+                    queue.push({ url: absoluteUrl, depth: depth + 1 });
                 }
             } catch (e) { console.warn(`رابط غير صالح في الصفحة ${sourceUrl}: ${href}`); }
         });
@@ -305,7 +268,7 @@
         buildFinalReport();
         displayResults();
 
-        // <<< تم الدمج: تفعيل منطق الربط الذكي بعد اكتمال الفحص >>>
+        // Integrated Activation Logic from protocol
         const visualizerData = generateVisualizerData();
         if (visualizerData) {
             if (visualizerActionsContainer) visualizerActionsContainer.classList.remove('d-none');
@@ -352,9 +315,10 @@
             });
         }
         for (const data of pageData.values()) data.incomingLinkCount = incomingLinksMap.get(data.canonical) || 0;
-
+        
         const titleMap = new Map();
         const descriptionMap = new Map();
+
         for (const [canonicalUrl, data] of pageData.entries()) {
             if (data.status >= 400) addIssue(canonicalUrl, data, 'خطأ زحف', SEVERITY.CRITICAL, { text: `الصفحة الأساسية أعادت رمز الحالة ${data.status}` });
             data.outgoingLinks.forEach(link => {
@@ -453,9 +417,7 @@
 
     // --- Event Listeners ---
     startCrawlBtn.addEventListener('click', async () => {
-        if (!initializeCrawl()) {
-            return;
-        }
+        if (!initializeCrawl()) return;
         updateProgress(0, 1, 'المرحلة 0: جارِ جلب وفهم ملف robots.txt...');
         try {
             const robotsUrl = `${origin}/robots.txt`;
