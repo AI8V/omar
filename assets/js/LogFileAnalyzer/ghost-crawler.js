@@ -28,9 +28,6 @@
     const errorToastEl = document.getElementById('errorToast');
     const errorToast = bootstrap.Toast.getOrCreateInstance(errorToastEl);
     const toastBodyMessage = document.getElementById('toast-body-message');
-    // --- START: AI8V Integration ---
-    const visualizeBtn = document.getElementById('visualizeBtn');
-    // --- END: AI8V Integration ---
 
     // --- State Variables ---
     let origin;
@@ -61,22 +58,10 @@
     }
 
     /**
-     * Displays a toast notification with a message.
+     * Displays a toast notification with an error message.
      */
-    function showToast(message, type = 'error', title = 'خطأ في الإدخال') {
-        const toastHeader = errorToastEl.querySelector('.toast-header');
-        const toastIcon = toastHeader.querySelector('i');
-        const toastTitle = toastHeader.querySelector('strong');
-
+    function showToast(message) {
         toastBodyMessage.innerText = message;
-        toastTitle.innerText = title;
-
-        if (type === 'success') {
-            toastIcon.className = 'text-success bi bi-check-circle-fill ms-2';
-        } else {
-            toastIcon.className = 'text-danger bi bi-exclamation-triangle-fill ms-2';
-        }
-
         errorToast.show();
     }
 
@@ -93,18 +78,19 @@
         const startUrl = normalizeUrl(rawStartUrl);
         origin = new URL(startUrl).origin;
         
+        // Read and validate advanced settings
         crawlDelayValue = parseInt(crawlDelayInput.value, 10);
         if (isNaN(crawlDelayValue) || crawlDelayValue < 0) {
-            crawlDelayValue = 100;
+            crawlDelayValue = 100; // Fallback
         }
         maxDepthValue = parseInt(maxDepthInput.value, 10);
         if (isNaN(maxDepthValue) || maxDepthValue < 0) {
-            maxDepthValue = 10;
+            maxDepthValue = 10; // Fallback
         }
 
         crawledUrls = new Set();
         queue = [{ url: startUrl, depth: 0 }];
-        pageData = new Map();
+        pageData = new Map(); // Will be keyed by CANONICAL URL
         allFoundLinks = new Set();
         linkStatusCache = new Map();
         finalReport = [];
@@ -114,49 +100,11 @@
         progressSection.classList.remove('d-none');
         resultsSection.classList.add('d-none');
         exportCsvBtn.classList.add('d-none');
-        // --- START: AI8V Integration ---
-        visualizeBtn.classList.add('d-none');
-        // --- END: AI8V Integration ---
         startCrawlBtn.disabled = true;
         startCrawlBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جارِ الفحص...`;
 
         return true;
     }
-    
-    // --- START: AI8V Integration Logic ---
-    /**
-     * Generates a unified data object compatible with the Site Visualizer Lab.
-     * @returns {string|null} A JSON string of the site footprint, or null if no data.
-     */
-    function generateVisualizerData() {
-        if (!pageData || pageData.size === 0) return null;
-
-        const fullSearchIndex = [];
-        for (const page of pageData.values()) {
-            fullSearchIndex.push({
-                url: page.canonical,
-                title: page.title,
-                seo: {
-                    internalLinkEquity: page.incomingLinkCount,
-                    crawlDepth: page.depth,
-                    isNoIndex: page.isNoIndex,
-                    isOrphan: page.depth > 0 && page.incomingLinkCount === 0,
-                    contentAnalysis: {
-                        // Extract only internal, non-image, unique links
-                        outgoingInternalLinks: [...new Set(
-                            page.outgoingLinks
-                                .filter(link => link.type === 'لينك داخلى' && link.url.startsWith(origin))
-                                .map(link => link.url)
-                        )]
-                    }
-                }
-            });
-        }
-        
-        // The Visualizer expects an array of page objects.
-        return JSON.stringify(fullSearchIndex);
-    }
-    // --- END: AI8V Integration Logic ---
 
     /**
      * Parses the content of a robots.txt file.
@@ -213,7 +161,7 @@
         const { url: currentUrl, depth } = queue.shift();
         
         if (depth > maxDepthValue) {
-            processQueue();
+            processQueue(); // Skip processing, move to the next item
             return;
         }
         
@@ -259,7 +207,7 @@
     }
 
     /**
-     * Analyzes the fetched response and consolidates data based on the canonical URL.
+     * [MODIFIED] Analyzes the fetched response and consolidates data based on the canonical URL.
      */
     async function analyzeResponse(response, currentUrl, depth) {
         const pageInfo = {
@@ -268,12 +216,12 @@
             title: '[لا يوجد عنوان]',
             description: '',
             h1s: [],
-            canonical: normalizeUrl(currentUrl),
+            canonical: normalizeUrl(currentUrl), // Default canonical is the URL itself
             isNoIndex: false,
             isNoFollow: false,
             wordCount: 0,
             outgoingLinks: [],
-            incomingLinkCount: 0,
+            incomingLinkCount: 0, // Will be calculated later
         };
 
         if (response.ok && (response.headers.get('Content-Type') || '').includes('text/html')) {
@@ -289,7 +237,7 @@
             if (canonicalLink && canonicalLink.href) {
                 try {
                     pageInfo.canonical = normalizeUrl(new URL(canonicalLink.href, currentUrl).href);
-                } catch (e) {}
+                } catch (e) { /* Keep default canonical if href is invalid */ }
             }
 
             const robotsMeta = doc.querySelector('meta[name="robots"]');
@@ -303,6 +251,7 @@
             pageInfo.title = '[فشل الزحف]';
         }
 
+        // --- Canonical Consolidation Logic ---
         const canonicalUrl = pageInfo.canonical;
 
         if (!pageData.has(canonicalUrl)) {
@@ -336,6 +285,7 @@
                     anchor: a.innerText.trim() || '[نص فارغ]'
                 });
                 
+                // Add to queue only if it's internal, not crawled, not in queue, and within max depth
                 if (absoluteUrl.startsWith(origin) && !crawledUrls.has(absoluteUrl) && !queue.some(q => q.url === absoluteUrl)) {
                     if ((depth + 1) <= maxDepthValue) {
                         queue.push({ url: absoluteUrl, depth: depth + 1 });
@@ -372,23 +322,6 @@
         updateProgress(0, 1, 'المرحلة الثالثة: جاري تجميع التقرير النهائي...');
         buildFinalReport();
         displayResults();
-        
-        // --- START: AI8V Integration ---
-        const visualizerData = generateVisualizerData();
-        if (visualizerData) {
-            try {
-                sessionStorage.setItem('ai8v_crawl_data', visualizerData);
-                visualizeBtn.classList.remove('d-none');
-                visualizeBtn.onclick = () => {
-                    window.location.href = '/SiteVisualizerLab/'; 
-                };
-                showToast('بيانات التحليل البصري جاهزة. انقر على زر "تحليل بصري" لعرض الخريطة.', 'success', 'اكتمل بنجاح');
-            } catch (e) {
-                console.error("Failed to store data in sessionStorage:", e);
-                showToast('حجم بيانات الفحص أكبر من المسموح به في المتصفح. لا يمكن تفعيل التحليل البصري.', 'error');
-            }
-        }
-        // --- END: AI8V Integration ---
 
         startCrawlBtn.disabled = false;
         startCrawlBtn.innerHTML = `<i class="bi bi-search ms-2"></i>ابدأ الفحص`;
@@ -429,7 +362,7 @@
     }
 
     /**
-     * Builds the final report by checking every CONSOLIDATED page for all types of issues.
+     * [MODIFIED] Builds the final report by checking every CONSOLIDATED page for all types of issues.
      */
     function buildFinalReport() {
         const incomingLinksMap = new Map();
