@@ -1,5 +1,5 @@
 // assets/js/LogFileAnalyzer/ghost-crawler.js
-// Ai8V - Ghost Crawler v2.0 (The Unified & Stabilized Edition)
+// Ai8V - Ghost Crawler v3.1 (The Hybrid & Resilient Edition)
 
 (function() {
     'use strict';
@@ -13,6 +13,8 @@
         LOW: { level: 3, text: 'منخفضة', class: 'bg-secondary' },
         INFO: { level: 4, text: 'للعلم', class: 'bg-light text-dark border' }
     };
+    // <<< تم الدمج: استخدام وكيل أكثر قوة وتوحيده في متغير واحد لسهولة الصيانة >>>
+    const PROXY_URL = 'https://api.allorigins.win/raw?url=';
 
     // --- DOM Elements ---
     const startUrlInput = document.getElementById('startUrl');
@@ -29,13 +31,11 @@
     const errorToastEl = document.getElementById('errorToast');
     const errorToast = bootstrap.Toast.getOrCreateInstance(errorToastEl);
     const toastBodyMessage = document.getElementById('toast-body-message');
-    // --- Elements for Smart Linking ---
+    // <<< تم الدمج: تعريف عناصر الواجهة الجديدة للربط الذكي >>>
     const visualizerActionsContainer = document.getElementById('visualizerActionsContainer');
-    // Note: The copy button and its toast are part of the last HTML version provided.
-    // This script will make them functional if they exist.
     const copyVisualizerDataBtn = document.getElementById('copyVisualizerDataBtn');
     const appToastEl = document.getElementById('appToast');
-    const appToast = appToastEl ? bootstrap.Toast.getOrCreateInstance(appToastEl) : null;
+    const appToast = appToastEl ? new bootstrap.Toast(appToastEl, { delay: 4000 }) : null;
     const appToastIcon = document.getElementById('toast-icon');
     const appToastTitle = document.getElementById('toast-title');
     const appToastBody = document.getElementById('toast-body-content');
@@ -53,13 +53,35 @@
     let crawlDelayValue;
     let maxDepthValue;
 
-    // --- NEW: Helper Functions for Linking ---
+    // --- Helper Functions ---
 
     /**
-     * Shows a general purpose application toast notification.
+     * Normalizes a URL by removing the hash and trailing slash.
      */
+    function normalizeUrl(urlStr) {
+        try {
+            const urlObj = new URL(urlStr);
+            urlObj.hash = '';
+            if (urlObj.pathname.length > 1 && urlObj.pathname.endsWith('/')) {
+                urlObj.pathname = urlObj.pathname.slice(0, -1);
+            }
+            return urlObj.href;
+        } catch (e) {
+            return urlStr;
+        }
+    }
+
+    /**
+     * Displays a toast notification with an error message.
+     */
+    function showToast(message) {
+        toastBodyMessage.innerText = message;
+        errorToast.show();
+    }
+    
+    // <<< تم الدمج: الدوال المساعدة الجديدة للربط الذكي >>>
     function showAppToast(message, type = 'info', title = 'تنبيه') {
-        if (!appToast || !appToastBody || !appToastTitle || !appToastIcon) return;
+        if (!appToast) return;
         appToastBody.textContent = message;
         appToastTitle.textContent = title;
         if (type === 'error') {
@@ -72,9 +94,6 @@
         appToast.show();
     }
     
-    /**
-     * Copies text to the clipboard and shows a confirmation toast.
-     */
     function copyToClipboard(text) {
         if (!navigator.clipboard) {
             showAppToast('متصفحك لا يدعم النسخ إلى الحافظة.', 'error');
@@ -88,13 +107,8 @@
         });
     }
 
-    /**
-     * Generates a unified data object compatible with the Site Visualizer Lab.
-     * @returns {string|null} A JSON string of the site footprint, or null if no data.
-     */
     function generateVisualizerData() {
         if (!pageData || pageData.size === 0) return null;
-
         const fullSearchIndex = [];
         for (const page of pageData.values()) {
             fullSearchIndex.push({
@@ -117,27 +131,11 @@
         }
         return JSON.stringify(fullSearchIndex, null, 2);
     }
-    
-    // --- Core Crawler Functions ---
+    // <<< نهاية الدوال المساعدة المدمجة >>>
 
-    function normalizeUrl(urlStr) {
-        try {
-            const urlObj = new URL(urlStr);
-            urlObj.hash = '';
-            if (urlObj.pathname.length > 1 && urlObj.pathname.endsWith('/')) {
-                urlObj.pathname = urlObj.pathname.slice(0, -1);
-            }
-            return urlObj.href;
-        } catch (e) {
-            return urlStr;
-        }
-    }
-
-    function showToast(message) {
-        toastBodyMessage.innerText = message;
-        errorToast.show();
-    }
-
+    /**
+     * Resets all state variables and UI elements to start a new crawl.
+     */
     function initializeCrawl() {
         const rawStartUrl = startUrlInput.value.trim();
         if (!rawStartUrl || !rawStartUrl.startsWith('https://')) {
@@ -147,17 +145,16 @@
 
         const startUrl = normalizeUrl(rawStartUrl);
         origin = new URL(startUrl).origin;
-
-        // <<< START: LOGIC RESTORED FROM OLD WORKING VERSION >>>
+        
+        // **مهم:** هذا هو منطق النسخة القديمة المستقرة للتحكم في الزحف
         crawlDelayValue = parseInt(crawlDelayInput.value, 10);
         if (isNaN(crawlDelayValue) || crawlDelayValue < 0) {
-            crawlDelayValue = 100; // Fallback
+            crawlDelayValue = 100;
         }
         maxDepthValue = parseInt(maxDepthInput.value, 10);
         if (isNaN(maxDepthValue) || maxDepthValue < 0) {
-            maxDepthValue = 10; // Fallback
+            maxDepthValue = 10;
         }
-        // <<< END: LOGIC RESTORED FROM OLD WORKING VERSION >>>
 
         crawledUrls = new Set();
         queue = [{ url: startUrl, depth: 0 }];
@@ -171,7 +168,8 @@
         progressSection.classList.remove('d-none');
         resultsSection.classList.add('d-none');
         exportCsvBtn.classList.add('d-none');
-        if (visualizerActionsContainer) { // Check if the element exists
+        // <<< تم الدمج: إخفاء حاوية الأزرار الجديدة عند البدء >>>
+        if (visualizerActionsContainer) {
             visualizerActionsContainer.classList.add('d-none');
         }
         startCrawlBtn.disabled = true;
@@ -179,7 +177,7 @@
 
         return true;
     }
-    
+
     function parseRobotsTxt(content) {
         const rules = { allow: [], disallow: [] };
         let agentBlock = false;
@@ -196,7 +194,7 @@
         });
         return rules;
     }
-    
+
     function isAllowedByRobots(url) {
         if (!robotsRules) return true;
         const path = new URL(url).pathname;
@@ -226,11 +224,10 @@
             setTimeout(processQueue, 1);
             return;
         }
-
         crawledUrls.add(currentUrl);
         updateProgress(crawledUrls.size, crawledUrls.size + queue.length, `المرحلة الأولى: يتم الآن فحص ${currentUrl}`);
         try {
-            const proxyUrl = `https://throbbing-dew-da3c.amr-omar304.workers.dev/?url=${encodeURIComponent(currentUrl)}`;
+            const proxyUrl = `${PROXY_URL}${encodeURIComponent(currentUrl)}`;
             const response = await fetch(proxyUrl);
             await analyzeResponse(response, currentUrl, depth);
         } catch (error) {
@@ -242,7 +239,7 @@
     }
 
     async function analyzeResponse(response, currentUrl, depth) {
-        const pageInfo = { status: response.status, depth, title: '[لا يوجد عنوان]', description: '', h1s: [], canonical: normalizeUrl(currentUrl), isNoIndex: false, isNoFollow: false, wordCount: 0, outgoingLinks: [], incomingLinkCount: 0 };
+        const pageInfo = { status: response.status, depth: depth, title: '[لا يوجد عنوان]', description: '', h1s: [], canonical: normalizeUrl(currentUrl), isNoIndex: false, isNoFollow: false, wordCount: 0, outgoingLinks: [], incomingLinkCount: 0 };
         if (response.ok && (response.headers.get('Content-Type') || '').includes('text/html')) {
             const html = await response.text();
             const parser = new DOMParser();
@@ -280,13 +277,11 @@
                 const absoluteUrl = normalizeUrl(new URL(href, sourceUrl).href);
                 allFoundLinks.add(absoluteUrl);
                 pageInfo.outgoingLinks.push({ url: absoluteUrl, type: absoluteUrl.startsWith(origin) ? 'لينك داخلى' : 'لينك خارجى', anchor: a.innerText.trim() || '[نص فارغ]' });
-                // <<< START: LOGIC RESTORED FROM OLD WORKING VERSION >>>
                 if (absoluteUrl.startsWith(origin) && !crawledUrls.has(absoluteUrl) && !queue.some(q => q.url === absoluteUrl)) {
                     if ((depth + 1) <= maxDepthValue) {
                         queue.push({ url: absoluteUrl, depth: depth + 1 });
                     }
                 }
-                // <<< END: LOGIC RESTORED FROM OLD WORKING VERSION >>>
             } catch (e) { console.warn(`رابط غير صالح في الصفحة ${sourceUrl}: ${href}`); }
         });
         doc.querySelectorAll('img[src]').forEach(img => {
@@ -310,31 +305,23 @@
         buildFinalReport();
         displayResults();
 
-        // <<< START: NEW LOGIC FOR SMART LINKING >>>
+        // <<< تم الدمج: تفعيل منطق الربط الذكي بعد اكتمال الفحص >>>
         const visualizerData = generateVisualizerData();
         if (visualizerData) {
             if (visualizerActionsContainer) visualizerActionsContainer.classList.remove('d-none');
             if (copyVisualizerDataBtn) {
                 copyVisualizerDataBtn.onclick = () => {
                     copyToClipboard(visualizerData);
-                    // Also save to sessionStorage for direct navigation
-                    try {
-                        sessionStorage.setItem('ai8v_crawl_data', visualizerData);
-                    } catch (e) {
-                         console.error("Could not write to sessionStorage:", e);
-                         showAppToast('فشل حفظ البيانات للجلسة الحالية، قد يكون حجمها كبيرًا.', 'error');
-                    }
+                    try { sessionStorage.setItem('ai8v_crawl_data', visualizerData); } 
+                    catch (e) { console.error("Could not write to sessionStorage:", e); }
                 };
             }
-             // Always save to session storage for the "Open Visualizer" link to work seamlessly
-            try {
-                sessionStorage.setItem('ai8v_crawl_data', visualizerData);
-            } catch (e) {
+            try { sessionStorage.setItem('ai8v_crawl_data', visualizerData); } 
+            catch (e) {
                 console.error("Could not write to sessionStorage:", e);
-                showAppToast('فشل حفظ البيانات للجلسة الحالية، قد يكون حجمها كبيرًا.', 'error');
+                showAppToast('فشل حفظ البيانات للجلسة، قد يكون حجمها كبيرًا.', 'error');
             }
         }
-        // <<< END: NEW LOGIC FOR SMART LINKING >>>
 
         startCrawlBtn.disabled = false;
         startCrawlBtn.innerHTML = `<i class="bi bi-search ms-2"></i>ابدأ الفحص`;
@@ -345,7 +332,7 @@
     async function checkLinkStatus(url) {
         if (linkStatusCache.has(url)) return;
         try {
-            const proxyUrl = `https://throbbing-dew-da3c.amr-omar304.workers.dev/?url=${encodeURIComponent(url)}`;
+            const proxyUrl = `${PROXY_URL}${encodeURIComponent(url)}`;
             const response = await fetch(proxyUrl, { method: 'HEAD', mode: 'cors' });
             linkStatusCache.set(url, { error: !response.ok, status: response.status });
         } catch (e) {
@@ -361,18 +348,13 @@
         const incomingLinksMap = new Map();
         for (const data of pageData.values()) {
             data.outgoingLinks.forEach(link => {
-                if (link.url.startsWith(origin)) {
-                    incomingLinksMap.set(link.url, (incomingLinksMap.get(link.url) || 0) + 1);
-                }
+                if (link.url.startsWith(origin)) incomingLinksMap.set(link.url, (incomingLinksMap.get(link.url) || 0) + 1);
             });
         }
-        for (const data of pageData.values()) {
-            data.incomingLinkCount = incomingLinksMap.get(data.canonical) || 0;
-        }
+        for (const data of pageData.values()) data.incomingLinkCount = incomingLinksMap.get(data.canonical) || 0;
 
         const titleMap = new Map();
         const descriptionMap = new Map();
-
         for (const [canonicalUrl, data] of pageData.entries()) {
             if (data.status >= 400) addIssue(canonicalUrl, data, 'خطأ زحف', SEVERITY.CRITICAL, { text: `الصفحة الأساسية أعادت رمز الحالة ${data.status}` });
             data.outgoingLinks.forEach(link => {
@@ -440,10 +422,7 @@
     }
 
     function exportToCsv() {
-        if (!finalReport || finalReport.length === 0) {
-            showAppToast('لا توجد بيانات لتصديرها.', 'error');
-            return;
-        }
+        if (!finalReport || finalReport.length === 0) { showAppToast('لا توجد بيانات لتصديرها.', 'error'); return; }
         const headers = ["الأهمية", "نوع المشكلة", "الصفحة المصدر (الأساسية)", "التفاصيل", "عنوان الصفحة", "حالة الصفحة", "عدد الكلمات", "الروابط الصادرة", "الروابط الواردة", "عمق الصفحة"];
         const escapeCsvField = (field) => { const str = String(field ?? ''); if (str.includes(',') || str.includes('"') || str.includes('\n')) { return `"${str.replace(/"/g, '""')}"`; } return str; };
         const formatDetailsForCsv = (issue) => {
@@ -480,7 +459,7 @@
         updateProgress(0, 1, 'المرحلة 0: جارِ جلب وفهم ملف robots.txt...');
         try {
             const robotsUrl = `${origin}/robots.txt`;
-            const proxyUrl = `https://throbbing-dew-da3c.amr-omar304.workers.dev/?url=${encodeURIComponent(robotsUrl)}`;
+            const proxyUrl = `${PROXY_URL}${encodeURIComponent(robotsUrl)}`;
             const response = await fetch(proxyUrl);
             if (response.ok) {
                 robotsRules = parseRobotsTxt(await response.text());
