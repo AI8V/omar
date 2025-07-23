@@ -79,7 +79,12 @@
             return;
         }
         navigator.clipboard.writeText(text).then(() => {
-            showAppToast('تم نسخ بيانات الخريطة بنجاح! يمكنك الآن لصقها في المحلل البصري.', 'success', 'تم النسخ');
+            if (copyVisualizerDataBtn) {
+            copyVisualizerDataBtn.classList.remove('btn-success');
+            copyVisualizerDataBtn.classList.add('btn-secondary');
+            copyVisualizerDataBtn.innerHTML = `<i class="bi bi-clipboard-data-fill ms-2"></i>نسخ بيانات الخريطة`;
+            copyVisualizerDataBtn.disabled = false;
+        }
         }).catch(err => {
             console.error('Failed to copy text: ', err);
             showAppToast('فشل النسخ إلى الحافظة.', 'error');
