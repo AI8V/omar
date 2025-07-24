@@ -443,16 +443,33 @@
     }
 
     /**
-     * Checks the HTTP status of a single URL.
+     * [تم التعديل] Checks the HTTP status of a single URL with a timeout.
      */
     async function checkLinkStatus(url) {
         if (linkStatusCache.has(url)) return;
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 ثواني مهلة
+
         try {
             const proxyUrl = `https://throbbing-dew-da3c.amr-omar304.workers.dev/?url=${encodeURIComponent(url)}`;
-            const response = await fetch(proxyUrl, { method: 'HEAD', mode: 'cors' });
+            const response = await fetch(proxyUrl, {
+                method: 'HEAD',
+                mode: 'cors',
+                signal: controller.signal
+            });
             linkStatusCache.set(url, { error: !response.ok, status: response.status });
         } catch (e) {
-            linkStatusCache.set(url, { error: true, status: 'Error: Host' });
+            if (e.name === 'AbortError') {
+                // حدث هذا بسبب انتهاء المهلة الزمنية
+                linkStatusCache.set(url, { error: true, status: 'Error: Timeout' });
+            } else {
+                // خطأ آخر في الشبكة أو الاتصال
+                linkStatusCache.set(url, { error: true, status: 'Error: Host' });
+            }
+        } finally {
+            // قم بإلغاء المهلة الزمنية في كل الأحوال لتجنب تسريب الموارد
+            clearTimeout(timeoutId);
         }
     }
 
