@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html data-bs-theme="auto" lang="ar" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    
+    <title>Content Engine: Architectural Content Generator | Ai8V</title>
+    <link rel="canonical" href="https://ai8v.com/ContentEngine/">
+    <meta property="og:url" content="https://ai8v.com/ContentEngine/">
+    
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://throbbing-dew-da3c.amr-omar304.workers.dev https://api.allorigins.win; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com; img-src 'self' data: https://images.example.com; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; object-src 'none';">
+    
+    <meta name="twitter:title" content="Content Engine: Architectural Content Generator | Ai8V">
+    <meta property="og:image" content="https://ai8v.com/assets/img/og-content-engine.jpg"> 
+    <meta property="og:title" content="Content Engine: Architectural Content Generator | Ai8V">
+    <meta name="description" content="حوّل المحتوى الخام إلى صفحات ويب ذات بنية هندسية مثالية. تستخدم أداة Content Engine من Ai8V بروتوكولات ذكية لضمان جودة الكود، الأداء الفائق، وتوافق كامل مع SEO.">
+    <meta property="og:type" content="website">
+    <meta property="og:description" content="حوّل المحتوى الخام إلى صفحات ويب ذات بنية هندسية مثالية. تستخدم أداة Content Engine من Ai8V بروتوكولات ذكية لضمان جودة الكود، الأداء الفائق، وتوافق كامل مع SEO.">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="An illustration of Ai8V's Content Engine tool showing a blueprint transforming into a well-structured webpage.">
+    <meta name="twitter:image:alt" content="An illustration of Ai8V's Content Engine tool showing a blueprint transforming into a well-structured webpage.">
+    <meta name="twitter:image" content="https://ai8v.com/assets/img/og-content-engine.jpg"> 
+    <meta name="twitter:description" content="حوّل المحتوى الخام إلى صفحات ويب ذات بنية هندسية مثالية. تستخدم أداة Content Engine من Ai8V بروتوكولات ذكية لضمان جودة الكود، الأداء الفائق، وتوافق كامل مع SEO.">
+    
+    <script>
+        (function() {
+
+            // JavaScript snippet handling Dark/Light mode switching
+
+            const getStoredTheme = () => localStorage.getItem('theme');
+            const setStoredTheme = theme => localStorage.setItem('theme', theme);
+            const forcedTheme = document.documentElement.getAttribute('data-bss-forced-theme');
+
+            const getPreferredTheme = () => {
+
+                if (forcedTheme) return forcedTheme;
+
+                const storedTheme = getStoredTheme();
+                if (storedTheme) {
+                    return storedTheme;
+                }
+
+                const pageTheme = document.documentElement.getAttribute('data-bs-theme');
+
+                if (pageTheme) {
+                    return pageTheme;
+                }
+
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+
+            const setTheme = theme => {
+                if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.setAttribute('data-bs-theme', 'dark');
+                } else {
+                    document.documentElement.setAttribute('data-bs-theme', theme);
+                }
+            }
+
+            setTheme(getPreferredTheme());
+
+            const showActiveTheme = (theme, focus = false) => {
+                const themeSwitchers = [].slice.call(document.querySelectorAll('.theme-switcher'));
+
+                if (!themeSwitchers.length) return;
+
+                document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+                    element.classList.remove('active');
+                    element.setAttribute('aria-pressed', 'false');
+                });
+
+                for (const themeSwitcher of themeSwitchers) {
+
+                    const btnToActivate = themeSwitcher.querySelector('[data-bs-theme-value="' + theme + '"]');
+
+                    if (btnToActivate) {
+                        btnToActivate.classList.add('active');
+                        btnToActivate.setAttribute('aria-pressed', 'true');
+                    }
+                }
+            }
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                const storedTheme = getStoredTheme();
+                if (storedTheme !== 'light' && storedTheme !== 'dark') {
+                    setTheme(getPreferredTheme());
+                }
+            });
+
+            window.addEventListener('DOMContentLoaded', () => {
+                showActiveTheme(getPreferredTheme());
+
+                document.querySelectorAll('[data-bs-theme-value]')
+                    .forEach(toggle => {
+                        toggle.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const theme = toggle.getAttribute('data-bs-theme-value');
+                            setStoredTheme(theme);
+                            setTheme(theme);
+                            showActiveTheme(theme);
+                        })
+                    })
+            });
+        })();
+    </script>
+    
+    <!-- Favicons and Manifest -->
+    <link rel="apple-touch-icon" type="image/png" sizes="180x18R" href="../assets/img/favicon/fav180.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon/fav16.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon/fav16D.png" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon/fav32.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon/fav32D.png" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/png" sizes="180x180" href="../assets/img/favicon/fav180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/img/favicon/fav192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="../assets/img/favicon/fav512.png">
+    
+    <!-- CSS and Fonts -->
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="manifest" href="../manifest.json" crossorigin="use-credentials">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "@id": "https://ai8v.com/ContentEngine/#software",
+          "name": "Content Engine: Architectural Content Generator",
+          "operatingSystem": "Web-based",
+          "applicationCategory": "DeveloperApplication",
+          "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "USD"
+          },
+          "description": "حوّل المحتوى الخام إلى صفحات ويب ذات بنية هندسية مثالية. تستخدم أداة Content Engine من Ai8V بروتوكولات ذكية لضمان جودة الكود، الأداء الفائق، وتوافق كامل مع SEO.",
+          "url": "https://ai8v.com/ContentEngine/",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Ai8V | Mind & Machine",
+            "@id": "https://ai8v.com/#organization" 
+          },
+          "isPartOf": {
+            "@id": "https://ai8v.com/#software"
+          }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="theme-switcher dropdown position-fixed top-0 start-0 m-3 mt-5 ps-0 pt-2 pb-0 mb-0" style="z-index:1031;"><button class="btn btn-link dropdown-toggle ps-0 pe-0 pb-0 pt-0" aria-expanded="false" data-bs-toggle="dropdown" aria-label="التبديل بين الوضع الفاتح والغامق" style="color:var(--bs-body-color);" title="التبديل بين الوضع الفاتح و الغامق" type="button"><span aria-hidden="true" class="bi bi-sun-fill mb-1"></span></button>
+        <div class="dropdown-menu"><button aria-pressed="false" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" type="button"><span aria-hidden="true" class="bi bi-sun-fill opacity-50 ms-2"></span>Light</button><button class="active dropdown-item d-flex align-items-center" aria-pressed="true" data-bs-theme-value="dark" type="button"><span aria-hidden="true" class="bi bi-moon-stars-fill opacity-50 ms-2"></span>Dark</button><button aria-pressed="false" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" type="button"><span aria-hidden="true" class="bi bi-circle-half opacity-50 ms-2"></span>Auto</button></div>
+    </div>
+    <nav class="navbar navbar-expand-lg sticky-top bg-body shadow-sm">
+    <div class="container"><a class="navbar-brand" href="/ContentEngine/"><i class="bi bi-cpu-fill ms-2" aria-hidden="true"></i>Content Engine </a><span class="fw-bold mx-auto navbar-text"><i class="bi bi-gem ms-2" aria-hidden="true"></i>Ai8V | Mind &amp; Machine </span>
+        <div class="btn-group" role="group" aria-label="مجموعة أزرار أدوات Ai8V"><a class="btn btn-primary border rounded" role="button" href="/" title="الانتقال إلى أداة مدقق الموقع الشامل"><span class="bi bi-shield-check ms-2" aria-hidden="true"></span>مدقق الموقع </a>
+            <div class="border rounded btn-group" role="group"><button id="toolsMenu" class="btn btn-primary dropdown-toggle dropdown-toggle-split me-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="عرض باقي أدوات Ai8V"><span class="visually-hidden">Toggle Dropdown</span></button>
+                <ul class="border-2 shadow-lg dropdown-menu" aria-labelledby="toolsMenu">
+                    <li><span class="text-center dropdown-header">أدوات الإنتاج والتحليل</span></li>
+                    <li><a class="d-flex align-items-center dropdown-item" href="/ContentEngine/"><span class="bi bi-cpu-fill opacity-75 ms-2" aria-hidden="true"></span>مُحرّك المحتوى </a></li>
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <li><span class="text-center dropdown-header">أدوات التحليل المتقدم</span></li>
+                    <li><a class="d-flex align-items-center dropdown-item" href="/SiteVisualizerLab/"><span class="bi bi-diagram-3-fill opacity-75 ms-2" aria-hidden="true"></span>المحلل البصري </a></li>
+                    <li><a class="d-flex align-items-center dropdown-item" href="/LogFileAnalyzer/"><span class="bi bi-server opacity-75 ms-2" aria-hidden="true"></span>محلل السجلات </a></li>
+                    <li><a class="d-flex align-items-center dropdown-item" href="/SchemaArchitect/"><span class="bi bi-bounding-box-circles opacity-75 ms-2" aria-hidden="true"></span>مهندس السكيما </a></li>
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <li><a class="fw-bold d-flex align-items-center dropdown-item" href="/"><span class="bi bi-house-door-fill opacity-75 ms-2" aria-hidden="true"></span>مدقق الموقع (الرئيسي) </a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    </nav>
+    <div class="container">
+        <main class="py-4" aria-labelledby="main-heading">
+            <div class="text-center mb-4">
+                <!-- 1. تم إضافة عنوان مرئي h1 -->
+                <h1 id="main-heading" class="display-5">The Maestro Cockpit</h1>
+                <p class="lead text-muted">قمرة القيادة الاستراتيجية لتوليد المحتوى المعماري</p>
+            </div>
+            
+            <!-- استخدام section لتغليف الأجزاء الرئيسية من الواجهة -->
+            <section aria-labelledby="inputs-section-heading">
+                <h2 id="inputs-section-heading" class="visually-hidden">منطقة إدخال البيانات</h2>
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <div class="d-flex flex-column gap-4">
+                            <!-- 2. تحويل رؤوس البطاقات إلى h3 داخل بنية section -->
+                            <div class="card shadow-sm" role="region" aria-labelledby="main-inputs-heading">
+                                <div class="card-header">
+                                    <h3 id="main-inputs-heading" class="h6 fw-bold mb-0">
+                                        <span class="bi bi-pencil-square me-2" aria-hidden="true"></span>
+                                        الخطوة 1: أدخل المدخلات الرئيسية
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="rawContentInput">النص الخام (THE_SOUL)</label>
+                                        <textarea class="form-control" id="rawContentInput" placeholder="الصق محتوى المقال الكامل هنا..." rows="8" aria-required="true" aria-describedby="rawContentHelp"></textarea>
+                                        <div id="rawContentHelp" class="form-text small">هذا الحقل إلزامي لبدء عملية التوليد.</div>
+                                    </div>
+                                    <div class="mb-0">
+                                        <label class="form-label" for="assetManifestInput">قائمة الأصول (ASSET_MANIFEST) - اختياري</label>
+                                        <textarea id="assetManifestInput" class="form-control" placeholder="- IMAGE: image.jpg | alt: ... | context: ..." rows="3" dir="ltr"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card shadow-sm" role="region" aria-labelledby="dna-selection-heading">
+                                <div class="card-header">
+                                    <h3 id="dna-selection-heading" class="h6 fw-bold mb-0">
+                                        <span class="bi bi-check2-square me-2" aria-hidden="true"></span>
+                                        الخطوة 2: حدد المكونات المطلوبة (TEMPLATE_DNA)
+                                    </h3>
+                                </div>
+                                <div class="card-body" id="dna-container" style="max-height:250px;overflow-y:auto;">
+                                    <!-- سيتم ملء مربعات الاختيار هنا بواسطة JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="card h-100 shadow-sm" role="region" aria-labelledby="output-section-heading">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h3 id="output-section-heading" class="h6 fw-bold mb-0">
+                                    <span class="bi bi-clipboard-check me-2" aria-hidden="true"></span>
+                                    الخطوة 3: احصل على بروتوكول "Genesis" جاهز
+                                </h3>
+                                <button class="btn btn-danger btn-sm" id="copyPromptBtn" disabled title="نسخ البروتوكول النهائي">
+                                    <!-- 3. تحويل <i> إلى <span> -->
+                                    <span class="bi bi-clipboard-x me-1" aria-hidden="true"></span>
+                                    نسخ البروتوكول
+                                </button>
+                            </div>
+                            <div class="card-body p-0 h-100">
+                                <textarea class="border-0 form-control h-100" dir="ltr" id="generatedPromptOutput" placeholder="سيظهر البرومبت النهائي هنا بعد التحليل..." readonly="" aria-live="polite" aria-label="البروتوكول النهائي المولد"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mt-4" aria-labelledby="actions-section-heading">
+                <h2 id="actions-section-heading" class="visually-hidden">أزرار الإجراءات الرئيسية</h2>
+                <div class="row">
+                    <div class="col-12 d-grid d-md-flex justify-content-md-center gap-3">
+                        <button class="btn btn-outline-info btn-lg" type="button" id="getMaestroProtocolBtn" title="نسخ بروتوكول المايسترو لبدء عملية التحليل مع نموذج اللغة">
+                            <span class="bi bi-robot me-2" aria-hidden="true"></span>
+                            احصل على بروتوكول "المايسترو"
+                        </button>
+                        <button class="btn btn-primary btn-lg flex-grow-1" type="button" id="generateBtn" title="بدء عملية تجميع بروتوكول جينيسيس بناءً على المدخلات">
+                            <span class="spinner-border spinner-border-sm me-2" role="status" id="generateBtnSpinner" aria-hidden="true" style="display:none;"></span>
+                            <span id="generateBtnIcon" class="bi bi-gear-wide-connected me-2" aria-hidden="true"></span>
+                            <span>قم بتوليد بروتوكول "Genesis"</span>
+                        </button>
+                        <button class="btn btn-outline-danger btn-lg" type="button" id="clearBtn" title="مسح جميع المدخلات والمخرجات للبدء من جديد">
+                            <span class="bi bi-eraser me-2" aria-hidden="true"></span>
+                            مسح الكل
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+    <script src="../assets/bootstrap/js/bootstrap.min.js" defer></script>
+    <script src="../assets/js/ContentEngine/toast-utility.js" defer></script>
+    <script src="../assets/js/ContentEngine/genesis-protocol-generator.js" defer></script>
+    <script src="../assets/js/ContentEngine/maestro-cockpit.js" defer></script>
+</body>
+
+</html>
