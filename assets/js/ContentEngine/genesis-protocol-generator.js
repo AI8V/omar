@@ -9,7 +9,7 @@ const GenesisProtocolGenerator = (function () {
 
     // 1. القوالب الثابتة (البروتوكولات)
     const MAESTRO_GENESIS_TEMPLATE = `GENESIS PROTOCOL
-GENESIS PROTOCOL
+
 TO: Large Language Model (LLM) - designated as "The Architect"
 FROM: The Maestro (via AI Tech Lead & Chief Strategist)
 SUBJECT:  - Architect a definitive HTML <main> component by synthesizing superior UX/UI design patterns with Ai8V Schema Architect compliant class hooks.
