@@ -46,28 +46,18 @@ INSTRUCTIONS: To execute, copy this entire protocol and fill in the placeholders
 --- END OF INPUT BLOCK ---
 
 Phase 1: Holistic Analysis & Architectural Planning
-
-**PRIMARY DIRECTIVE: Your goal is to function as a "Faithful Enhancer". You must preserve 100% of the original content from `THE_SOUL` while intelligently enriching it. DO NOT SUMMARIZE OR OMIT ANY ORIGINAL PARAGRAPHS.**
-
-1.  **Foundational Analysis (Internal Thought Process):**
-    *   First, fully understand the text in `THE_SOUL`, the available components in `TEMPLATE_DNA`, and the assets in `ASSET_MANIFEST`.
-    *   Mentally identify a reasonable number of logical opportunities (typically 2-5, depending on the article's length) to add value, such as expanding a section, adding a practical list, or creating a new relevant subsection.
-
-2.  **Content Synthesis & Structural Mapping:**
-    *   **Synthesize the final content:** Begin with the original `THE_SOUL` text as your base and seamlessly integrate your value-add expansions. The final output must be a single, cohesive, and expanded article.
-    *   **Content & Asset Integration:** Analyze the final synthesized content and map its chunks to the most effective Bootstrap components from the blueprints. As you do this, place the images from `ASSET_MANIFEST` in the most logical positions within the newly expanded content.
-
-3.  **Interactive Layer Construction:**
-    *   **Architect the Interactive Systems:** Based on the final, expanded structure, your next step is to build the interactive layer. This includes:
-        a.  **Dynamic Scrollspy System:** Architect the mandatory Bootstrap Scrollspy system and its corresponding navigational hub (`<nav>`), ensuring all sections (original and new) are included.
-        b.  **Internal Anchor Text Reinforcement (CRITICAL):**
-            i.  **Detect:** Scan the complete, synthesized text to identify between 2 and 4 of the most critical anchor phrases that reference internal sections.
-            ii. **Enhance with Precision:** For each detected phrase, you must replace the standard text or links with a fully interactive anchor tag. This tag **MUST** adhere to the following strict specifications:
-                -   Include `aria-controls` and `aria-expanded="false"` for accessibility.
-                -   Trigger `.show` on collapse targets where applicable.
-                -   Use Bootstrap utility classes: `fw-bold`, `text-primary`, and `scroll-link`.
-                -   Optionally support `data-scroll-target` for smooth navigation integration.
-            iii. **Ensure Functionality:** You must guarantee that all enhanced anchors are fully functional within both the Scrollspy and Collapse components, without causing layout shifts or interaction glitches.
+1. Content & Asset Analysis: Analyze THE_SOUL and the ASSET_MANIFEST.
+2. Intelligent Asset Placement: Determine the optimal placement for visual assets.
+3. Component Strategy: Map content chunks to the most effective Bootstrap 5.3 components from the blueprints below, using the context provided in THE_ENVIRONMENT.
+4. Interactive System Design: Architect the mandatory Bootstrap Scrollspy system.
+5. Internal Anchor Text Reinforcement:
+   - Detect and enhance 1-3 critical anchor phrases within THE_SOUL that reference internal sections.
+   - Replace standard \`<a href="#target">\` tags with enhanced interactive anchors that:
+       • Include \`aria-controls\` and \`aria-expanded\` for accessibility.
+       • Trigger \`.show\` on collapse targets where applicable.
+       • Use Bootstrap utility classes like \`fw-bold\`, \`text-primary\`, and \`scroll-link\`.
+       • Optionally support \`data-scroll-target\` for smooth navigation integration.
+   - Ensure all enhanced anchors are fully functional within both ScrollSpy and Collapse components, without causing layout shifts or interaction glitches.
 
 🏗️ Phase 2: Architectural Blueprints (The Art of Construction)
 {{BLUEPRINTS}}
