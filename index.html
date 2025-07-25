@@ -183,17 +183,24 @@
     <nav class="navbar navbar-expand-lg sticky-top bg-body shadow-sm">
         <div class="container"><a class="navbar-brand" href="/"><i class="bi bi-server ms-2" aria-hidden="true"></i>Site Auditor &amp; Health Scanner</a><span class="fw-bold mx-auto navbar-text"><i class="bi bi-gem ms-2" aria-hidden="true"></i>Ai8V | Mind &amp; Machine</span>
             <div class="btn-group" role="group" aria-label="مجموعة أزرار أدوات Ai8V"><a class="btn btn-primary border rounded" role="button" href="/" title="الانتقال إلى أداة مدقق الموقع الشامل"><span class="bi bi-shield-check ms-2" aria-hidden="true"></span>مدقق الموقع </a>
-                <div class="border rounded btn-group" role="group"><button class="btn btn-primary dropdown-toggle dropdown-toggle-split me-1" id="toolsMenu" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="عرض باقي أدوات Ai8V"><span class="visually-hidden">Toggle Dropdown</span></button>
-                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-start" aria-labelledby="toolsMenu">
-                        <li><span class="text-center dropdown-header">أدوات التحليل المتقدم</span></li>
-                        <li><a class="d-flex align-items-center dropdown-item" href="/SiteVisualizerLab/"><span class="bi bi-diagram-3-fill opacity-75 ms-2" aria-hidden="true"></span>المحلل البصري</a></li>
-                        <li><a class="d-flex align-items-center dropdown-item" href="/LogFileAnalyzer/"><span class="bi bi-server opacity-75 ms-2" aria-hidden="true"></span>محلل السجلات</a></li>
-                        <li><a class="d-flex align-items-center dropdown-item" href="/SchemaArchitect/"><span class="bi bi-bounding-box-circles opacity-75 ms-2" aria-hidden="true"></span>مهندس السكيما</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="fw-bold d-flex align-items-center dropdown-item" href="/"><span class="bi bi-house-door-fill opacity-75 ms-2" aria-hidden="true"></span>مدقق الموقع (الرئيسي)</a></li>
-                    </ul>
-                </div>
+            <div class="border rounded btn-group" role="group"><button id="toolsMenu" class="btn btn-primary dropdown-toggle dropdown-toggle-split me-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="عرض باقي أدوات Ai8V"><span class="visually-hidden">Toggle Dropdown</span></button>
+                <ul class="border-2 shadow-lg dropdown-menu" aria-labelledby="toolsMenu">
+                    <li><span class="text-center dropdown-header">أدوات الإنتاج والتحليل</span></li>
+                    <li><a class="d-flex align-items-center dropdown-item" href="/ContentEngine/"><span class="bi bi-cpu-fill opacity-75 ms-2" aria-hidden="true"></span>مُحرّك المحتوى </a></li>
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <li><span class="text-center dropdown-header">أدوات التحليل المتقدم</span></li>
+                    <li><a class="d-flex align-items-center dropdown-item" href="/SiteVisualizerLab/"><span class="bi bi-diagram-3-fill opacity-75 ms-2" aria-hidden="true"></span>المحلل البصري </a></li>
+                    <li><a class="d-flex align-items-center dropdown-item" href="/LogFileAnalyzer/"><span class="bi bi-server opacity-75 ms-2" aria-hidden="true"></span>محلل السجلات </a></li>
+                    <li><a class="d-flex align-items-center dropdown-item" href="/SchemaArchitect/"><span class="bi bi-bounding-box-circles opacity-75 ms-2" aria-hidden="true"></span>مهندس السكيما </a></li>
+                    <li>
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <li><a class="fw-bold d-flex align-items-center dropdown-item" href="/"><span class="bi bi-house-door-fill opacity-75 ms-2" aria-hidden="true"></span>مدقق الموقع (الرئيسي) </a></li>
+                </ul>
             </div>
+        </div>
         </div>
     </nav>
     <div class="theme-switcher dropdown position-fixed top-0 start-0 m-3 mt-5 ps-0 pt-2 pb-0 mb-0" style="z-index:1031;"><button class="btn btn-link dropdown-toggle ps-0 pe-0 pb-0 pt-0" aria-expanded="false" data-bs-toggle="dropdown" aria-label="التبديل بين الوضع الفاتح والغامق" style="color:var(--bs-body-color);" title="التبديل بين الوضع الفاتح و الغامق" type="button"><span aria-hidden="true" class="bi bi-sun-fill mb-1"></span></button>
