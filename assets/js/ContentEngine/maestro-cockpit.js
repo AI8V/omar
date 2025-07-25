@@ -66,7 +66,24 @@ You do not generate HTML. You generate the master plan for the Architect AI.
 
 
 ✅ FINAL OUTPUT
-Your only output is a single, complete block of text: The finalized Genesis Protocol prompt, intelligently customized and ready for the Architect AI.
+Your ONLY output will be a clean, structured block of text containing the three required inputs for the next stage. Do NOT generate the full "Genesis Protocol". Your entire response should be ONLY the following structure, with the placeholders filled with your analysis:
+
+"""
+[PRIMARY INPUT - THE_SOUL]:
+---
+(Your generated and polished Arabic content based on Phase 1 goes here.)
+---
+   
+[SECONDARY INPUT - ASSET_MANIFEST]:
+---
+(Your generated asset list based on Phase 3 goes here, in the format "- IMAGE: ... | alt: ... | context: ...")
+---
+
+[QUINARY INPUT - TEMPLATE_DNA]:
+---
+(Your detected component list from Phase 2 goes here, in the format "- COMPONENT_NAME")
+---
+"""
 `;
 
     // ===========================================
