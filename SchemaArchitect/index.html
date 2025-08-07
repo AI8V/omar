@@ -20,87 +20,6 @@
     <meta name="twitter:image:alt" content="An illustration of Ai8V's Schema Architect tool automatically generating structured data code from webpage content.">
     <meta name="twitter:image" content="https://ai8v.com/assets/img/og-schema-architect.jpg">
     <meta name="twitter:description" content="أنشئ بيانات Schema منظمة (JSON-LD) لموقعك بذكاء. تقوم أداة Schema Architect من Ai8V بتحليل محتوى صفحتك واقتراح أفضل أنواع السكيما تلقائيًا.">
-    <script>
-        (function() {
-
-            // JavaScript snippet handling Dark/Light mode switching
-
-            const getStoredTheme = () => localStorage.getItem('theme');
-            const setStoredTheme = theme => localStorage.setItem('theme', theme);
-            const forcedTheme = document.documentElement.getAttribute('data-bss-forced-theme');
-
-            const getPreferredTheme = () => {
-
-                if (forcedTheme) return forcedTheme;
-
-                const storedTheme = getStoredTheme();
-                if (storedTheme) {
-                    return storedTheme;
-                }
-
-                const pageTheme = document.documentElement.getAttribute('data-bs-theme');
-
-                if (pageTheme) {
-                    return pageTheme;
-                }
-
-                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            }
-
-            const setTheme = theme => {
-                if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    document.documentElement.setAttribute('data-bs-theme', 'dark');
-                } else {
-                    document.documentElement.setAttribute('data-bs-theme', theme);
-                }
-            }
-
-            setTheme(getPreferredTheme());
-
-            const showActiveTheme = (theme, focus = false) => {
-                const themeSwitchers = [].slice.call(document.querySelectorAll('.theme-switcher'));
-
-                if (!themeSwitchers.length) return;
-
-                document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
-                    element.classList.remove('active');
-                    element.setAttribute('aria-pressed', 'false');
-                });
-
-                for (const themeSwitcher of themeSwitchers) {
-
-                    const btnToActivate = themeSwitcher.querySelector('[data-bs-theme-value="' + theme + '"]');
-
-                    if (btnToActivate) {
-                        btnToActivate.classList.add('active');
-                        btnToActivate.setAttribute('aria-pressed', 'true');
-                    }
-                }
-            }
-
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-                const storedTheme = getStoredTheme();
-                if (storedTheme !== 'light' && storedTheme !== 'dark') {
-                    setTheme(getPreferredTheme());
-                }
-            });
-
-            window.addEventListener('DOMContentLoaded', () => {
-                showActiveTheme(getPreferredTheme());
-
-                document.querySelectorAll('[data-bs-theme-value]')
-                    .forEach(toggle => {
-                        toggle.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            const theme = toggle.getAttribute('data-bs-theme-value');
-                            setStoredTheme(theme);
-                            setTheme(theme);
-                            showActiveTheme(theme);
-                        })
-                    })
-            });
-        })();
-    </script>
     <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../assets/img/favicon/fav180.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon/fav16.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon/fav16D.png" media="(prefers-color-scheme: dark)">
@@ -149,9 +68,20 @@
 
   gtag('config', 'GT-WRCMSF9G');
 </script>
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K2D6DKRK');</script>
+<!-- End Google Tag Manager -->
 </head>
 
 <body>
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2D6DKRK"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
     <nav class="navbar navbar-expand-lg sticky-top bg-body shadow-sm">
         <div class="container"><a class="navbar-brand" href="/SchemaArchitect/"><span class="bi bi-bounding-box-circles ms-2" aria-hidden="true"></span>Schema Architect</a><span class="fw-bold mx-auto navbar-text"><span class="bi bi-gem ms-2" aria-hidden="true"></span>Ai8V | Mind &amp; Machine</span><button class="btn btn-outline-secondary btn-sm mt-2 ms-3" id="empBtn" type="button" title="إدارة كيانات العلامة التجارية"><span class="bi bi-buildings-fill ms-2" aria-hidden="true"></span> إدارة الكيانات</button>
             <div class="btn-group" role="group" aria-label="مجموعة أزرار أدوات Ai8V"><a class="btn btn-primary border rounded" role="button" href="/" title="الانتقال إلى أداة مدقق الموقع الشامل"><span class="bi bi-shield-check ms-2" aria-hidden="true"></span>مدقق الموقع </a>
@@ -372,6 +302,7 @@
 
     <script src="../assets/bootstrap/js/bootstrap.min.js" defer></script>
     <script src="../assets/js/SchemaArchitect/toast-utility.js" defer></script>
+    <script src="../assets/js/theme-switcher.js" defer></script>
     <script src="../assets/js/SchemaArchitect/dynamicPromptGenerator.js" defer></script>
     <script src="../assets/js/SchemaArchitect/entities.js" defer></script>
     <script src="../assets/js/SchemaArchitect/projects.js" defer></script>
