@@ -21,97 +21,6 @@
         <meta name="twitter:image" content="https://ai8v.com/assets/img/og-site-visualizer.jpg">
         <meta property="og:image:alt" content="Promotional image for Ai8V's Site Visualizer tool showing a network graph of a website's structure. The main text reads 'Visualize Your Site's Power', with features listed below: Discover orphan pages, analyze link equity, and build topic clusters.">
         <meta name="twitter:image:alt" content="Promotional image for Ai8V's Site Visualizer tool showing a network graph of a website's structure. The main text reads 'Visualize Your Site's Power', with features listed below: Discover orphan pages, analyze link equity, and build topic clusters.">
-        <script>
-            (function() {
-    
-                // JavaScript snippet handling Dark/Light mode switching
-    
-                const getStoredTheme = () => localStorage.getItem('theme');
-                const setStoredTheme = theme => localStorage.setItem('theme', theme);
-                const forcedTheme = document.documentElement.getAttribute('data-bss-forced-theme');
-    
-                const getPreferredTheme = () => {
-    
-                    if (forcedTheme) return forcedTheme;
-    
-                    const storedTheme = getStoredTheme();
-                    if (storedTheme) {
-                        return storedTheme;
-                    }
-    
-                    const pageTheme = document.documentElement.getAttribute('data-bs-theme');
-    
-                    if (pageTheme) {
-                        return pageTheme;
-                    }
-    
-                    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                }
-    
-                const setTheme = theme => {
-                    if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                        document.documentElement.setAttribute('data-bs-theme', 'dark');
-                    } else {
-                        document.documentElement.setAttribute('data-bs-theme', theme);
-                    }
-                }
-    
-                setTheme(getPreferredTheme());
-    
-                const showActiveTheme = (theme, focus = false) => {
-                    const themeSwitchers = [].slice.call(document.querySelectorAll('.theme-switcher'));
-    
-                    if (!themeSwitchers.length) return;
-    
-                    document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
-                        element.classList.remove('active');
-                        element.setAttribute('aria-pressed', 'false');
-                    });
-    
-                    for (const themeSwitcher of themeSwitchers) {
-    
-                        const btnToActivate = themeSwitcher.querySelector('[data-bs-theme-value="' + theme + '"]');
-    
-                        if (btnToActivate) {
-                            btnToActivate.classList.add('active');
-                            btnToActivate.setAttribute('aria-pressed', 'true');
-                        }
-                    }
-                }
-    
-                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-                    const storedTheme = getStoredTheme();
-                    if (storedTheme !== 'light' && storedTheme !== 'dark') {
-                        setTheme(getPreferredTheme());
-                    }
-                });
-    
-                window.addEventListener('DOMContentLoaded', () => {
-                    showActiveTheme(getPreferredTheme());
-    
-                    document.querySelectorAll('[data-bs-theme-value]')
-                        .forEach(toggle => {
-                            toggle.addEventListener('click', (e) => {
-                                e.preventDefault();
-                                const theme = toggle.getAttribute('data-bs-theme-value');
-                                setStoredTheme(theme);
-                                setTheme(theme);
-                                showActiveTheme(theme);
-                            })
-                        })
-                });
-            })();
-        </script>
-
-        <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=GT-WRCMSF9G"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'GT-WRCMSF9G');
-</script>
         <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../assets/img/favicon/fav180.png">
         <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon/fav16.png">
         <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon/fav16D.png" media="(prefers-color-scheme: dark)">
@@ -151,9 +60,29 @@
               }
             }
         </script>
+        <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=GT-WRCMSF9G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'GT-WRCMSF9G');
+</script>
+        <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K2D6DKRK');</script>
+<!-- End Google Tag Manager -->
     </head>
     
     <body>
+        <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2D6DKRK"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
         <div class="theme-switcher dropdown position-fixed top-0 start-0 m-3 mt-5 ps-0 pt-2 pb-0 mb-0" style="z-index:1031;"><button class="btn btn-link dropdown-toggle ps-0 pe-0 pb-0 pt-0" aria-expanded="false" data-bs-toggle="dropdown" aria-label="التبديل بين الوضع الفاتح والغامق" style="color:var(--bs-body-color);" title="التبديل بين الوضع الفاتح و الغامق" type="button"><span aria-hidden="true" class="bi bi-sun-fill mb-1"></span></button>
         <div class="dropdown-menu"><button aria-pressed="false" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" type="button"><span aria-hidden="true" class="bi bi-sun-fill opacity-50 ms-2"></span>Light</button><button class="active dropdown-item d-flex align-items-center" aria-pressed="true" data-bs-theme-value="dark" type="button"><span aria-hidden="true" class="bi bi-moon-stars-fill opacity-50 ms-2"></span>Dark</button><button aria-pressed="false" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" type="button"><span aria-hidden="true" class="bi bi-circle-half opacity-50 ms-2"></span>Auto</button></div>
         </div>
@@ -256,6 +185,7 @@
         </div>
         <script src="../assets/bootstrap/js/bootstrap.min.js" defer></script>
         <script src="../assets/js/bs-init.js" defer></script>
+        <script src="../assets/js/theme-switcher.js" defer></script>
         <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js" defer></script>
         <script src="../assets/js/SiteVisualizerLab/enhancements.js" defer></script>
         <script src="../assets/js/SiteVisualizerLab/site-visualizer-lab.js" defer></script>
