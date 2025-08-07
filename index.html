@@ -29,87 +29,6 @@
             "url": "https://ai8v.com"
         }
     </script>
-    <script>
-        (function() {
-
-            // JavaScript snippet handling Dark/Light mode switching
-
-            const getStoredTheme = () => localStorage.getItem('theme');
-            const setStoredTheme = theme => localStorage.setItem('theme', theme);
-            const forcedTheme = document.documentElement.getAttribute('data-bss-forced-theme');
-
-            const getPreferredTheme = () => {
-
-                if (forcedTheme) return forcedTheme;
-
-                const storedTheme = getStoredTheme();
-                if (storedTheme) {
-                    return storedTheme;
-                }
-
-                const pageTheme = document.documentElement.getAttribute('data-bs-theme');
-
-                if (pageTheme) {
-                    return pageTheme;
-                }
-
-                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            }
-
-            const setTheme = theme => {
-                if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    document.documentElement.setAttribute('data-bs-theme', 'dark');
-                } else {
-                    document.documentElement.setAttribute('data-bs-theme', theme);
-                }
-            }
-
-            setTheme(getPreferredTheme());
-
-            const showActiveTheme = (theme, focus = false) => {
-                const themeSwitchers = [].slice.call(document.querySelectorAll('.theme-switcher'));
-
-                if (!themeSwitchers.length) return;
-
-                document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
-                    element.classList.remove('active');
-                    element.setAttribute('aria-pressed', 'false');
-                });
-
-                for (const themeSwitcher of themeSwitchers) {
-
-                    const btnToActivate = themeSwitcher.querySelector('[data-bs-theme-value="' + theme + '"]');
-
-                    if (btnToActivate) {
-                        btnToActivate.classList.add('active');
-                        btnToActivate.setAttribute('aria-pressed', 'true');
-                    }
-                }
-            }
-
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-                const storedTheme = getStoredTheme();
-                if (storedTheme !== 'light' && storedTheme !== 'dark') {
-                    setTheme(getPreferredTheme());
-                }
-            });
-
-            window.addEventListener('DOMContentLoaded', () => {
-                showActiveTheme(getPreferredTheme());
-
-                document.querySelectorAll('[data-bs-theme-value]')
-                    .forEach(toggle => {
-                        toggle.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            const theme = toggle.getAttribute('data-bs-theme-value');
-                            setStoredTheme(theme);
-                            setTheme(theme);
-                            showActiveTheme(theme);
-                        })
-                    })
-            });
-        })();
-    </script>
     <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="assets/img/favicon/fav180.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon/fav16.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon/fav16D.png" media="(prefers-color-scheme: dark)">
@@ -177,18 +96,14 @@
   ]
 }
 </script>
-
-    <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=GT-WRCMSF9G"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'GT-WRCMSF9G');
 </script>
 </head>
-
 <body>
     <nav class="navbar navbar-expand-lg sticky-lg-top bg-body shadow-sm">
         <div class="container"><a class="navbar-brand" href="/"><i class="bi bi-server ms-2" aria-hidden="true"></i>Site Auditor &amp; Health Scanner</a><span class="fw-bold mx-auto navbar-text"><i class="bi bi-gem ms-2" aria-hidden="true"></i>Ai8V | Mind &amp; Machine</span>
@@ -291,7 +206,18 @@
             <div class="row gx-4 gy-4">
                 <div class="col-md-12 col-lg-3 text-end mb-4 mb-md-0">
                     <h3 class="text-uppercase mb-3 h5"> ادعم المشروع</h3>
-                    <p class="text-muted small" style="line-height:1.8;"> تم بناء هذه الأدوات لتكون متاحة للجميع. أنا أؤمن بمشاركة المعرفة. إذا كنت بحاجة إلى مساعدة متخصصة لموقعك أو لديك استفسار يتطلب خبرة، يمكنك حجز استشارة مدفوعة. </p><a class="btn btn-success mt-2" role="button" id="whatsappBtn" href="https://wa.me/201556450850?text=مرحبًا،%20أرغب%20في%20حجز%20استشارة%20مدفوعة%20بخصوص%20تحسين%20محركات%20البحث%20بعد%20اطلاعي%20على%20أدوات%20Ai8V." target="_blank"><span class="bi bi-whatsapp ms-2" aria-hidden="true"></span> اطلب استشارة مدفوعة <span class="visually-hidden">(يفتح في نافذة جديدة)</span></a>
+                    <p class="text-muted small" style="line-height: 1.8;">
+                    تم بناء هذه الأدوات لتكون متاحة للجميع. أنا أؤمن بمشاركة المعرفة. إذا كنت بحاجة إلى مساعدة متخصصة لموقعك أو لديك استفسار يتطلب خبرة، يمكنك حجز استشارة مدفوعة.
+                    </p>
+                    <a class="btn btn-primary btn-lg mt-2" 
+                            role="button" 
+                            href="#"
+                            data-cal-link="ai8v.com/consultation"
+                            data-cal-namespace="consultation"
+                            data-cal-config='{"layout":"month_view"}'>
+                        <span class="bi bi-calendar-check me-2"></span>
+                        احجز استشارة مدفوعة
+                    </a>
                 </div>
                 <div class="col-md-6 col-lg-3 text-end mb-4 mb-md-0">
                     <h3 class="text-uppercase text-center mb-3 h5">مجموعة الأدوات</h3>
@@ -329,7 +255,8 @@
         </div>
     </div>
     <script src="../assets/bootstrap/js/bootstrap.min.js" defer></script>
-    <script src="../assets/js/bs-init.js" defer></script>
+    <script src="../assets/js/cal.js" defer></script>
+    <script src="../assets/js/theme-switcher.js" defer></script>
     <script src="../assets/js/ghost-crawler.js" defer></script>
 </body>
 
