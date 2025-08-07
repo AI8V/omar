@@ -7,7 +7,15 @@
     <title>Ai8V | All-in-One SEO Analysis &amp; Website Crawler Tool</title>
     <link rel="canonical" href="https://ai8v.com/">
     <meta property="og:url" content="https://ai8v.com/">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://throbbing-dew-da3c.amr-omar304.workers.dev https://api.allorigins.win; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com; img-src 'self' data: https://images.example.com; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; object-src 'none';">
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self'; 
+        connect-src 'self' https://throbbing-dew-da3c.amr-omar304.workers.dev https://api.allorigins.win https://api.cal.com https://app.cal.com;
+        script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com https://cal.com; 
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com https://cal.com; 
+        img-src 'self' data: https://images.example.com; 
+        font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; 
+        frame-src 'self' https://app.cal.com;
+        object-src 'none';">
     <meta name="twitter:title" content="Ai8V | All-in-One SEO Analysis &amp; Website Crawler Tool">
     <meta name="twitter:card" content="summary_large_image">
     <meta property="og:description" content="جرّب Ai8V، أداة تحليل SEO وزاحف المواقع الشاملة. احصل على تقارير دقيقة، توصيات ذكية، وتصورات بيانية لبنية موقعك لتحسين ترتيبك في نتائج البحث.">
@@ -105,6 +113,35 @@
 </script>
 </head>
 <body>
+        <div class="dropdown d-inline-block position-fixed top-0 start-0 m-3" style="z-index: 1031;">
+        
+        <button class="btn btn-link dropdown-toggle text-body" 
+                id="theme-switcher-button" 
+                type="button" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false" 
+                aria-label="Toggle theme">
+            <span class="bi bi-sun-fill ms-1"></span>
+        </button>
+
+        <ul class="dropdown-menu" aria-labelledby="theme-switcher-button">
+            <li>
+                <button class="dropdown-item d-flex align-items-center" type="button" data-bs-theme-value="light">
+                    <span class="bi bi-sun-fill ms-2 opacity-50"></span> Light
+                </button>
+            </li>
+            <li>
+                <button class="dropdown-item d-flex align-items-center" type="button" data-bs-theme-value="dark">
+                    <span class="bi bi-moon-stars-fill ms-2 opacity-50"></span> Dark
+                </button>
+            </li>
+            <li>
+                <button class="dropdown-item d-flex align-items-center" type="button" data-bs-theme-value="auto">
+                    <span class="bi bi-circle-half ms-2 opacity-50"></span> Auto
+                </button>
+            </li>
+        </ul>
+    </div>
     <nav class="navbar navbar-expand-lg sticky-lg-top bg-body shadow-sm">
         <div class="container"><a class="navbar-brand" href="/"><i class="bi bi-server ms-2" aria-hidden="true"></i>Site Auditor &amp; Health Scanner</a><span class="fw-bold mx-auto navbar-text"><i class="bi bi-gem ms-2" aria-hidden="true"></i>Ai8V | Mind &amp; Machine</span>
             <div class="btn-group" role="group" aria-label="مجموعة أزرار أدوات Ai8V"><a class="btn btn-primary border rounded" role="button" href="/" title="الانتقال إلى أداة مدقق الموقع الشامل"><span class="bi bi-shield-check ms-2" aria-hidden="true"></span>مدقق الموقع </a>
@@ -128,9 +165,6 @@
         </div>
         </div>
     </nav>
-    <div class="theme-switcher dropdown position-fixed top-0 start-0 m-3 mt-5 ps-0 pt-2 pb-0 mb-0" style="z-index:1031;"><button class="btn btn-link dropdown-toggle ps-0 pe-0 pb-0 pt-0" aria-expanded="false" data-bs-toggle="dropdown" aria-label="التبديل بين الوضع الفاتح والغامق" style="color:var(--bs-body-color);" title="التبديل بين الوضع الفاتح و الغامق" type="button"><span aria-hidden="true" class="bi bi-sun-fill mb-1"></span></button>
-        <div class="dropdown-menu"><button aria-pressed="false" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" type="button"><span aria-hidden="true" class="bi bi-sun-fill opacity-50 ms-2"></span>Light</button><button class="active dropdown-item d-flex align-items-center" aria-pressed="true" data-bs-theme-value="dark" type="button"><span aria-hidden="true" class="bi bi-moon-stars-fill opacity-50 ms-2"></span>Dark</button><button aria-pressed="false" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" type="button"><span aria-hidden="true" class="bi bi-circle-half opacity-50 ms-2"></span>Auto</button></div>
-    </div>
     <main class="container my-5">
         <section aria-labelledby="main-tool-heading">
             <div class="row justify-content-center">
@@ -209,14 +243,14 @@
                     <p class="text-muted small" style="line-height: 1.8;">
                     تم بناء هذه الأدوات لتكون متاحة للجميع. أنا أؤمن بمشاركة المعرفة. إذا كنت بحاجة إلى مساعدة متخصصة لموقعك أو لديك استفسار يتطلب خبرة، يمكنك حجز استشارة مدفوعة.
                     </p>
-                    <a class="btn btn-primary btn-lg mt-2" 
-                            role="button" 
-                            href="#"
-                            data-cal-link="ai8v.com/consultation"
-                            data-cal-namespace="consultation"
-                            data-cal-config='{"layout":"month_view"}'>
-                        <span class="bi bi-calendar-check me-2"></span>
-                        احجز استشارة مدفوعة
+                    <a class="btn btn-success btn-lg mt-2" 
+                       role="button" 
+                       href="#"
+                       data-cal-link="ai8v.com/consultation"
+                       data-cal-namespace="consultation"
+                       data-cal-config='{"layout":"month_view"}'>
+                        <span class="bi bi-calendar-check me-2" aria-hidden="true"></span>
+                        احجز استشارة استراتيجية مدفوعة
                     </a>
                 </div>
                 <div class="col-md-6 col-lg-3 text-end mb-4 mb-md-0">
