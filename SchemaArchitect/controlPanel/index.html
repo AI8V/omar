@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html data-bs-theme="auto" lang="ar" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>المدخلات الأساسية - شرح أداة Schema Architect</title>
+    <link rel="canonical" href="https://ai8v.com/SchemaArchitect/controlPanel/">
+    <meta property="og:url" content="https://ai8v.com/SchemaArchitect/controlPanel/">
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self'; 
+        
+        script-src 
+            'self' 
+            'unsafe-inline' 
+            https://*.googletagmanager.com 
+            https://cdnjs.cloudflare.com 
+            https://cdn.jsdelivr.net 
+            https://unpkg.com;
+        
+        style-src 
+            'self' 
+            'unsafe-inline' 
+            https://fonts.googleapis.com 
+            https://cdn.jsdelivr.net 
+            https://unpkg.com;
+        
+        img-src 
+            'self' 
+            data: 
+            https://i.ytimg.com
+            https://*.google-analytics.com 
+            https://*.analytics.google.com 
+            https://*.googletagmanager.com 
+            https://*.g.doubleclick.net 
+            https://*.google.com 
+            https://*.google.com.eg
+            https://*.google.nl;
+        
+        font-src 
+            'self' 
+            https://fonts.gstatic.com 
+            https://cdn.jsdelivr.net;
+        
+        connect-src 
+            'self' 
+            https://*.google-analytics.com 
+            https://*.analytics.google.com 
+            https://analytics.google.com 
+            https://*.googletagmanager.com 
+            https://*.g.doubleclick.net 
+            https://throbbing-dew-da3c.amr-omar304.workers.dev 
+            https://api.allorigins.win;
+            
+        frame-src 
+            'self' 
+            https://*.googletagmanager.com 
+            https://www.youtube.com;
+    
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+    ">
+    <meta name="description" content="تعرف على كيفية تزويد أداة Schema Architect بالمدخلات الأساسية، الخطوة الأولى لتحويل المحتوى إلى بيانات منظمة.">
+    <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../assets/img/favicon/fav180.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon/fav16.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon/fav16D.png" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon/fav32.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon/fav32D.png" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/png" sizes="180x180" href="../assets/img/favicon/fav180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/img/favicon/fav192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="../assets/img/favicon/fav512.png">
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="manifest" href="../manifest.json" crossorigin="use-credentials">
+    <link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/SchemaArchitect/Lightbox.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K2D6DKRK');</script>
+<!-- End Google Tag Manager -->
+</head>
+
+<body>
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2D6DKRK"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+    <header>
+        <div class="theme-switcher dropdown position-fixed top-0 start-0 m-3 mt-5 ps-0 pt-2 pb-0 mb-0" style="z-index:1031;"><button class="btn btn-link dropdown-toggle ps-0 pe-0 pb-0 pt-0" aria-expanded="false" data-bs-toggle="dropdown" aria-label="التبديل بين الوضع الفاتح والغامق" style="color:var(--bs-body-color);" title="التبديل بين الوضع الفاتح و الغامق" type="button"><span aria-hidden="true" class="bi bi-sun-fill mb-1"></span></button>
+            <div class="dropdown-menu"><button aria-pressed="false" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" type="button"><span aria-hidden="true" class="bi bi-sun-fill opacity-50 ms-2"></span>Light</button><button class="active dropdown-item d-flex align-items-center" aria-pressed="true" data-bs-theme-value="dark" type="button"><span aria-hidden="true" class="bi bi-moon-stars-fill opacity-50 ms-2"></span>Dark</button><button aria-pressed="false" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" type="button"><span aria-hidden="true" class="bi bi-circle-half opacity-50 ms-2"></span>Auto</button></div>
+        </div>
+        <nav class="navbar navbar-expand-lg sticky-top bg-body shadow-sm">
+            <div class="container"><a class="navbar-brand" href="/SchemaArchitect/"><span class="bi bi-bounding-box-circles ms-2" aria-hidden="true"></span><span class="text-primary-emphasis">Schema Architect</span></a><span class="fw-bold text-primary-emphasis mx-auto navbar-text">Ai8V | Mind &amp; Machine</span>
+                <div class="btn-group" role="group" aria-label="مجموعة أزرار أدوات Ai8V"><a class="btn btn-primary border rounded" role="button" href="/" title="الانتقال إلى أداة مدقق الموقع الشامل"><span class="bi bi-shield-check ms-2" aria-hidden="true"></span>مدقق الموقع </a>
+                    <div class="border rounded btn-group" role="group"><button class="btn btn-primary dropdown-toggle dropdown-toggle-split me-1" id="toolsMenu" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="عرض باقي أدوات Ai8V"><span class="visually-hidden">Toggle Dropdown</span></button>
+                        <ul class="border-2 shadow-lg dropdown-menu-end dropdown-menu" aria-labelledby="toolsMenu">
+                            <li><span class="text-center dropdown-header">أدوات الإنتاج والتحليل</span></li>
+                            <li><a class="d-flex align-items-center dropdown-item" href="/ContentEngine/"><span class="bi bi-cpu-fill opacity-75 ms-2" aria-hidden="true"></span>مُحرّك المحتوى </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><span class="text-center dropdown-header">أدوات التحليل المتقدم</span></li>
+                            <li><a class="d-flex align-items-center dropdown-item" href="/SiteVisualizerLab/"><span class="bi bi-diagram-3-fill opacity-75 ms-2" aria-hidden="true"></span>المحلل البصري </a></li>
+                            <li><a class="d-flex align-items-center dropdown-item" href="/LogFileAnalyzer/"><span class="bi bi-server opacity-75 ms-2" aria-hidden="true"></span>محلل السجلات </a></li>
+                            <li><a class="d-flex align-items-center dropdown-item" href="/SchemaArchitect/"><span class="bi bi-bounding-box-circles opacity-75 ms-2" aria-hidden="true"></span>مهندس السكيما </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="fw-bold d-flex align-items-center dropdown-item" href="/"><span class="bi bi-house-door-fill opacity-75 ms-2" aria-hidden="true"></span>مدقق الموقع (الرئيسي) </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <h1 class="visually-hidden">شرح المدخلات الأساسية في أداة Schema Architect</h1>
+        <div class="container-fluid my-5">
+            <div class="row">
+                <div class="col">
+                    <section class="mx-auto col-10 my-5" aria-labelledby="control-panel-heading">
+                        <header class="text-center border-bottom pb-3 mb-4">
+                            <h2 class="text-primary" id="control-panel-heading"> لوحة التحكم - غرفة القيادة في Schema Architect </h2>
+                        </header>
+                        <p class="lead text-center text-muted mb-4"> اكتشف أهم قسم في الأداة حيث تبدأ رحلة تحويل محتواك إلى بيانات منظمة. إتقان لوحة التحكم = ضمان نجاح السكيما بالكامل. </p>
+                        <figure class="figure text-center d-flex flex-column align-items-center mb-4">
+                            <div class="shadow-sm ratio ratio-16x9 rounded"><a class="lightbox-trigger" href="../../assets/img/schema-architect-control-panel-1200.jpg" aria-label="تكبير الصورة">
+                                    <picture>
+                                        <source srcset="../assets/img/schema-architect-control-panel-400.webp 400w, ../assets/img/schema-architect-control-panel-820.webp 820w, ../assets/img/schema-architect-control-panel-1200.webp 1200w" sizes="(max-width: 991px) 100vw, 83vw" type="image/webp"><img class="rounded img-fluid shadow-sm figure-img" src="../assets/img/schema-architect-control-panel-1200.jpg" width="1200" height="630" alt="لوحة التحكم في أداة Schema Architect مع الأجزاء الثلاثة الرئيسية" title="لوحة التحكم - المدخلات الأساسية، القوالب، والخيارات المتقدمة">
+                                    </picture>
+                                </a></div>
+                            <figcaption class="figure-caption"> لوحة التحكم تُظهر الأجزاء الثلاثة: المدخلات الأساسية، إدارة القوالب، والخيارات المتقدمة </figcaption>
+                        </figure>
+                        <div id="lightbox" class="lightbox-overlay" role="dialog" aria-modal="true" style="display:none;"><span class="lightbox-close" role="button" aria-label="إغلاق">×</span><img id="lightbox-img" src="" alt="">
+                            <p class="text-center text-white mt-2" id="lightbox-caption"></p>
+                        </div>
+                        <aside class="alert alert-warning" role="complementary" aria-label="تحذير مهم"><strong>⚠️ نقطة حاسمة:</strong><span> اعتبر هذا القسم غرفة القيادة في طائرتك. دقة المعلومات التي تدخلها هنا تحدد مسار الرحلة بأكملها ووجهتها النهائية. إتقانك لهذا القسم هو الخطوة الأولى نحو بناء سكيما احترافية. </span></aside>
+                        <h3 class="mt-4">الأجزاء الثلاثة للوحة التحكم</h3>
+                        <p>تتكون لوحة التحكم من ثلاثة أجزاء رئيسية تعمل معاً بتناغم مثالي لضمان دقة التحليل وسرعة العمل:</p>
+                        <div class="row g-4 mb-4">
+                            <div class="col-lg-4">
+                                <div class="card h-100 border-info">
+                                    <div class="card-header bg-info">
+                                        <h4 class="text-center text-dark mb-0"><span class="bi bi-wrench-adjustable ms-2" aria-hidden="true"></span>المدخلات الأساسية</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">تزويد الأداة بالوقود اللازم للتحليل</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card h-100 border-success">
+                                    <div class="card-header text-white bg-success">
+                                        <h4 class="text-center mb-0 h5"><span class="bi bi-folder-fill ms-2" aria-hidden="true"></span>إدارة القوالب</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">أتمتة العمل وتوفير الوقت للمواقع المتكررة</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card h-100 border-danger">
+                                    <div class="card-header text-white bg-danger">
+                                        <h4 class="text-center mb-0 h5"><span class="bi bi-gear-fill ms-2" aria-hidden="true"></span>الخيارات المتقدمة</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">التوجيه الدقيق للمحلل الذكي</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 class="mt-4 h3"><span aria-hidden="true">1️⃣</span><span class="visually-hidden">الجزء الأول في لوحة التحكم: </span> المدخلات الأساسية: تزويد الأداة بالوقود</h2>
+                        <p>لديك طريقتان رئيسيتان لتغذية الأداة بالمحتوى المطلوب تحليله:</p>
+                        <div class="accordion mb-4" id="inputMethodsAccordion">
+                            <div class="accordion-item">
+                                <h3 id="urlMethod" class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#urlMethodContent" aria-expanded="true" aria-controls="urlMethodContent"><span class="bi bi-globe2 ms-2" aria-hidden="true"></span>رابط الصفحة (Page URL) - الخيار الأسرع والأشهر </button></h3>
+                                <div id="urlMethodContent" class="accordion-collapse collapse show" aria-labelledby="urlMethod" data-bs-parent="#inputMethodsAccordion">
+                                    <div class="accordion-body">
+                                        <p><strong>كيف يعمل:</strong> ببساطة، الصق رابط الصفحة التي تريد تحليلها (مثل مقال، صفحة منتج، إلخ). ستقوم الأداة بزيارة هذا الرابط وجلب كود الـ HTML الخاص به تلقائياً لتحليله.</p>
+                                        <div class="alert alert-success" role="alert"><strong>مثالي للاستخدام مع:</strong>
+                                            <ul class="mb-0 mt-2">
+                                                <li>الصفحات المنشورة والمتاحة للعامة</li>
+                                                <li>التحليل السريع للمواقع الموجودة</li>
+                                                <li>مراجعة سكيما الصفحات الحالية</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h3 id="htmlMethod" class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#htmlMethodContent" aria-expanded="false" aria-controls="htmlMethodContent"><span class="bi bi-code-slash ms-2" aria-hidden="true"></span>لصق كود HTML - للمحترفين والمطورين </button></h3>
+                                <div id="htmlMethodContent" class="accordion-collapse collapse" aria-labelledby="htmlMethod" data-bs-parent="#inputMethodsAccordion">
+                                    <div class="accordion-body">
+                                        <p><strong>متى تستخدمه:</strong></p>
+                                        <ul class="list-group list-group-flush mb-3">
+                                            <li class="list-group-item"><strong><span class="bi bi-wrench ms-2" aria-hidden="true"></span> الصفحات قيد التطوير:</strong><span> إذا كانت الصفحة موجودة على جهازك المحلي (localhost) وليست منشورة بعد </span></li>
+                                            <li class="list-group-item"><strong><span class="bi bi-gear ms-2" aria-hidden="true"></span>اختبار التغييرات:</strong><span> إذا أردت اختبار إضافة عناصر جديدة أو تغييرات في الكود قبل نشرها على موقعك الفعلي </span></li>
+                                        </ul>
+                                        <div class="alert alert-warning" role="alert"><strong>⚠️ نقطة مهمة - Base URL:</strong>
+                                            <p class="mb-2">عند لصق كود HTML، قد تلاحظ أن روابط الصور أو الصفحات الداخلية تكون نسبية (تبدأ بـ / مثلاً: <code dir="ltr">/images/product.jpg</code>).</p>
+                                            <p class="mb-0">لكي تفهم الأداة هذه الروابط بشكل صحيح، يجب أن تزودها بـ <strong>"رابط URL الأصلي" (Base URL)</strong> في الحقل الذي يظهر أسفله. هذا يخبر الأداة: "اعتبر أن هذا الكود مصدره https://www.example.com"</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <figure class="figure mt-3">
+                            <figcaption class="figure-caption form-label">الزر الأهم في لوحة التحكم:</figcaption>
+                            <div class="alert alert-primary d-flex align-items-center" role="alert">
+                                <div class="ms-3"><button class="btn btn-primary btn-lg disabled" type="button" disabled=""><span class="bi bi-search ms-2" aria-hidden="true"></span>فك شفرة المحتوى (Analyze Content) </button></div>
+                                <div><strong>مفتاح التشغيل:</strong><span> عند الضغط عليه، تبدأ الأداة عمليتها الذكية في قراءة المحتوى، تفكيكه، وفهم مكوناته، ثم عرض النتائج في القسمين الأوسط والأيسر. </span></div>
+                            </div>
+                        </figure>
+                        <h2 class="mt-4 h3"><span aria-hidden="true">2️⃣</span><span class="visually-hidden">الجزء الثاني في لوحة التحكم: </span> المشاريع والقوالب: أتمتة عملك وتوفير الوقت</h2>
+                        <p>إذا كنت تدير موقعاً كبيراً أو تعمل كخبير SEO لعدة مواقع، فستلاحظ أن صفحات المنتجات، على سبيل المثال، لها نفس التصميم ونفس "الكلاسات" (CSS Classes) في الكود.</p>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="card h-100 border-success">
+                                    <div class="card-header text-white bg-success">
+                                        <h3 class="text-center mb-0 h5"><span class="bi bi-save2-fill ms-2" aria-hidden="true"></span>حفظ كقالب</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">بعد أن تقوم بتحديد كل المُعرّفات المخصصة لموقع معين، يمكنك إعطاء هذا الإعداد اسماً (مثل "قالب منتجات متجري") وحفظه.</p><small class="text-muted">مثال: "قالب منتجات متجري" أو "قالب مقالات المدونة"</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-info">
+                                    <div class="card-header bg-info">
+                                        <h3 class="text-center text-dark mb-0 h5"><span class="bi bi-folder ms-2" aria-hidden="true"></span> اختر مشروع محفوظ</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">في المرة القادمة التي تريد فيها تحليل صفحة منتج من نفس الموقع، كل ما عليك فعله هو اختيار القالب المحفوظ من القائمة المنسدلة.</p><small class="text-primary-emphasis">النتيجة: توفير وقت هائل وضمان الاتساق في العمل ✅</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 class="mt-4 h3"><span aria-hidden="true">3️⃣</span><span class="visually-hidden">الجزء الثالث في لوحة التحكم: </span> الخيارات المتقدمة: توجيه المحلل الذكي بدقة</h2>
+                        <p>هذا هو الجزء الذي يميز المحترف الحقيقي. الأداة ذكية في اكتشاف العناصر الشائعة، ولكن أحياناً يكون تصميم موقعك فريداً.</p>
+                        <div class="alert alert-info" role="alert">
+                            <h3 class="alert-heading h5">💡 كيف تعمل الخيارات المتقدمة؟</h3>
+                            <p class="mb-2">هذا القسم يسمح لك بأن تكون "المُعلّم" الذي يوجه الأداة ويقول لها:</p>
+                            <ul class="mb-0">
+                                <li>"ابحثي عن السعر هنا بالضبط"</li>
+                                <li>"استخرجي خطوات الوصفة من هذه العناصر تحديداً"</li>
+                                <li>"العنوان الرئيسي موجود في هذا المكان"</li>
+                            </ul>
+                        </div><figure class="mt-3">
+    <figcaption class="figure-caption text-center form-label">مثال على استخدام CSS Selectors:</figcaption>
+    <pre class="p-3 rounded bg-dark text-white text-center" dir="ltr"><code class="language-css" dir="ltr">/* الشائعة CSS أمثلة لمحددات  */
+
+.price-container .current-price     /* للسعر الحالي */
+#product-title h1                   /* للعنوان الرئيسي */
+.recipe-steps li                    /* لخطوات الوصفة */
+[data-rating]                       /* للتقييمات */
+.author-info .author-name          /* لاسم الكاتب */</code></pre>
+</figure>
+                        <div class="table-responsive my-4">
+                            <table class="table table-striped table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">نوع الاستخدام</th>
+                                        <th scope="col">المبتدئ</th>
+                                        <th scope="col">المحترف</th>
+                                        <th scope="col">المطور المتقدم</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>طريقة الإدخال</strong></td>
+                                        <td>رابط الصفحة فقط</td>
+                                        <td>رابط + قوالب محفوظة</td>
+                                        <td>كود HTML + CSS Selectors مخصصة</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>الخيارات المستخدمة</strong></td>
+                                        <td>الأساسية فقط</td>
+                                        <td>الأساسية + القوالب</td>
+                                        <td>جميع الخيارات المتقدمة</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>مستوى الدقة</strong></td>
+                                        <td>جيد للمواقع الشائعة</td>
+                                        <td>ممتاز مع توفير الوقت</td>
+                                        <td>دقة مثالية 100%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <article class="text-center border-primary shadow-sm card mt-4">
+                            <header class="text-white bg-primary card-header">
+                                <h3 class="my-1 h4">إتقان لوحة التحكم = نجاح السكيما</h3>
+                            </header>
+                            <div class="card-body">
+                                <p class="card-text"> لوحة التحكم هي أساس كل عمل احترافي في Schema Architect. من دقة إدخال البيانات إلى استخدام القوالب وصولاً للتوجيه المتقدم - كل خطوة تؤثر على جودة النتيجة النهائية. </p>
+                                <footer class="blockquote-footer mt-2"><span class="text-primary-emphasis"> القادم: نتعمق في الخيارات المتقدمة: لـ توجيه المحلل الذكي بدقة - عقل الأداة الذكي. </span></footer>
+                            </div><a class="btn btn-primary m-3" role="button" href="/SchemaArchitect/"> العودة إلى أداة Schema Architect <span class="bi bi-arrow-left-circle-fill ms-1" aria-hidden="true"></span></a>
+                        </article>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="text-center text-primary-emphasis bg-dark-subtle mt-5 h5 py-2">
+        <div class="container-fluid">
+            <div class="row d-grid">
+                <div class="col">
+                    <p>2025 Schema Architect | Ai8V © جميع الحقوق محفوظة</p>
+                </div>
+                <div class="col"><small>تم التحديث في: <time datetime="2025-08-12T14:30:00Z">12 أغسطس 2025</time></small></div>
+            </div>
+        </div>
+    </footer>
+    <script src="../assets/bootstrap/js/bootstrap.min.js" defer></script>
+    <script src="../assets/js/SchemaArchitect/schema-architect.js" defer></script>
+    <script src="../assets/js/SchemaArchitect/Lightbox.js" defer></script>
+</body>
+
+</html>
