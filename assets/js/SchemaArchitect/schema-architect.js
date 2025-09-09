@@ -450,6 +450,39 @@
 }
     
 
+
+function displayExistingSchema(htmlContent) {
+    const doc = new DOMParser().parseFromString(htmlContent, 'text/html');
+    const scripts = Array.from(doc.querySelectorAll('script[type="application/ld+json"]'));
+
+    if (scripts.length === 0) {
+        return ''; // لا تفعل شيئًا إذا لم توجد سكيما
+    }
+
+    let outputHtml = `<hr class="my-4"><h3 class="h5 mt-4 mb-3"><span class="bi bi-shield-check ms-2"></span> 3. السكيما الحالية المكتشفة:</h3>`;
+
+    scripts.forEach((script, index) => {
+        try {
+            const jsonData = JSON.parse(script.textContent);
+            const schemaType = jsonData['@type'] || 'غير معروف';
+            outputHtml += `
+                <div class="card shadow-sm mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">النوع: ${schemaType}</span>
+                        <span class="badge bg-info text-dark">#${index + 1}</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <textarea class="border-0 form-control" dir="ltr" readonly rows="8">${JSON.stringify(jsonData, null, 2)}</textarea>
+                    </div>
+                </div>`;
+        } catch (e) {
+            // تجاهل أي كود JSON غير صالح
+        }
+    });
+
+    return outputHtml;
+}
+
     // ===================================================================
     //  3. Final Schema Generation Engine
     // ===================================================================
@@ -916,7 +949,7 @@ function getPublisherData(entities) {
                     </div>
                 </div>`;
         });
-        DOM.analysisResults.innerHTML = html;
+        return html;
     }
 
     function updateActionButtonsState(isEnabled, copyText = 'نسخ') {
@@ -1100,7 +1133,9 @@ function getPublisherData(entities) {
             const baseUrl = DOM.urlInput.value.trim() || DOM.baseUrlInput.value.trim();
             const entities = analyzeContent(contentToAnalyze, baseUrl);
             const suggestions = suggestSchema(entities);
-            renderAnalysis(entities, suggestions);
+            const analysisHtml = renderAnalysis(entities, suggestions);
+            const existingSchemaHtml = displayExistingSchema(contentToAnalyze);
+            DOM.analysisResults.innerHTML = analysisHtml + existingSchemaHtml;
 
             const updateSchemaOutput = (type) => {
                 const finalSchema = generateFinalSchema(entities, type, baseUrl); // Pass baseUrl to generator
