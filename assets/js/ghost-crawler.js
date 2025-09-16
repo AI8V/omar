@@ -78,18 +78,33 @@
             showAppToast('متصفحك لا يدعم النسخ إلى الحافظة.', 'error');
             return;
         }
+
+    // حفظ الحالة الأصلية للزر قبل التغيير المؤقت
+    const originalText = copyVisualizerDataBtn.innerHTML;
+    const originalClasses = copyVisualizerDataBtn.classList.value;
+
         navigator.clipboard.writeText(text).then(() => {
             if (copyVisualizerDataBtn) {
                 copyVisualizerDataBtn.classList.remove('btn-secondary');
                 copyVisualizerDataBtn.classList.add('btn-success');
                 copyVisualizerDataBtn.innerHTML = `<i class="bi bi-check-circle-fill ms-2"></i> تم النسخ بنجاح!`;
-                copyVisualizerDataBtn.disabled = true;
-            }
-        }).catch(err => {
-            console.error('Failed to copy text: ', err);
-            showAppToast('فشل النسخ إلى الحافظة.', 'error');
-        });
-    }
+
+            // إعادة الزر إلى حالته الأصلية بعد 3 ثوانٍ
+            setTimeout(() => {
+                copyVisualizerDataBtn.classList.value = originalClasses; // استعادة الفئات الأصلية
+                copyVisualizerDataBtn.innerHTML = originalText; // استعادة النص الأصلي
+            }, 3000); // 3000 مللي ثانية = 3 ثوانٍ
+          }
+    }).catch(err => {
+        console.error('فشل النسخ إلى الحافظة: ', err);
+        showAppToast('فشل النسخ إلى الحافظة.', 'error');
+        // في حالة الفشل، يمكن إعادة الزر إلى حالته الأصلية فورًا إذا كان قد تم تغييره
+        if (copyVisualizerDataBtn) {
+            copyVisualizerDataBtn.classList.value = originalClasses;
+            copyVisualizerDataBtn.innerHTML = originalText;
+        }
+    });
+}
 
     /**
      * Generates a unified data object compatible with the Site Visualizer Lab.
